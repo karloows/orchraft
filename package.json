@@ -1,0 +1,24 @@
+{
+  "name": "orchraft",
+  "version": "0.1.0",
+  "description": "A toolkit for building and orchestrating agentic software development workflows with reusable agents, skills, rules, and automation.",
+  "private": true,
+  "keywords": [
+    "claude-code",
+    "cursor",
+    "ai-coding",
+    "skills",
+    "agent-skills",
+    "developer-tools",
+    "agentic-workflow",
+    "agent-rules",
+    "agent-policies"
+  ],
+  "homepage": "https://github.com/karloows/orchraft",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/karloows/orchraft.git"
+  },
+  "license": "Apache-2.0",
+  "author": "karloows"
+}
