@@ -26,7 +26,7 @@ Use this skill when the user asks the AI to ship work.
 2. Validate the touched area.
 3. Use the current non-`main` branch, or create a policy-compliant branch from
    `main` when currently on `main`.
-4. Stage only intended changes, commit with the required title and body, then
+4. Stage only intended changes, commit with a policy-compliant message, then
    push.
 5. Create or update the pull request and report the branch, commit, PR, and
    validation result.

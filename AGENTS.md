@@ -67,8 +67,8 @@ hooks, and CI checks should win.
 
 - `context/policies/branch-policy.md`: branch name format, allowed types, and
   branch examples.
-- `context/policies/commit-policy.md`: commit title/body format and required
-  commit body sections.
+- `context/policies/commit-policy.md`: commit title format and when to add a
+  free-form prose body.
 - `context/policies/review-policy.md`: reviewer priority order, severity
   levels, and findings format for PR review.
 - `context/policies/writing-guidelines.md`: shared writing rules, PR title/body
