@@ -197,36 +197,68 @@ See `context/policies/review-policy.md` for the severity levels
 ## Comment Format
 
 Inline comment (one per line-specific finding, via
-`add_comment_to_pending_review`), per `context/policies/review-policy.md`'s
-findings format:
-
-```
-[SEVERITY] <one-line finding> — <why it matters / what to do>
-```
+`add_comment_to_pending_review`): use the shape defined in
+`context/policies/review-policy.md`'s Findings Format section — do not
+restate the template here, so the two can't drift apart.
 
 Review-body summary (the `submit_pending` body, covers everything that isn't
-line-specific plus a rollup):
+line-specific plus a rollup). Keep the summary line visible; collapse each
+section behind `<details>` with its PASS/ISSUES status in the `<summary>` so
+it's readable collapsed, and wrap section content in `<sub>` for a smaller
+footprint — long reviews stay scannable instead of pushing the PR page down:
 
 ```
 ## Review — <PR title>
 
-### Scope
-[PASS / ISSUES] — planned vs. shipped
+**Summary:** [N] issue(s) — [critical count] critical, [important count]
+important, [minor count] minor. [M] judgment call(s) not counted as issues,
+if any.
 
-### Policy compliance
-[PASS / ISSUES] — branch, commit, PR text vs. context/policies/
+<details>
+<summary>Scope — [PASS / ISSUES]</summary>
 
-### Code review
-[PASS / ISSUES] — correctness, edge cases, consistency (see inline comments)
+<sub>
 
-### Unanchored findings
+planned vs. shipped
+
+</sub>
+</details>
+
+<details>
+<summary>Policy compliance — [PASS / ISSUES]</summary>
+
+<sub>
+
+branch, commit, PR text vs. context/policies/
+
+</sub>
+</details>
+
+<details>
+<summary>Code review — [PASS / ISSUES]</summary>
+
+<sub>
+
+correctness, edge cases, consistency (see inline comments)
+
+</sub>
+</details>
+
+<details>
+<summary>Unanchored findings ([count])</summary>
+
+<sub>
+
 [SEVERITY] <finding> — <required remediation>, one per finding with no valid
-diff-line anchor. Omit this section entirely when there are none.
+diff-line anchor.
 
-### Summary
-[N] issue(s): [critical count] critical, [important count] important,
-[minor count] minor. [M] judgment call(s) not counted as issues, if any.
+</sub>
+</details>
 ```
+
+Omit the `Unanchored findings` block entirely when there are none — don't
+post an empty collapsed section. Keep the `**Summary:**` line uncollapsed;
+it's the only part a reviewer needs without expanding anything.
 
 Write both in the tone required by
 `context/policies/writing-guidelines.md`: concise, technical, no emojis, no
