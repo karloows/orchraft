@@ -26,7 +26,7 @@ Use this skill when the user asks the AI to ship work.
 2. Validate the touched area.
 3. Use the current non-`main` branch, or create a policy-compliant branch from
    `main` when currently on `main`.
-4. Stage only intended changes, commit with the required title and body, then
+4. Stage only intended changes, commit with a policy-compliant message, then
    push.
 5. Create or update the pull request and report the branch, commit, PR, and
    validation result.
@@ -75,10 +75,9 @@ Use this skill when the user asks the AI to ship work.
    non-`main` branch, keep using it.
 4. Stage only the intended changes.
 5. Write a commit title using `<type>(<scope>): <summary>`.
-6. Include a non-empty commit body with:
-   - `## Context`
-   - `## Changes`
-   - `## Validation`
+6. Add a commit body only when the title doesn't fully explain the change,
+   written as free-form prose with no headings, per
+   `context/policies/commit-policy.md`.
 7. Let local git hooks run normally during commit. If hooks auto-fix files,
    review the resulting diff, stage only intended hook changes, and commit
    again.
@@ -97,8 +96,8 @@ Use this skill when the user asks the AI to ship work.
   dominant change where possible.
 - Commit title: follow `context/policies/commit-policy.md` exactly:
   `<type>(<scope>): <summary>`.
-- Commit body: include only the required `## Context`, `## Changes`, and
-  `## Validation` sections, with non-empty content about the staged diff.
+- Commit body: follow `context/policies/commit-policy.md` exactly: optional,
+  free-form prose with no headings, describing only the staged diff.
 - Pull request title: follow `context/policies/writing-guidelines.md`. Omit
   commit scope unless the user explicitly asks for it.
 - Pull request body: follow `context/policies/writing-guidelines.md`. Describe
