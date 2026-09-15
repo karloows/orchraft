@@ -77,6 +77,8 @@ base:
 - `context/policies/branch-policy.md`, `context/policies/commit-policy.md`,
   and `context/policies/writing-guidelines.md` for naming, commit, and PR-text
   compliance.
+- `context/policies/review-policy.md` for reviewer priority order, severity
+  levels, and findings format — do not invent a different taxonomy.
 - The PR's own commit history for whether Conventional Commits was actually
   followed, not just the final diff.
 - Any project-local architecture, design-system, or lint/CI config already in
@@ -128,8 +130,10 @@ policies above only.
   decline or don't respond in this turn. Skip asking entirely if the tool
   isn't available in this session, the repo doesn't support it, or Copilot
   has already been requested/reviewed on this PR.
-- Check for this skill's prior review(s) on the PR. If one exists, review
-  only the code delta since that review's commit and note which earlier
+- Check for this skill's prior review(s) on the PR: find the latest review
+  body ending in the `<!-- roast:review head=<sha> -->` marker (see Comment
+  Format), and use that SHA as the prior review's commit. If one exists, review
+  only the code delta since that commit and note which earlier
   findings still stand, were fixed, or no longer apply — do not re-post
   unchanged findings as if they were new. Scope and policy compliance (PR
   title, description, branch name) are PR-level, not commit-level — re-check
@@ -162,8 +166,9 @@ policies above only.
    - `pull_request_review_write` with method `create` to open a pending
      review.
    - `add_comment_to_pending_review` once per remaining file/line, capped at
-     20 inline comments. Beyond the cap, list the rest as bullets in the
-     summary body instead of continuing to post individual comments — a wall
+     20 inline comments. Beyond the cap, add the rest to the summary body's
+     Unanchored findings block instead of continuing to post individual
+     comments — a wall
      of inline comments is noise, not signal. If any `add_comment_to_pending_review`
      call fails, stop adding further comments and do not call
      `submit_pending` — report the failure and that a pending review was
@@ -189,52 +194,117 @@ policies above only.
 
 ## Severity Guide
 
-- **Critical** — merge-blocking: security exposure, data loss, the change
-  can't run/build at all, a required policy violation (e.g. commit format,
-  direct push to `main`), or the PR is missing something the linked task
-  explicitly asked for.
-- **Important** — a recoverable correctness defect that doesn't block merge
-  (an ordinary bug, a missing edge case a real user hits, an inconsistent
-  pattern, drift from an established convention).
-- **Minor** — cosmetic or non-blocking (naming nit, optional polish).
+See `context/policies/review-policy.md` for the severity levels
+(Critical/Important/Minor) and reviewer priority order findings must follow.
 
 ## Comment Format
 
 Inline comment (one per line-specific finding, via
-`add_comment_to_pending_review`):
-
-```
-[SEVERITY] <one-line finding> — <why it matters / what to do>
-```
+`add_comment_to_pending_review`): use the shape defined in
+`context/policies/review-policy.md`'s Findings Format section — do not
+restate the template here, so the two can't drift apart.
 
 Review-body summary (the `submit_pending` body, covers everything that isn't
-line-specific plus a rollup):
+line-specific plus a rollup). Layout, top to bottom:
 
+1. **Verdict callout** (always visible) — a GitHub alert, which renders as a
+   colored box: `[!TIP]` (green) for zero issues, `[!WARNING]` (amber) for
+   important/minor issues only, `[!CAUTION]` (red) when anything is critical.
+2. **Scoreboard table** (always visible) — counts per severity plus judgment
+   calls.
+3. **One collapsed `<details>` per section** — bold name, topical emoji, and
+   status in the `<summary>`. Put the section's checks in a ` ```diff ` block:
+   `+` lines render green (passing check), `-` lines render red (issue),
+   lines starting with a space stay neutral (judgment calls — not enforced).
+   Hard-wrap at ~76 characters and repeat the same prefix on continuation
+   lines; GitHub won't soft-wrap code blocks and an unprefixed continuation
+   loses its color.
+4. **`---` then a collapsed "Review info" footer** — commit range, full vs.
+   delta review, files reviewed, standards used.
+5. **Hidden marker** `<!-- roast:review head=<sha> -->` as the last line, so a
+   later pass can find this skill's prior review and its commit reliably.
+
+Keep GitHub alerts and the table at the top level — alerts don't render
+inside `<details>`. Every `<details>` must open and close in a matched pair;
+count them before posting, since one stray tag breaks the nesting of
+everything after it.
+
+````markdown
+## 🔥 Roast — <PR title>
+
+> [!TIP]
+> **Clean pass.** Nothing blocking. <[M] judgment call(s) worth a glance.>
+
+| 🚨 Critical | ⚠️ Important | 💡 Minor | 🤔 Judgment calls |
+| :---: | :---: | :---: | :---: |
+| **[n]** | **[n]** | **[n]** | **[n]** |
+
+<details>
+<summary><b>🔭 Scope</b> — [✅ Pass / ❌ Issues / 🤔 Judgment call]</summary>
+<br>
+
+```diff
++ ✅ planned vs. shipped, no gaps
 ```
-## Review — <PR title>
 
-### Scope
-[PASS / ISSUES] — planned vs. shipped
+</details>
 
-### Policy compliance
-[PASS / ISSUES] — branch, commit, PR text vs. context/policies/
+<details>
+<summary><b>📐 Policy compliance</b> — [status]</summary>
+<br>
 
-### Code review
-[PASS / ISSUES] — correctness, edge cases, consistency (see inline comments)
-
-### Unanchored findings
-[SEVERITY] <finding> — <required remediation>, one per finding with no valid
-diff-line anchor. Omit this section entirely when there are none.
-
-### Summary
-[N] issue(s): [critical count] critical, [important count] important,
-[minor count] minor.
+```diff
++ ✅ branch name matches branch-policy.md
++ ✅ commit title/body follow commit-policy.md
+- ❌ [IMPORTANT] PR body missing Validation section — add what ran
 ```
 
-Write both in the tone required by
-`context/policies/writing-guidelines.md`: concise, technical, no emojis, no
-marketing language. Emoji handoff phrasing below applies to the chat response
-to the user only, never to anything posted on the PR.
+</details>
+
+<details>
+<summary><b>🔍 Code review</b> — [status]</summary>
+<br>
+
+```diff
++ ✅ no secrets in diff
+  🤔 [JUDGMENT CALL] <note> — see inline comment
+```
+
+</details>
+
+<details>
+<summary><b>📎 Unanchored findings</b> — [count]</summary>
+<br>
+
+```diff
+- ❌ [SEVERITY] <finding> — <required remediation>
+```
+
+</details>
+
+---
+
+<details>
+<summary>ℹ️ Review info</summary>
+<br>
+
+- **Commits:** `<base-sha>`..`<head-sha>` (<full review / delta since `<sha>`>)
+- **Files reviewed (<n>):** `<path>`, `<path>`
+- **Standards:** `context/policies/review-policy.md`, `context/policies/`
+
+</details>
+
+<!-- roast:review head=<head-sha> -->
+````
+
+Omit the `Unanchored findings` block entirely when there are none — don't
+post an empty collapsed section.
+
+Write the finding text in the tone required by
+`context/policies/writing-guidelines.md`: concise, technical, no marketing
+language. The emoji, alerts, and color conventions above are this section's
+own formatting, not a `writing-guidelines.md` requirement, and don't extend to
+PR titles or descriptions.
 
 ## Guardrails
 
@@ -244,8 +314,8 @@ to the user only, never to anything posted on the PR.
 - Post one review per pass (one pending review, submitted once); do not open
   multiple pending reviews or submit partial reviews one comment at a time.
 - Do not invent policies this repo does not have. If something looks wrong
-  but no policy or visible convention covers it, flag it as a judgment call,
-  not a violation.
+  but no policy or visible convention covers it, tag it `[JUDGMENT CALL]`
+  per `context/policies/review-policy.md`, not a severity.
 
 ## Stop Conditions
 

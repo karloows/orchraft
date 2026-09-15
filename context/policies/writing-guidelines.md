@@ -133,7 +133,23 @@ a PR body describes the reviewable branch.
 
 ---
 
-## 4. Things the AI must NEVER do
+## 4. Skill Description Rules
+
+Format for a skill's frontmatter `description`:
+
+    Have the AI <verb phrase describing what it does>. Use when the user says <trigger word>, asks to <trigger phrase>, or wants <outcome>.
+
+- First sentence: what the skill does, from the AI's perspective ("Have the
+  AI ...").
+- Second sentence: `Use when ...`, listing the words/phrases that should
+  trigger it.
+- Keep both sentences on one line in the frontmatter; no line breaks.
+
+Example:
+
+    Have the AI explain something grounded in real sources, not a confident guess. Use when the user says yap, asks "explain this", or wants a walkthrough of an error.
+
+## 5. Things the AI must NEVER do
 
 - Never invent features not mentioned
 - Never add hype or praise
