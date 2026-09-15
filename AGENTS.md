@@ -69,6 +69,8 @@ hooks, and CI checks should win.
   branch examples.
 - `context/policies/commit-policy.md`: commit title/body format and required
   commit body sections.
+- `context/policies/review-policy.md`: reviewer priority order, severity
+  levels, and findings format for PR review.
 - `context/policies/writing-guidelines.md`: shared writing rules, PR title/body
   defaults, secret hygiene, and project-template override guidance.
 

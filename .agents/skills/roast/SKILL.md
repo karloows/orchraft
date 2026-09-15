@@ -77,6 +77,8 @@ base:
 - `context/policies/branch-policy.md`, `context/policies/commit-policy.md`,
   and `context/policies/writing-guidelines.md` for naming, commit, and PR-text
   compliance.
+- `context/policies/review-policy.md` for reviewer priority order, severity
+  levels, and findings format — do not invent a different taxonomy.
 - The PR's own commit history for whether Conventional Commits was actually
   followed, not just the final diff.
 - Any project-local architecture, design-system, or lint/CI config already in
@@ -189,19 +191,14 @@ policies above only.
 
 ## Severity Guide
 
-- **Critical** — merge-blocking: security exposure, data loss, the change
-  can't run/build at all, a required policy violation (e.g. commit format,
-  direct push to `main`), or the PR is missing something the linked task
-  explicitly asked for.
-- **Important** — a recoverable correctness defect that doesn't block merge
-  (an ordinary bug, a missing edge case a real user hits, an inconsistent
-  pattern, drift from an established convention).
-- **Minor** — cosmetic or non-blocking (naming nit, optional polish).
+See `context/policies/review-policy.md` for the severity levels
+(Critical/Important/Minor) and reviewer priority order findings must follow.
 
 ## Comment Format
 
 Inline comment (one per line-specific finding, via
-`add_comment_to_pending_review`):
+`add_comment_to_pending_review`), per `context/policies/review-policy.md`'s
+findings format:
 
 ```
 [SEVERITY] <one-line finding> — <why it matters / what to do>
@@ -228,7 +225,7 @@ diff-line anchor. Omit this section entirely when there are none.
 
 ### Summary
 [N] issue(s): [critical count] critical, [important count] important,
-[minor count] minor.
+[minor count] minor. [M] judgment call(s) not counted as issues, if any.
 ```
 
 Write both in the tone required by
@@ -244,8 +241,8 @@ to the user only, never to anything posted on the PR.
 - Post one review per pass (one pending review, submitted once); do not open
   multiple pending reviews or submit partial reviews one comment at a time.
 - Do not invent policies this repo does not have. If something looks wrong
-  but no policy or visible convention covers it, flag it as a judgment call,
-  not a violation.
+  but no policy or visible convention covers it, tag it `[JUDGMENT CALL]`
+  per `context/policies/review-policy.md`, not a severity.
 
 ## Stop Conditions
 
