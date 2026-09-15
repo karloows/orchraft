@@ -220,9 +220,10 @@ language as the review body, top to bottom:
    lines or files.
 5. **🤖 Prompt for AI agents**: a collapsed `<details>` holding a
    ` ```text ` block the author can paste into any coding agent. Make it
-   self-contained, since the agent won't see the PR: file path and line
-   range, what's wrong, the fix, and how to confirm it worked. Keep it to
-   plain instructions with no emoji or alert markup.
+   self-contained, since the agent won't see the PR: file path, line range,
+   and the quoted anchored text or nearest heading (lines shift as other
+   fixes land), what's wrong, the fix, and how to confirm it worked. Keep
+   it to plain instructions with no emoji or alert markup.
 
 ````markdown
 > [!NOTE]
@@ -253,7 +254,8 @@ entry. Confirm every "## " heading in the file has a matching Contents entry.
 
 When several findings share one line (see Default Path step 6), post one
 comment with an alert per finding, most severe first, and at most one
-suggestion block. Keep one prompt per finding.
+suggestion block. Put each finding's prompt directly under its own alert
+and Fix line; place the single suggestion block after the last finding.
 
 Review-body summary (the `submit_pending` body, covers everything that isn't
 line-specific plus a rollup). Layout, top to bottom:
