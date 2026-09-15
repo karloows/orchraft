@@ -130,8 +130,10 @@ policies above only.
   decline or don't respond in this turn. Skip asking entirely if the tool
   isn't available in this session, the repo doesn't support it, or Copilot
   has already been requested/reviewed on this PR.
-- Check for this skill's prior review(s) on the PR. If one exists, review
-  only the code delta since that review's commit and note which earlier
+- Check for this skill's prior review(s) on the PR: find the latest review
+  body ending in the `<!-- roast:review head=<sha> -->` marker (see Comment
+  Format), and use that SHA as the prior review's commit. If one exists, review
+  only the code delta since that commit and note which earlier
   findings still stand, were fixed, or no longer apply — do not re-post
   unchanged findings as if they were new. Scope and policy compliance (PR
   title, description, branch name) are PR-level, not commit-level — re-check
@@ -164,8 +166,9 @@ policies above only.
    - `pull_request_review_write` with method `create` to open a pending
      review.
    - `add_comment_to_pending_review` once per remaining file/line, capped at
-     20 inline comments. Beyond the cap, list the rest as bullets in the
-     summary body instead of continuing to post individual comments — a wall
+     20 inline comments. Beyond the cap, add the rest to the summary body's
+     Unanchored findings block instead of continuing to post individual
+     comments — a wall
      of inline comments is noise, not signal. If any `add_comment_to_pending_review`
      call fails, stop adding further comments and do not call
      `submit_pending` — report the failure and that a pending review was
