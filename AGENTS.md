@@ -24,8 +24,9 @@ If one of these is coming up and the current turn didn't clearly ask for it,
 stop and ask instead of inferring permission from context, urgency, prior
 turns, or "this is obviously what they want." This rule overrides any skill
 step elsewhere that could otherwise be read as running to completion
-unattended, and it is intentionally kept here only — see "How To Use This
-Repo" below on duplication.
+unattended. It is intentionally kept here only, not copied into each skill
+file, per this repo's general no-duplication rule (see "How To Use This
+Repo").
 
 ## How To Use This Repo
 
