@@ -99,6 +99,11 @@ Use this skill when the user asks the AI to ship work.
 - If the branch name would violate policy, stop and fix the branch name instead of improvising.
 - Do not create a second topic branch from an existing non-`main` branch unless
   the user explicitly asks to branch off or retarget the work.
+- If branch creation fails with a git refs collision such as an existing
+  `docs` ref blocking `docs/...`, diagnose the local and remote refs with the
+  correct git commands before changing the branch name. Retry with approval
+  when the failure may be permission or sandbox related. Do not switch to a
+  less accurate type or unrelated branch name just to bypass the error.
 
 ## Stop Conditions
 
