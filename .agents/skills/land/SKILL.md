@@ -111,9 +111,11 @@ Use this skill when the user asks the AI to land work end to end.
 
 ## Handoff
 
-- Open with a fresh one-line success phrase in the orc voice, speaking as the
-  Haulmaster from `context/personality.md` (the target repo's copy when it
-  exists, otherwise `${CLAUDE_PLUGIN_ROOT}/context/personality.md`).
+- Unless the user asked for plain output, open with a fresh one-line success
+  phrase in the orc voice, speaking as the Haulmaster from
+  `context/personality.md` (the target repo's copy when it exists, otherwise
+  `${CLAUDE_PLUGIN_ROOT}/context/personality.md`). If they did, open with the
+  plain result instead.
 - Report the final branch state.
 - Say which merge method was used.
 - Say whether the verified local branch was deleted.

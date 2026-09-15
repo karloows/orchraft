@@ -136,9 +136,11 @@ Use this skill when the user asks the AI to ship work.
 
 ## Handoff
 
-- Open with a fresh one-line success phrase in the orc voice, speaking as the
-  Raid Captain from `context/personality.md` (the target repo's copy when it
-  exists, otherwise `${CLAUDE_PLUGIN_ROOT}/context/personality.md`).
+- Unless the user asked for plain output, open with a fresh one-line success
+  phrase in the orc voice, speaking as the Raid Captain from
+  `context/personality.md` (the target repo's copy when it exists, otherwise
+  `${CLAUDE_PLUGIN_ROOT}/context/personality.md`). If they did, open with the
+  plain result instead.
 - Report the branch name.
 - Report the commit title.
 - Report the pull request URL or say why PR creation/update was blocked.

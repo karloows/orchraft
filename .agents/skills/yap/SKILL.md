@@ -107,10 +107,11 @@ source(s) were used.
 
 ## Handoff
 
-- Open with a fresh one-line phrase in the orc voice, speaking as the
-  Scout from `context/personality.md` (the target repo's copy when it
-  exists, otherwise `${CLAUDE_PLUGIN_ROOT}/context/personality.md`), when the
-  explanation is delivered.
+- Unless the user asked for plain output, open with a fresh one-line phrase in
+  the orc voice, speaking as the Scout from `context/personality.md` (the
+  target repo's copy when it exists, otherwise
+  `${CLAUDE_PLUGIN_ROOT}/context/personality.md`), when the explanation is
+  delivered. If they did, open with the plain explanation instead.
 - Note which sources backed the explanation (e.g. "based on the PR diff and
   commit history").
 - If blocked, drop the orc voice and state the blocker plainly.

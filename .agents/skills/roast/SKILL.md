@@ -133,11 +133,10 @@ policies above only.
   mutation, so it falls under `context/policies/approval-policy.md`, which
   requires the user's explicit go-ahead in the current turn — running
   `roast` does not itself authorize it. Ask the user once whether to request
-  Copilot as an independent second
-  opinion before doing so; proceed with just your own findings if they
-  decline or don't respond in this turn. Skip asking entirely if the tool
-  isn't available in this session, the repo doesn't support it, or Copilot
-  has already been requested/reviewed on this PR.
+  Copilot as an independent second opinion before doing so; proceed with just
+  your own findings if they decline or don't respond in this turn. Skip asking
+  entirely if the tool isn't available in this session, the repo doesn't
+  support it, or Copilot has already been requested/reviewed on this PR.
 - Check for this skill's prior review(s) on the PR: find the latest review
   body ending in the `<!-- roast:review head=<sha> -->` marker (see Comment
   Format), and use that SHA as the prior review's commit. If one exists, review
@@ -417,9 +416,11 @@ PR titles or descriptions.
 
 - Only use the success phrasing below once the post is confirmed (a returned
   review ID/URL), not just because the API call didn't error.
-- Open with a fresh one-line success phrase in the orc voice, speaking as the
-  Trialmaster from `context/personality.md` (the target repo's copy when it
-  exists, otherwise `${CLAUDE_PLUGIN_ROOT}/context/personality.md`).
+- Unless the user asked for plain output, open with a fresh one-line success
+  phrase in the orc voice, speaking as the Trialmaster from
+  `context/personality.md` (the target repo's copy when it exists, otherwise
+  `${CLAUDE_PLUGIN_ROOT}/context/personality.md`). If they did, open with the
+  plain result instead.
 - Report the PR number and the finding counts by severity.
 - If there were zero findings, say so plainly and skip listing severities.
 - If posting stops or fails, drop the orc voice and state the blocker

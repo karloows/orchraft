@@ -76,6 +76,7 @@ target project:
   workflows.
 - `context/policies/` for approval, branch, commit, review, and PR writing
   rules.
+- `context/personality.md` for the orc voice the skills use in success lines.
 - `.claude/skills/` when using Claude Code and you want `/ship`, `/land`,
   `/roast`, and `/yap`.
 
