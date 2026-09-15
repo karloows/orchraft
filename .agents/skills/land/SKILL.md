@@ -59,8 +59,8 @@ Use this skill when the user asks the AI to land work end to end.
 - Confirm the pull request has no unresolved merge conflicts.
 - Confirm the connected account can merge the pull request.
 - Confirm there are no tracked or staged local changes.
-- If untracked files are present, stash them before landing and record the
-  stash ref so it can be restored after the workflow.
+- If untracked files are present and there are no tracked or staged changes,
+  stash those untracked files before landing and record the stash ref.
 
 ## Default Path
 
@@ -81,8 +81,10 @@ Use this skill when the user asks the AI to land work end to end.
 - After the merge completes, switch to `main` locally, sync local `main`, and
   confirm there are still no tracked or staged local changes before deleting
   the verified local topic branch.
-- Restore any untracked-file stash created for this workflow after branch
-  deletion or after any stop condition that leaves the worktree usable.
+- After branch deletion, restore any untracked-file stash created for this
+  workflow with `git stash pop` or the repository-equivalent restore command.
+- If landing stops after creating an untracked-file stash, restore it once the
+  worktree is usable.
 
 ## Stop Conditions
 
