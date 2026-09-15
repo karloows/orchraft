@@ -33,7 +33,7 @@ hooks, and CI checks should win.
   including merge checks, local cleanup, and handoff.
 - `.agents/skills/review/SKILL.md`: AI-driven pull request review workflow
   that checks a PR against this repo's own policies and posts findings as a
-  PR comment, CodeRabbit-style.
+  PR review with inline comments and a summary, CodeRabbit-style.
 - `.claude/skills/ship/SKILL.md`, `.claude/skills/land/SKILL.md`, and
   `.claude/skills/review/SKILL.md`: Claude skill symlinks so Claude sessions
   can use `/ship`, `/land`, and `/review` while reading the same canonical

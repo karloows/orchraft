@@ -1,6 +1,6 @@
 ---
 name: review
-description: Have the AI review the current pull request's diff against this repo's own policies and commit history, then post the findings as a single PR comment. Use when the user says review, asks for a PR review, or wants CodeRabbit-style automated review after shipping.
+description: Have the AI review the current pull request's diff against this repo's own policies and commit history, then post the findings as a PR review with inline comments and a summary. Use when the user says review, asks for a PR review, or wants CodeRabbit-style automated review after shipping.
 ---
 
 # Review Workflow
@@ -100,16 +100,19 @@ policies above only.
   generic "no PR found."
 - Fetch the full PR diff and commit list from GitHub, not a local `git diff`
   guess — the PR may include commits from other pushes.
-- Record the PR's current head SHA and state (open) before reviewing, and
-  re-check both immediately before posting — if the SHA changed (a
-  force-push or new commit landed mid-review), re-fetch the diff instead of
-  posting against a stale one; if the PR was merged or closed while the
-  review was being built, stop and report that instead of posting to a
-  PR that's no longer open.
-- Check for an existing pending review left open by a prior interrupted run
-  (`pull_request_review_write` method `get`/list, or the equivalent read) and
-  discard it before creating a new one; two open pending reviews on the same
-  PR will conflict.
+- Record the PR's current head SHA, base SHA (or an equivalent diff-identity
+  hash), and state (open) before reviewing, and re-check all of them
+  immediately before posting — if the head or base changed (a force-push, a
+  new commit, or a retargeted base branch), re-fetch the diff and recompute
+  findings instead of posting against a stale one; if the PR was merged or
+  closed while the review was being built, stop and report that instead of
+  posting to a PR that's no longer open.
+- Check for an existing pending review on the PR (`pull_request_review_write`
+  method `get`/list, or the equivalent read). Only discard it if it's
+  confirmed to belong to the connected account (from `get_me`) — a pending
+  review owned by someone else is their in-progress work, not a stale
+  leftover, and must be left untouched. If ownership can't be established,
+  stop instead of guessing (see Stop Conditions).
 - Check for this skill's prior review(s) on the PR. If one exists, review
   only the code delta since that review's commit and note which earlier
   findings still stand, were fixed, or no longer apply — do not re-post
@@ -228,8 +231,9 @@ to the user only, never to anything posted on the PR.
 - Stop if the PR was merged or closed after the review was fetched but before
   it was posted — report the findings in chat and do not post to a PR that's
   no longer open.
-- Stop if a leftover pending review cannot be discarded cleanly — report it so
-  the user can resolve it on GitHub instead of guessing.
+- Stop if a leftover pending review cannot be discarded cleanly, or its
+  ownership can't be confirmed as the connected account's — report it so the
+  user can resolve it on GitHub instead of guessing.
 - If `submit_pending` fails after inline comments were already added, do not
   exit silently — report that a pending review was left partially built on
   the PR, with the findings in chat, so the user knows it needs manual
