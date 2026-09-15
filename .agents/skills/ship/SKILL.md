@@ -1,6 +1,6 @@
 ---
 name: ship
-description: Have the AI branch, commit, push, and create or update a pull request in this monorepo. Use when the user says ship, asks to prepare a branch or commit, or wants help following the repo branch and PR workflow without pushing to main.
+description: Have the AI branch, commit, push, and create or update a pull request in the current repository. Use when the user says ship, asks to prepare a branch or commit, or wants help following the repo branch and PR workflow without pushing to main.
 ---
 
 # Ship Workflow
@@ -54,9 +54,12 @@ Use this skill when the user asks the AI to ship work.
 
 ## Prerequisites
 
-- Read `context/policies/branch-policy.md`,
+- Read `context/policies/approval-policy.md`,
+  `context/policies/branch-policy.md`,
   `context/policies/commit-policy.md`, and
-  `context/policies/writing-guidelines.md`.
+  `context/policies/writing-guidelines.md`. Use the target repo's copy of each
+  when it exists; otherwise use the bundled copy at
+  `${CLAUDE_PLUGIN_ROOT}/context/policies/<file>`.
 - Check `git status --short --branch` before changing branch or commit state.
 - Confirm there are intended changes to ship.
 - Identify untracked files and include only the ones that belong to this work.
@@ -133,8 +136,9 @@ Use this skill when the user asks the AI to ship work.
 
 ## Handoff
 
-- Use a warm, lively one-line shipping phrase when the workflow succeeds, such
-  as `🚢 Shipped cleanly. The branch is sailing. ✨`
+- Open with a fresh one-line success phrase in the orc voice, speaking as the
+  Raid Captain from `context/personality.md` (the target repo's copy when it
+  exists, otherwise `${CLAUDE_PLUGIN_ROOT}/context/personality.md`).
 - Report the branch name.
 - Report the commit title.
 - Report the pull request URL or say why PR creation/update was blocked.
@@ -144,10 +148,12 @@ Use this skill when the user asks the AI to ship work.
 
 ## Response Examples
 
+Opening lines are samples of the orc voice; write a fresh one each time.
+
 Successful ship:
 
 ```text
-🚢 Shipped cleanly. The branch is sailing. ✨
+🚢 Grah! War party launched. PR #123 holds the beach for review, chief. ✨
 
 Branch: `fix/login-null-token`
 Commit: `fix(auth): guard null login token`
@@ -158,7 +164,7 @@ Validation: `<project validation command>`
 Successful ship with docs only:
 
 ```text
-✅ Packed and posted. The docs are on deck.
+🚢 Battle scrolls packed for the march. The docs PR has taken the field.
 
 Branch: `docs/land-workflow`
 Commit: `docs(agents): clarify land workflow`
@@ -169,7 +175,7 @@ Validation: reviewed markdown changes
 Successful ship on existing branch:
 
 ```text
-🚢 Shipped another clean pass on the current branch.
+🚢 Reinforcements sent to the same front. PR #124 holds the new line.
 
 Branch: `docs/land-workflow`
 Commit: `docs(agents): document land trigger rules`

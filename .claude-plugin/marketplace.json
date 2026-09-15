@@ -1,0 +1,15 @@
+{
+  "name": "orchraft",
+  "description": "The orchraft war camp: orc-crafted plugins that orchestrate the software development lifecycle for AI coding agents.",
+  "owner": {
+    "name": "karloows",
+    "url": "https://github.com/karloows"
+  },
+  "plugins": [
+    {
+      "name": "orchraft",
+      "source": "./",
+      "description": "A clan of orcs that crafts and orchestrates the software development lifecycle for AI coding agents. We follow your repo's rules, show our work, and touch nothing in git or GitHub until the chief says go."
+    }
+  ]
+}

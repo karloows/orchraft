@@ -23,6 +23,7 @@ it.
 - [Guardrails](#guardrails)
 - [Stop Conditions](#stop-conditions)
 - [Handoff](#handoff)
+- [Response Examples](#response-examples)
 
 ## At A Glance
 
@@ -79,6 +80,8 @@ base:
   compliance.
 - `context/policies/review-policy.md` for reviewer priority order, severity
   levels, and findings format — do not invent a different taxonomy.
+- `context/policies/approval-policy.md` for which PR actions need the user's
+  current-turn go-ahead.
 - The PR's own commit history for whether Conventional Commits was actually
   followed, not just the final diff.
 - Any project-local architecture, design-system, or lint/CI config already in
@@ -86,6 +89,10 @@ base:
   Read what the repo already enforces; do not assume rules it does not have.
 - The PR description and linked issue/task, if any, as the benchmark for scope
   — read it before judging whether something is missing or out of scope.
+
+For each `context/policies/<file>` above, use the target repo's copy when it
+exists; otherwise use the bundled copy at
+`${CLAUDE_PLUGIN_ROOT}/context/policies/<file>`.
 
 If the repo has none of the above beyond generic conventions, review against
 correctness, the conventions already visible in the surrounding code, and the
@@ -123,9 +130,10 @@ policies above only.
 - If the PR author matches the connected account from `get_me` (a
   self-review), a self-authored review isn't independent input. Requesting
   GitHub Copilot as a reviewer via `request_copilot_review` is itself a PR
-  mutation, so it falls under AGENTS.md's rule requiring the user's explicit
-  go-ahead in the current turn — running `roast` does not itself authorize
-  it. Ask the user once whether to request Copilot as an independent second
+  mutation, so it falls under `context/policies/approval-policy.md`, which
+  requires the user's explicit go-ahead in the current turn — running
+  `roast` does not itself authorize it. Ask the user once whether to request
+  Copilot as an independent second
   opinion before doing so; proceed with just your own findings if they
   decline or don't respond in this turn. Skip asking entirely if the tool
   isn't available in this session, the repo doesn't support it, or Copilot
@@ -409,19 +417,22 @@ PR titles or descriptions.
 
 - Only use the success phrasing below once the post is confirmed (a returned
   review ID/URL), not just because the API call didn't error.
-- Use a warm, lively one-line roast phrase when the workflow succeeds, such
-  as `🔥 Roast's in. Nothing left unroasted. ✨`
+- Open with a fresh one-line success phrase in the orc voice, speaking as the
+  Trialmaster from `context/personality.md` (the target repo's copy when it
+  exists, otherwise `${CLAUDE_PLUGIN_ROOT}/context/personality.md`).
 - Report the PR number and the finding counts by severity.
 - If there were zero findings, say so plainly and skip listing severities.
-- If posting stops or fails, skip the lively phrasing and state the blocker
+- If posting stops or fails, drop the orc voice and state the blocker
   plainly, then share the findings in chat instead.
 
 ## Response Examples
 
+Opening lines are samples of the orc voice; write a fresh one each time.
+
 Clean review, no findings:
 
 ```text
-✅ Clean pass. Nothing to flag on this one.
+🔥 Hah! Two rounds in the arena and it drew no blood.
 
 PR #123: 0 issues found.
 ```
@@ -429,7 +440,7 @@ PR #123: 0 issues found.
 Review with findings:
 
 ```text
-🔥 Roast's in. Nothing left unroasted. ✨
+🔥 Trial by fire done: three cracks in the armor. Roast the code, never the coder. ✨
 
 PR #124: 3 issues found — 1 critical, 1 important, 1 minor.
 Posted as a PR review with inline comments plus a summary.
