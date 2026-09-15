@@ -203,9 +203,12 @@ restate the template here, so the two can't drift apart.
 
 Review-body summary (the `submit_pending` body, covers everything that isn't
 line-specific plus a rollup). Keep the summary line visible; collapse each
-section behind `<details>` with its PASS/ISSUES status in the `<summary>` so
-it's readable collapsed, and wrap section content in `<sub>` for a smaller
-footprint — long reviews stay scannable instead of pushing the PR page down:
+section behind `<details>`, with its PASS/ISSUES status in the `<summary>`,
+and wrap both the `<summary>` text and the section body in `<sub>` so the
+whole block — header included, not just the expanded content — stays small
+and scannable instead of pushing the PR page down. Each `<details>` must
+open and close in a matched pair; double-check the count before posting, a
+stray tag breaks the nesting of everything after it:
 
 ```
 ## Review — <PR title>
@@ -215,7 +218,7 @@ important, [minor count] minor. [M] judgment call(s) not counted as issues,
 if any.
 
 <details>
-<summary>Scope — [PASS / ISSUES]</summary>
+<summary><sub>Scope — [PASS / ISSUES]</sub></summary>
 
 <sub>
 
@@ -225,7 +228,7 @@ planned vs. shipped
 </details>
 
 <details>
-<summary>Policy compliance — [PASS / ISSUES]</summary>
+<summary><sub>Policy compliance — [PASS / ISSUES]</sub></summary>
 
 <sub>
 
@@ -235,7 +238,7 @@ branch, commit, PR text vs. context/policies/
 </details>
 
 <details>
-<summary>Code review — [PASS / ISSUES]</summary>
+<summary><sub>Code review — [PASS / ISSUES]</sub></summary>
 
 <sub>
 
@@ -245,7 +248,7 @@ correctness, edge cases, consistency (see inline comments)
 </details>
 
 <details>
-<summary>Unanchored findings ([count])</summary>
+<summary><sub>Unanchored findings ([count])</sub></summary>
 
 <sub>
 
