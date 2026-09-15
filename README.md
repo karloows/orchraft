@@ -24,12 +24,12 @@ The name joins *orchestration* and *craft*. The orc does the crafting.
 Each skill is one tool in the clan's kit. These are forged today; more are on
 the anvil as we cover the rest of the lifecycle.
 
-| Skill | What it does |
-| --- | --- |
-| `ship` | Creates a policy-compliant branch, commit, push, and pull request from the actual diff. |
-| `roast` | Reviews the pull request against your repo's policies and posts findings as inline comments with fixes and copy-paste AI prompts. |
-| `land` | Checks mergeability and CI, merges with the repo's default method, syncs `main`, and cleans up the branch. |
-| `yap` | Explains a PR, file, error, policy, or dependency, citing real sources instead of guessing. Read-only. |
+| Skill | Clan role | What it does |
+| --- | --- | --- |
+| `ship` | 🚢 Raid Captain | Creates a policy-compliant branch, commit, push, and pull request from the actual diff. |
+| `roast` | 🔥 Trialmaster | Reviews the pull request against your repo's policies and posts findings as inline comments with fixes and copy-paste AI prompts. |
+| `land` | 🏰 Haulmaster | Checks mergeability and CI, merges with the repo's default method, syncs `main`, and cleans up the branch. |
+| `yap` | 🗣️ Scout | Explains a PR, file, error, policy, or dependency, citing real sources instead of guessing. Read-only. |
 
 Today's march is `ship` → `roast` → fix → `ship` → `land`, with `yap`
 available at any point.
