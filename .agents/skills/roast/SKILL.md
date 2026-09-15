@@ -1,12 +1,13 @@
 ---
-name: review
-description: Have the AI review the current pull request's diff against the target repository's own policies and commit history — not an external ruleset — then post the findings as a PR review with inline comments and a summary. Use when the user says review, asks for a PR review, or wants CodeRabbit-style automated review after shipping.
+name: roast
+description: Have the AI review the current pull request's diff against the target repository's own policies and commit history — not an external ruleset — then post the findings as a PR review with inline comments and a summary. Use when the user says roast, review, asks for a PR review, or wants CodeRabbit-style automated review after shipping.
 ---
 
-# Review Workflow
+# Roast Workflow
 
-Use this skill when the user asks the AI to review a pull request, or right
-after `ship` opens/updates one and the user asks for a review pass on it.
+Use this skill when the user asks the AI to roast (review) a pull request, or
+right after `ship` opens/updates one and the user asks for a review pass on
+it.
 
 ## Contents
 
@@ -61,12 +62,12 @@ What the end user needs in place before this skill can work at all:
 
 ## Trigger Rules
 
-- Run when the user explicitly asks to review, review the PR, or check the
-  branch the way an automated reviewer would.
+- Run when the user explicitly asks to roast, review, review the PR, or check
+  the branch the way an automated reviewer would.
 - Run immediately after `ship` when the user asks `ship` to include a review,
-  or says so as a standing preference (e.g. "always review after you ship").
+  or says so as a standing preference (e.g. "always roast after you ship").
 - Do not run automatically on every `ship` unless the user has said so; `ship`
-  and `review` are separate skills with separate trigger rules.
+  and `roast` are separate skills with separate trigger rules.
 
 ## Sources Of Truth
 
@@ -92,7 +93,9 @@ policies above only.
 
 - Call `get_me` first to confirm the connected GitHub identity and its access
   before doing anything else — this predicts permission failures (fork PRs,
-  read-only tokens) instead of discovering them after building the review.
+  read-only tokens) instead of discovering them after building the review. If
+  the MCP path is unavailable, use `gh api user` as the equivalent identity
+  check before continuing.
 - Confirm the current branch is non-`main` and has an open, non-draft pull
   request; use the GitHub MCP connector to fetch it, falling back to `gh`
   only if the MCP path is unavailable or blocked. If no PR exists yet, that
@@ -113,7 +116,18 @@ policies above only.
   whether it's a stale leftover from an interrupted run or a still-active
   review from the same account running concurrently in another session. If
   one exists, stop and surface it to the user for confirmation before
-  proceeding (see Stop Conditions).
+  proceeding, without requesting Copilot or making any other PR mutation
+  (see Stop Conditions).
+- If the PR author matches the connected account from `get_me` (a
+  self-review), a self-authored review isn't independent input. Requesting
+  GitHub Copilot as a reviewer via `request_copilot_review` is itself a PR
+  mutation, so it falls under AGENTS.md's rule requiring the user's explicit
+  go-ahead in the current turn — running `roast` does not itself authorize
+  it. Ask the user once whether to request Copilot as an independent second
+  opinion before doing so; proceed with just your own findings if they
+  decline or don't respond in this turn. Skip asking entirely if the tool
+  isn't available in this session, the repo doesn't support it, or Copilot
+  has already been requested/reviewed on this PR.
 - Check for this skill's prior review(s) on the PR. If one exists, review
   only the code delta since that review's commit and note which earlier
   findings still stand, were fixed, or no longer apply — do not re-post
@@ -150,28 +164,38 @@ policies above only.
    - `add_comment_to_pending_review` once per remaining file/line, capped at
      20 inline comments. Beyond the cap, list the rest as bullets in the
      summary body instead of continuing to post individual comments — a wall
-     of inline comments is noise, not signal.
+     of inline comments is noise, not signal. If any `add_comment_to_pending_review`
+     call fails, stop adding further comments and do not call
+     `submit_pending` — report the failure and that a pending review was
+     left partially built on the PR (see Stop Conditions).
    - `pull_request_review_write` with method `submit_pending` (event
      `COMMENT`, never `REQUEST_CHANGES`/`APPROVE` unless the user asks) using
      the summary report as the review body.
    A finding can only anchor to a line inside the diff's hunks — GitHub
    rejects comments on unchanged lines. Route any finding without a valid
    diff-line anchor (e.g. "this untouched file should have been updated too")
-   into the summary body instead of dropping it or erroring.
-   Fall back to `gh pr comment` with the full report as one issue comment only
-   if the MCP review-write path is itself unavailable.
+   into the summary body's "Unanchored findings" section instead of dropping
+   it or erroring.
+   Fall back to `gh api repos/<owner>/<repo>/issues/<number>/comments -f
+   body=<report>` to post the full report as one issue comment only if the
+   MCP review-write path is itself unavailable — it returns a parseable
+   `id`/`html_url`, unlike relying on console output from `gh pr comment`.
 8. Confirm `submit_pending` (or the `gh` fallback) actually returned a review
    ID/URL before declaring success — a call that doesn't error is not proof
-   it posted; verify the response, don't assume it.
+   it posted. For the `gh` fallback, validate the response's `id`/`html_url`,
+   or read back the PR's issue comments and match the one just created;
+   don't assume success from the absence of an error.
 9. Report the same findings to the user in the chat response.
 
 ## Severity Guide
 
-- **Critical** — breaks behavior, violates a required policy (e.g. commit
-  format, direct push to `main`), or the PR is missing something the linked
-  task explicitly asked for.
-- **Important** — will compound if left in (inconsistent pattern, missing
-  edge case a real user hits, drift from an established convention).
+- **Critical** — merge-blocking: security exposure, data loss, the change
+  can't run/build at all, a required policy violation (e.g. commit format,
+  direct push to `main`), or the PR is missing something the linked task
+  explicitly asked for.
+- **Important** — a recoverable correctness defect that doesn't block merge
+  (an ordinary bug, a missing edge case a real user hits, an inconsistent
+  pattern, drift from an established convention).
 - **Minor** — cosmetic or non-blocking (naming nit, optional polish).
 
 ## Comment Format
@@ -197,6 +221,10 @@ line-specific plus a rollup):
 
 ### Code review
 [PASS / ISSUES] — correctness, edge cases, consistency (see inline comments)
+
+### Unanchored findings
+[SEVERITY] <finding> — <required remediation>, one per finding with no valid
+diff-line anchor. Omit this section entirely when there are none.
 
 ### Summary
 [N] issue(s): [critical count] critical, [important count] important,
@@ -238,17 +266,18 @@ to the user only, never to anything posted on the PR.
 - Stop if a pending review already exists on the PR — report it and ask the
   user to confirm discarding it (or resolve it on GitHub themselves) before
   proceeding; never discard it automatically.
-- If `submit_pending` fails after inline comments were already added, do not
-  exit silently — report that a pending review was left partially built on
-  the PR, with the findings in chat, so the user knows it needs manual
+- If `add_comment_to_pending_review` or `submit_pending` fails after inline
+  comments were already added, do not exit silently — report that a pending
+  review was left partially built on the PR, with the findings in chat, so
+  the user knows it needs manual
   submission or discarding on GitHub.
 
 ## Handoff
 
 - Only use the success phrasing below once the post is confirmed (a returned
   review ID/URL), not just because the API call didn't error.
-- Use a warm, lively one-line review phrase when the workflow succeeds, such
-  as `🔍 Review's in. The rabbit hole has been fully explored. ✨`
+- Use a warm, lively one-line roast phrase when the workflow succeeds, such
+  as `🔥 Roast's in. Nothing left unroasted. ✨`
 - Report the PR number and the finding counts by severity.
 - If there were zero findings, say so plainly and skip listing severities.
 - If posting stops or fails, skip the lively phrasing and state the blocker
@@ -267,7 +296,7 @@ PR #123: 0 issues found.
 Review with findings:
 
 ```text
-🔍 Review's in. The rabbit hole has been fully explored. ✨
+🔥 Roast's in. Nothing left unroasted. ✨
 
 PR #124: 3 issues found — 1 critical, 1 important, 1 minor.
 Posted as a PR review with inline comments plus a summary.
@@ -276,7 +305,7 @@ Posted as a PR review with inline comments plus a summary.
 Blocked review:
 
 ```text
-⚠️ Review is blocked: no open pull request on this branch yet.
+⚠️ Roast is blocked: no open pull request on this branch yet.
 
-Run `ship` first, then review. No comment or review was posted.
+Run `ship` first, then roast. No comment or review was posted.
 ```
