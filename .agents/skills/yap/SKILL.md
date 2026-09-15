@@ -19,6 +19,7 @@ generic description.
 - [Guardrails](#guardrails)
 - [Stop Conditions](#stop-conditions)
 - [Handoff](#handoff)
+- [Response Examples](#response-examples)
 
 ## At A Glance
 
@@ -54,9 +55,9 @@ generic description.
 
 Pick the grounding sources based on what's being explained:
 
-- **PR / diff** — the PR's diff, commit history, and linked
-  issue/task (same fetch approach as `roast`'s Prerequisites). Explain what
-  changed and why, citing file:line from the diff.
+- **PR / diff** — the PR's diff, commit history, description, and linked
+  issue/task, fetched through the GitHub MCP connector (falling back to
+  `gh`). Explain what changed and why, citing file:line from the diff.
 - **File / module** — the file's current content plus `git log -p` /
   `git blame` on it for why it's shaped the way it is, and any repo docs
   (`CLAUDE.md`, `AGENTS.md`, `README.md`) that describe its role.
@@ -67,8 +68,9 @@ Pick the grounding sources based on what's being explained:
   (`context/policies/*`, CI config, lint config) including any rationale
   section it already has.
 - **Dependency / version bump** — the package's actual changelog/release
-  notes (fetch via `WebFetch`/`WebSearch` if not vendored locally) rather than
-  inferring risk from the version number alone.
+  notes (if not vendored locally, fetch them with a web fetch or search tool
+  when one is available) rather than inferring risk from the version number
+  alone.
 
 If the target doesn't fit any of these, ground it in whatever the closest
 real source is (repo code, git history, or fetched docs) and say which
