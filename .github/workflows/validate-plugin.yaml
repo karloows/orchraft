@@ -1,0 +1,25 @@
+name: Validate Plugin
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+      - name: Install Claude Code
+        run: npm install -g @anthropic-ai/claude-code@2.1.270
+      - name: Validate marketplace
+        run: claude plugin validate . --strict
+      - name: Validate skills
+        run: claude plugin validate .agents/skills --strict
+      # Not --strict: the root CLAUDE.md warning is expected, since that file
+      # is a pointer for contributors, not plugin context.
+      - name: Validate plugin manifest
+        run: claude plugin validate .claude-plugin/plugin.json
