@@ -1,2 +1,10 @@
+# macOS Finder metadata
 .DS_Store
+# npm/node dependency cache
 node_modules/
+# local env var overrides (direnv)
+.envrc
+# local MCP server config, may contain secrets/tokens
+.mcp.json
+# per-machine Claude Code permission overrides
+.claude/settings.local.json

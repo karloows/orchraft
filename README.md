@@ -26,6 +26,12 @@ Copy the parts you need into a target project:
 Project-local instructions, PR templates, hooks, and CI checks should override
 these defaults.
 
+## Releases
+
+Versioning and `CHANGELOG.md` are managed by
+[release-please](https://github.com/googleapis/release-please). Merge a
+release PR to publish a new version; do not edit `CHANGELOG.md` by hand.
+
 ## License
 
 Apache-2.0
