@@ -58,10 +58,13 @@ hooks, and CI checks should win.
 - `.agents/skills/roast/SKILL.md`: AI-driven pull request review workflow
   that checks a PR against this repo's own policies and posts findings as a
   PR review with inline comments and a summary, CodeRabbit-style.
-- `.claude/skills/ship/SKILL.md`, `.claude/skills/land/SKILL.md`, and
-  `.claude/skills/roast/SKILL.md`: Claude skill symlinks so Claude sessions
-  can use `/ship`, `/land`, and `/roast` while reading the same canonical
-  skill files.
+- `.agents/skills/yap/SKILL.md`: AI-driven explainer workflow that explains a
+  PR/diff, file, error/log, policy, or dependency grounded in real sources
+  (code, git history, docs) with citations, read-only.
+- `.claude/skills/ship/SKILL.md`, `.claude/skills/land/SKILL.md`,
+  `.claude/skills/roast/SKILL.md`, and `.claude/skills/yap/SKILL.md`: Claude
+  skill symlinks so Claude sessions can use `/ship`, `/land`, `/roast`, and
+  `/yap` while reading the same canonical skill files.
 
 ## Policies
 
