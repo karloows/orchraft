@@ -153,7 +153,7 @@ Successful ship:
 Branch: `fix/login-null-token`
 Commit: `fix(auth): guard null login token`
 PR: https://github.com/example/repo/pull/123
-Validation: `npm test -- auth`
+Validation: `<project validation command>`
 ```
 
 Successful ship with docs only:
@@ -181,7 +181,7 @@ Validation: reviewed markdown changes
 Blocked ship:
 
 ```text
-⚠️ Shipping is blocked: validation failed in `npm test -- auth`.
+⚠️ Shipping is blocked: validation failed in `<project validation command>`.
 
 No commit or push was performed.
 ```

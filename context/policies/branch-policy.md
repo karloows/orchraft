@@ -177,5 +177,6 @@ Following this guide helps the AI agent generate **predictable, structured, and 
 
 ## 8. Local Enforcement
 
-If local hooks reject the branch name, rename the branch to match this policy
-before committing.
+If local hooks reject the branch name, follow the target project's required
+branch format. If the hook requirements and this policy cannot be reconciled,
+report the conflict to the user before committing.
