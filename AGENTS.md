@@ -4,6 +4,30 @@ orchraft contains reusable agent workflow guidance that can be copied
 into other projects. Keep this file as the map, not the rulebook: detailed
 branch, commit, PR, ship, and land behavior lives in the files linked below.
 
+## Non-Negotiable: Ask Before Every Mutating Action
+
+No skill, policy, or agent session may do any of the following without the
+user's explicit go-ahead **in the current turn**:
+
+- Commit.
+- Push.
+- Create or update a branch.
+- Create, update, or merge a pull request.
+- Post a PR comment or review.
+
+This applies every single time one of these is about to happen — including a
+follow-up fix on a PR that's already open. Approval does not carry forward:
+finishing one `ship` or `review` pass does not authorize the next one, even
+minutes later in the same conversation about the same branch.
+
+If one of these is coming up and the current turn didn't clearly ask for it,
+stop and ask instead of inferring permission from context, urgency, prior
+turns, or "this is obviously what they want." This rule overrides any skill
+step elsewhere that could otherwise be read as running to completion
+unattended. It is intentionally kept here only, not copied into each skill
+file, per this repo's general no-duplication rule (see "How To Use This
+Repo").
+
 ## How To Use This Repo
 
 - Use the skills in `.agents/skills/` for end-to-end agent workflows.
