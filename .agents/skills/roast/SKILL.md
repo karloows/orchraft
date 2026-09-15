@@ -119,13 +119,15 @@ policies above only.
   proceeding, without requesting Copilot or making any other PR mutation
   (see Stop Conditions).
 - If the PR author matches the connected account from `get_me` (a
-  self-review), also request GitHub Copilot as a reviewer via
-  `request_copilot_review` before posting your own findings — a self-authored
-  review isn't independent input, and Copilot gives a genuinely separate
-  second opinion. Skip this silently if the tool isn't available in this
-  session, the repo doesn't support it, or Copilot has already been
-  requested/reviewed on this PR; a failure here never blocks the rest of the
-  workflow.
+  self-review), a self-authored review isn't independent input. Requesting
+  GitHub Copilot as a reviewer via `request_copilot_review` is itself a PR
+  mutation, so it falls under AGENTS.md's rule requiring the user's explicit
+  go-ahead in the current turn — running `roast` does not itself authorize
+  it. Ask the user once whether to request Copilot as an independent second
+  opinion before doing so; proceed with just your own findings if they
+  decline or don't respond in this turn. Skip asking entirely if the tool
+  isn't available in this session, the repo doesn't support it, or Copilot
+  has already been requested/reviewed on this PR.
 - Check for this skill's prior review(s) on the PR. If one exists, review
   only the code delta since that review's commit and note which earlier
   findings still stand, were fixed, or no longer apply — do not re-post
