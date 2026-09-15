@@ -174,8 +174,7 @@ Description:
 
 ```text
 A clan of orcs that crafts and orchestrates the software development
-lifecycle for AI coding agents. We follow your repo's rules, show our work,
-and touch nothing in git or GitHub until the chief says go.
+lifecycle for AI coding agents.
 ```
 
 Success lines for each skill live under [Clan Roles](#clan-roles).
