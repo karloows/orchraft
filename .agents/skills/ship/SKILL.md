@@ -10,6 +10,7 @@ Use this skill when the user asks the AI to ship work.
 ## Contents
 
 - [At A Glance](#at-a-glance)
+- [Trigger Rules](#trigger-rules)
 - [What This Is Not](#what-this-is-not)
 - [Prerequisites](#prerequisites)
 - [Default Path](#default-path)
@@ -30,11 +31,24 @@ Use this skill when the user asks the AI to ship work.
 5. Create or update the pull request and report the branch, commit, PR, and
    validation result.
 
+## Trigger Rules
+
+- Only start this workflow when the user's current message explicitly asks to
+  ship, create a branch/commit/PR, or otherwise gives a clear go signal for the
+  full ship workflow.
+- Do not infer shipping approval from the fact that changes were just made,
+  validation passed, a prior turn discussed shipping, or the work appears ready.
+- If the user asks for edits, review, validation, or policy changes without a
+  current-turn ship request, make the changes only and wait for an explicit
+  ship/go confirmation before committing, pushing, or opening/updating a PR.
+
 ## What This Is Not
 
 - Not a land workflow for merging pull requests or deleting topic branches.
 - Not approval to commit unrelated local changes.
 - Not permission to push directly to `main` unless the user explicitly asks.
+- Not permission to commit, push, or open/update a pull request after ordinary
+  edits unless the user explicitly asks to ship in the current turn.
 - Not a replacement for validation; run the smallest relevant checks before
   committing.
 
@@ -107,6 +121,8 @@ Use this skill when the user asks the AI to ship work.
 
 ## Stop Conditions
 
+- Stop before commit, push, or PR mutation if the user has not explicitly asked
+  to ship in the current turn.
 - Stop if there are no changes to ship.
 - Stop if the only available branch would be `main` and the user did not
   explicitly allow committing to `main`.
