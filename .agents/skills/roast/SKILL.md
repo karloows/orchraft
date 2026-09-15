@@ -200,9 +200,62 @@ See `context/policies/review-policy.md` for the severity levels
 ## Comment Format
 
 Inline comment (one per line-specific finding, via
-`add_comment_to_pending_review`): use the shape defined in
-`context/policies/review-policy.md`'s Findings Format section — do not
-restate the template here, so the two can't drift apart.
+`add_comment_to_pending_review`): carry the fields from
+`context/policies/review-policy.md`'s Findings Format section (severity,
+finding, why it matters / what to do) and render them in the same visual
+language as the review body, top to bottom:
+
+1. **Severity alert**: a GitHub alert whose color matches the severity, with
+   the same emoji as the scoreboard. Use `[!CAUTION]` 🚨 for Critical,
+   `[!WARNING]` ⚠️ for Important, `[!NOTE]` 💡 for Minor, and `[!TIP]` 🤔
+   for a judgment call. Its first line is the bold severity plus a
+   two-to-four-word topic.
+2. **What's wrong**: one or two sentences, with code identifiers, paths, and
+   headings in backticks.
+3. **🛠️ Fix**: the concrete remediation, starting with a verb.
+4. **Suggestion block** (optional): when the fix is a small change to the
+   anchored lines, add a ` ```suggestion ` block so the author can apply it
+   in one click. Anchor the comment's `startLine`..`line` (side `RIGHT`) to
+   exactly the lines the block replaces; omit it when the fix spans other
+   lines or files.
+5. **🤖 Prompt for AI agents**: a collapsed `<details>` holding a
+   ` ```text ` block the author can paste into any coding agent. Make it
+   self-contained, since the agent won't see the PR: file path, line range,
+   and the quoted anchored text or nearest heading (lines shift as other
+   fixes land), what's wrong, the fix, and how to confirm it worked. Keep
+   it to plain instructions with no emoji or alert markup.
+
+````markdown
+> [!NOTE]
+> **💡 Minor** · Table of contents out of sync
+
+`Contents` stops at `Handoff`, but the file has a `## Response Examples`
+section (line 114). `land`'s Contents already lists it.
+
+**🛠️ Fix:** Add the missing entry so the table of contents matches the file.
+
+```suggestion
+- [Handoff](#handoff)
+- [Response Examples](#response-examples)
+```
+
+<details>
+<summary>🤖 Prompt for AI agents</summary>
+
+```text
+In .agents/skills/yap/SKILL.md, the Contents list (lines 12-21) ends at
+"- [Handoff](#handoff)" but the file also has a "## Response Examples"
+section. Add "- [Response Examples](#response-examples)" after the Handoff
+entry. Confirm every "## " heading in the file has a matching Contents entry.
+```
+
+</details>
+````
+
+When several findings share one line (see Default Path step 6), post one
+comment with an alert per finding, most severe first, and at most one
+suggestion block. Put each finding's prompt directly under its own alert
+and Fix line; place the single suggestion block after the last finding.
 
 Review-body summary (the `submit_pending` body, covers everything that isn't
 line-specific plus a rollup). Layout, top to bottom:
@@ -279,6 +332,16 @@ everything after it.
 ```diff
 - ❌ [SEVERITY] <finding> — <required remediation>
 ```
+
+<details>
+<summary>🤖 Prompts for AI agents</summary>
+
+```text
+1. <self-contained prompt for the first unanchored finding>
+2. <self-contained prompt for the next one>
+```
+
+</details>
 
 </details>
 
