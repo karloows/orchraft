@@ -12,7 +12,8 @@
     "developer-tools",
     "agentic-workflow",
     "agent-rules",
-    "agent-policies"
+    "agent-policies",
+    "codex"
   ],
   "homepage": "https://github.com/karloows/orchraft",
   "repository": {
