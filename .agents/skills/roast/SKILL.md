@@ -93,7 +93,9 @@ policies above only.
 
 - Call `get_me` first to confirm the connected GitHub identity and its access
   before doing anything else — this predicts permission failures (fork PRs,
-  read-only tokens) instead of discovering them after building the review.
+  read-only tokens) instead of discovering them after building the review. If
+  the MCP path is unavailable, use `gh api user` as the equivalent identity
+  check before continuing.
 - Confirm the current branch is non-`main` and has an open, non-draft pull
   request; use the GitHub MCP connector to fetch it, falling back to `gh`
   only if the MCP path is unavailable or blocked. If no PR exists yet, that
@@ -108,20 +110,22 @@ policies above only.
   findings instead of posting against a stale one; if the PR was merged or
   closed while the review was being built, stop and report that instead of
   posting to a PR that's no longer open.
-- If the PR author matches the connected account from `get_me` (a self-review),
-  also request GitHub Copilot as a reviewer via `request_copilot_review`
-  before posting your own findings — a self-authored review isn't independent
-  input, and Copilot gives a genuinely separate second opinion. Skip this
-  silently if the tool isn't available in this session, the repo doesn't
-  support it, or Copilot has already been requested/reviewed on this PR; a
-  failure here never blocks the rest of the workflow.
 - Check for an existing pending review on the PR (`pull_request_review_write`
   method `get`/list, or the equivalent read). Never auto-discard it, even if
   it belongs to the connected account — account ownership doesn't tell you
   whether it's a stale leftover from an interrupted run or a still-active
   review from the same account running concurrently in another session. If
   one exists, stop and surface it to the user for confirmation before
-  proceeding (see Stop Conditions).
+  proceeding, without requesting Copilot or making any other PR mutation
+  (see Stop Conditions).
+- If the PR author matches the connected account from `get_me` (a
+  self-review), also request GitHub Copilot as a reviewer via
+  `request_copilot_review` before posting your own findings — a self-authored
+  review isn't independent input, and Copilot gives a genuinely separate
+  second opinion. Skip this silently if the tool isn't available in this
+  session, the repo doesn't support it, or Copilot has already been
+  requested/reviewed on this PR; a failure here never blocks the rest of the
+  workflow.
 - Check for this skill's prior review(s) on the PR. If one exists, review
   only the code delta since that review's commit and note which earlier
   findings still stand, were fixed, or no longer apply — do not re-post
@@ -158,28 +162,38 @@ policies above only.
    - `add_comment_to_pending_review` once per remaining file/line, capped at
      20 inline comments. Beyond the cap, list the rest as bullets in the
      summary body instead of continuing to post individual comments — a wall
-     of inline comments is noise, not signal.
+     of inline comments is noise, not signal. If any `add_comment_to_pending_review`
+     call fails, stop adding further comments and do not call
+     `submit_pending` — report the failure and that a pending review was
+     left partially built on the PR (see Stop Conditions).
    - `pull_request_review_write` with method `submit_pending` (event
      `COMMENT`, never `REQUEST_CHANGES`/`APPROVE` unless the user asks) using
      the summary report as the review body.
    A finding can only anchor to a line inside the diff's hunks — GitHub
    rejects comments on unchanged lines. Route any finding without a valid
    diff-line anchor (e.g. "this untouched file should have been updated too")
-   into the summary body instead of dropping it or erroring.
-   Fall back to `gh pr comment` with the full report as one issue comment only
-   if the MCP review-write path is itself unavailable.
+   into the summary body's "Unanchored findings" section instead of dropping
+   it or erroring.
+   Fall back to `gh api repos/<owner>/<repo>/issues/<number>/comments -f
+   body=<report>` to post the full report as one issue comment only if the
+   MCP review-write path is itself unavailable — it returns a parseable
+   `id`/`html_url`, unlike relying on console output from `gh pr comment`.
 8. Confirm `submit_pending` (or the `gh` fallback) actually returned a review
    ID/URL before declaring success — a call that doesn't error is not proof
-   it posted; verify the response, don't assume it.
+   it posted. For the `gh` fallback, validate the response's `id`/`html_url`,
+   or read back the PR's issue comments and match the one just created;
+   don't assume success from the absence of an error.
 9. Report the same findings to the user in the chat response.
 
 ## Severity Guide
 
-- **Critical** — breaks behavior, violates a required policy (e.g. commit
-  format, direct push to `main`), or the PR is missing something the linked
-  task explicitly asked for.
-- **Important** — will compound if left in (inconsistent pattern, missing
-  edge case a real user hits, drift from an established convention).
+- **Critical** — merge-blocking: security exposure, data loss, the change
+  can't run/build at all, a required policy violation (e.g. commit format,
+  direct push to `main`), or the PR is missing something the linked task
+  explicitly asked for.
+- **Important** — a recoverable correctness defect that doesn't block merge
+  (an ordinary bug, a missing edge case a real user hits, an inconsistent
+  pattern, drift from an established convention).
 - **Minor** — cosmetic or non-blocking (naming nit, optional polish).
 
 ## Comment Format
@@ -205,6 +219,10 @@ line-specific plus a rollup):
 
 ### Code review
 [PASS / ISSUES] — correctness, edge cases, consistency (see inline comments)
+
+### Unanchored findings
+[SEVERITY] <finding> — <required remediation>, one per finding with no valid
+diff-line anchor. Omit this section entirely when there are none.
 
 ### Summary
 [N] issue(s): [critical count] critical, [important count] important,
@@ -246,9 +264,10 @@ to the user only, never to anything posted on the PR.
 - Stop if a pending review already exists on the PR — report it and ask the
   user to confirm discarding it (or resolve it on GitHub themselves) before
   proceeding; never discard it automatically.
-- If `submit_pending` fails after inline comments were already added, do not
-  exit silently — report that a pending review was left partially built on
-  the PR, with the findings in chat, so the user knows it needs manual
+- If `add_comment_to_pending_review` or `submit_pending` fails after inline
+  comments were already added, do not exit silently — report that a pending
+  review was left partially built on the PR, with the findings in chat, so
+  the user knows it needs manual
   submission or discarding on GitHub.
 
 ## Handoff
