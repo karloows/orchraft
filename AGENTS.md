@@ -1,38 +1,30 @@
 # orchraft
 
-orchraft contains reusable agent workflow guidance that can be copied
-into other projects. Keep this file as the map, not the rulebook: detailed
-branch, commit, PR, ship, and land behavior lives in the files linked below.
+orchraft orchestrates the software development lifecycle for AI coding
+agents, with the user approving every mutating step. The current skills cover
+pull requests (`ship`, `roast`, `land`, `yap`); more workflows will cover the
+rest of the lifecycle. It is distributed as a Claude Code plugin and can also
+be copied into other projects. Keep this file as the map, not the rulebook:
+detailed branch, commit, PR, ship, roast, land, and yap behavior lives in the
+files linked below.
 
 ## Non-Negotiable: Ask Before Every Mutating Action
 
-No skill, policy, or agent session may do any of the following without the
-user's explicit go-ahead **in the current turn**:
-
-- Commit.
-- Push.
-- Create or update a branch.
-- Create, update, or merge a pull request.
-- Post a PR comment or review.
-
-This applies every single time one of these is about to happen — including a
-follow-up fix on a PR that's already open. Approval does not carry forward:
-finishing one `ship` or `review` pass does not authorize the next one, even
-minutes later in the same conversation about the same branch.
-
-If one of these is coming up and the current turn didn't clearly ask for it,
-stop and ask instead of inferring permission from context, urgency, prior
-turns, or "this is obviously what they want." This rule overrides any skill
-step elsewhere that could otherwise be read as running to completion
-unattended. It is intentionally kept here only, not copied into each skill
-file, per this repo's general no-duplication rule (see "How To Use This
-Repo").
+No commit, push, branch create/update, PR create/update/merge, or PR
+comment/review happens without the user's explicit go-ahead in the current
+turn, and approval never carries forward. The full rule lives in
+`context/policies/approval-policy.md` so it ships with the plugin; read it
+before any of those actions. It overrides any skill step that could be read
+as running to completion unattended.
 
 ## How To Use This Repo
 
 - Use the skills in `.agents/skills/` for end-to-end agent workflows.
 - Use the policies in `context/policies/` for reusable naming and writing
   standards.
+- Use `context/personality.md` for the orc voice on user-facing surfaces
+  (README intro, plugin descriptions, skill handoff lines). Everything that
+  file excludes, including policies, commits, and PR text, stays plain.
 - Prefer project-local rules, templates, hooks, and CI checks over these
   defaults when this workflow pack is installed into another repository.
 - Keep guidance generic unless a file is intentionally project-specific.
@@ -42,8 +34,8 @@ Repo").
 ## Design Intent
 
 orchraft is meant to be portable. The workflows should explain how an AI agent
-ships and lands work safely without assuming a specific app stack, CI provider,
-branch protection setup, or hosting platform.
+ships, reviews, lands, and explains work safely without assuming a specific
+app stack, CI provider, branch protection setup, or hosting platform.
 
 The files here are defaults, not overrides. When copied into another project,
 the target project's local instructions, PR templates, branch protections,
@@ -65,9 +57,19 @@ hooks, and CI checks should win.
   `.claude/skills/roast/SKILL.md`, and `.claude/skills/yap/SKILL.md`: Claude
   skill symlinks so Claude sessions can use `/ship`, `/land`, `/roast`, and
   `/yap` while reading the same canonical skill files.
+- `.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json`: Claude
+  Code plugin manifest and single-plugin marketplace. The manifest's `skills`
+  path points at `.agents/skills/`, so installed users get `/orchraft:ship`,
+  `/orchraft:land`, `/orchraft:roast`, and `/orchraft:yap` from the same
+  canonical files.
 
 ## Policies
 
+Skills read `context/policies/<file>` from the target repo when it exists,
+falling back to the copy bundled with the plugin.
+
+- `context/policies/approval-policy.md`: which git and PR actions need the
+  user's current-turn go-ahead, and why approval never carries forward.
 - `context/policies/branch-policy.md`: branch name format, allowed types, and
   branch examples.
 - `context/policies/commit-policy.md`: commit title format and when to add a
@@ -87,6 +89,8 @@ hooks, and CI checks should win.
   instructions.
 - Keep Claude skills as symlinks to `.agents/skills`; edit the canonical skill
   files, not the links.
+- Don't edit the plugin manifest's `version` by hand; release-please bumps it
+  alongside `package.json`.
 
 ## What Not To Add Here
 

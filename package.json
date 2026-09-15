@@ -1,7 +1,7 @@
 {
   "name": "orchraft",
   "version": "0.1.0",
-  "description": "A toolkit for building and orchestrating agentic software development workflows with reusable agents, skills, rules, and automation.",
+  "description": "A clan of orcs that crafts and orchestrates the software development lifecycle for AI coding agents.",
   "private": true,
   "keywords": [
     "claude-code",

@@ -2,6 +2,14 @@
   "release-type": "node",
   "include-component-in-tag": false,
   "packages": {
-    ".": {}
+    ".": {
+      "extra-files": [
+        {
+          "type": "json",
+          "path": ".claude-plugin/plugin.json",
+          "jsonpath": "$.version"
+        }
+      ]
+    }
   }
 }

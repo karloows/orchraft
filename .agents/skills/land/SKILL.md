@@ -48,6 +48,10 @@ Use this skill when the user asks the AI to land work end to end.
   otherwise could be read as discussion instead of approval, ask one concise
   clarification question before merging.
 - Do not infer approval from an earlier turn.
+- Merging falls under `context/policies/approval-policy.md` (the target repo's
+  copy when it exists, otherwise
+  `${CLAUDE_PLUGIN_ROOT}/context/policies/approval-policy.md`); the direct
+  commands above are that policy's current-turn go-ahead.
 
 ## Preconditions
 
@@ -107,8 +111,11 @@ Use this skill when the user asks the AI to land work end to end.
 
 ## Handoff
 
-- Use a warm, lively one-line landing phrase when the workflow succeeds, such
-  as `🛬 The captain has landed cleanly. Main is shining. ✨`
+- Unless the user asked for plain output, open with a fresh one-line success
+  phrase in the orc voice, speaking as the Haulmaster from
+  `context/personality.md` (the target repo's copy when it exists, otherwise
+  `${CLAUDE_PLUGIN_ROOT}/context/personality.md`). If they did, open with the
+  plain result instead.
 - Report the final branch state.
 - Say which merge method was used.
 - Say whether the verified local branch was deleted.
@@ -117,10 +124,12 @@ Use this skill when the user asks the AI to land work end to end.
 
 ## Response Examples
 
+Opening lines are samples of the orc voice; write a fresh one each time.
+
 Successful landing:
 
 ```text
-🛬 The captain has landed cleanly. Main is shining. ✨
+🏰 Rrraaagh! Victory march into main. The branch banner rests with honor. ✨
 
 Merged PR #123 using the repository default merge method: squash.
 Local `main` is synced, and `fix/login-crash` was deleted.
@@ -130,7 +139,7 @@ Restored the local stash.
 Successful landing with no stash:
 
 ```text
-✅ Touchdown. The branch is home.
+🏰 Gates opened on green. Spoils carried home, feast hall ready.
 
 Merged PR #124 using the repository default merge method: merge commit.
 Local `main` is synced, and `feat/offline-cache` was deleted.
@@ -148,5 +157,5 @@ No merge was performed. Local branch and worktree were left unchanged.
 Clarification needed:
 
 ```text
-❓ Do you want me to land the current branch now?
+❓ Chief, land the current branch now?
 ```
