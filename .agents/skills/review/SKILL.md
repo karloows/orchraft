@@ -1,6 +1,6 @@
 ---
 name: review
-description: Have the AI review the current pull request's diff against this repo's own policies and commit history, then post the findings as a PR review with inline comments and a summary. Use when the user says review, asks for a PR review, or wants CodeRabbit-style automated review after shipping.
+description: Have the AI review the current pull request's diff against the target repository's own policies and commit history — not an external ruleset — then post the findings as a PR review with inline comments and a summary. Use when the user says review, asks for a PR review, or wants CodeRabbit-style automated review after shipping.
 ---
 
 # Review Workflow
@@ -108,11 +108,12 @@ policies above only.
   closed while the review was being built, stop and report that instead of
   posting to a PR that's no longer open.
 - Check for an existing pending review on the PR (`pull_request_review_write`
-  method `get`/list, or the equivalent read). Only discard it if it's
-  confirmed to belong to the connected account (from `get_me`) — a pending
-  review owned by someone else is their in-progress work, not a stale
-  leftover, and must be left untouched. If ownership can't be established,
-  stop instead of guessing (see Stop Conditions).
+  method `get`/list, or the equivalent read). Never auto-discard it, even if
+  it belongs to the connected account — account ownership doesn't tell you
+  whether it's a stale leftover from an interrupted run or a still-active
+  review from the same account running concurrently in another session. If
+  one exists, stop and surface it to the user for confirmation before
+  proceeding (see Stop Conditions).
 - Check for this skill's prior review(s) on the PR. If one exists, review
   only the code delta since that review's commit and note which earlier
   findings still stand, were fixed, or no longer apply — do not re-post
@@ -128,19 +129,22 @@ policies above only.
    in either direction (planned-but-missing, or shipped-but-unplanned).
 3. Check policy compliance: branch name, each commit title/body, and the PR
    title/body against `context/policies/`.
-4. Check the code itself: correctness, error handling, edge cases, and
-   consistency with existing patterns in the touched files. Always scan for
-   hardcoded secrets, tokens, keys, or credentials in the diff and flag any
-   as Critical — this check runs regardless of what else is found. Skip
-   generated, vendored, or lockfile diffs (e.g. `*.lock`, `dist/`,
-   `node_modules/`, checked-in build output) — no human authored those lines.
-   If the diff is too large to read in one pass, review file-by-file,
-   prioritizing logic and security-sensitive files over docs/config, rather
-   than silently truncating or skipping the rest.
-5. Rank findings by severity (see below). Group findings that land on the
+4. Scan the full diff for hardcoded secrets, tokens, keys, or credentials
+   first, before any file-type exclusion, and flag any as Critical — this
+   check applies to every file in the diff, generated/vendored/lockfiles
+   included, since leaked credentials show up in those as often as in
+   hand-written code.
+5. Check the code itself: correctness, error handling, edge cases, and
+   consistency with existing patterns in the touched files. Skip generated,
+   vendored, or lockfile diffs (e.g. `*.lock`, `dist/`, `node_modules/`,
+   checked-in build output) for this correctness pass only — no human
+   authored those lines. If the diff is too large to read in one pass,
+   review file-by-file, prioritizing logic and security-sensitive files over
+   docs/config, rather than silently truncating or skipping the rest.
+6. Rank findings by severity (see below). Group findings that land on the
    same file/line into a single inline comment instead of stacking multiple
    comments on one line.
-6. Post the findings as one PR review through the GitHub MCP connector:
+7. Post the findings as one PR review through the GitHub MCP connector:
    - `pull_request_review_write` with method `create` to open a pending
      review.
    - `add_comment_to_pending_review` once per remaining file/line, capped at
@@ -156,10 +160,10 @@ policies above only.
    into the summary body instead of dropping it or erroring.
    Fall back to `gh pr comment` with the full report as one issue comment only
    if the MCP review-write path is itself unavailable.
-7. Confirm `submit_pending` (or the `gh` fallback) actually returned a review
+8. Confirm `submit_pending` (or the `gh` fallback) actually returned a review
    ID/URL before declaring success — a call that doesn't error is not proof
    it posted; verify the response, don't assume it.
-8. Report the same findings to the user in the chat response.
+9. Report the same findings to the user in the chat response.
 
 ## Severity Guide
 
@@ -231,9 +235,9 @@ to the user only, never to anything posted on the PR.
 - Stop if the PR was merged or closed after the review was fetched but before
   it was posted — report the findings in chat and do not post to a PR that's
   no longer open.
-- Stop if a leftover pending review cannot be discarded cleanly, or its
-  ownership can't be confirmed as the connected account's — report it so the
-  user can resolve it on GitHub instead of guessing.
+- Stop if a pending review already exists on the PR — report it and ask the
+  user to confirm discarding it (or resolve it on GitHub themselves) before
+  proceeding; never discard it automatically.
 - If `submit_pending` fails after inline comments were already added, do not
   exit silently — report that a pending review was left partially built on
   the PR, with the findings in chat, so the user knows it needs manual
