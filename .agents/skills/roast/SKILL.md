@@ -202,71 +202,106 @@ Inline comment (one per line-specific finding, via
 restate the template here, so the two can't drift apart.
 
 Review-body summary (the `submit_pending` body, covers everything that isn't
-line-specific plus a rollup). Keep the summary line visible; collapse each
-section behind `<details>`, with its PASS/ISSUES status in the `<summary>`,
-and wrap both the `<summary>` text and the section body in `<sub>` so the
-whole block — header included, not just the expanded content — stays small
-and scannable instead of pushing the PR page down. Each `<details>` must
-open and close in a matched pair; double-check the count before posting, a
-stray tag breaks the nesting of everything after it:
+line-specific plus a rollup). Layout, top to bottom:
 
+1. **Verdict callout** (always visible) — a GitHub alert, which renders as a
+   colored box: `[!TIP]` (green) for zero issues, `[!WARNING]` (amber) for
+   important/minor issues only, `[!CAUTION]` (red) when anything is critical.
+2. **Scoreboard table** (always visible) — counts per severity plus judgment
+   calls.
+3. **One collapsed `<details>` per section** — bold name, topical emoji, and
+   status in the `<summary>`. Put the section's checks in a ` ```diff ` block:
+   `+` lines render green (passing check), `-` lines render red (issue),
+   lines starting with a space stay neutral (judgment calls — not enforced).
+   Hard-wrap at ~76 characters and repeat the same prefix on continuation
+   lines; GitHub won't soft-wrap code blocks and an unprefixed continuation
+   loses its color.
+4. **`---` then a collapsed "Review info" footer** — commit range, full vs.
+   delta review, files reviewed, standards used.
+5. **Hidden marker** `<!-- roast:review head=<sha> -->` as the last line, so a
+   later pass can find this skill's prior review and its commit reliably.
+
+Keep GitHub alerts and the table at the top level — alerts don't render
+inside `<details>`. Every `<details>` must open and close in a matched pair;
+count them before posting, since one stray tag breaks the nesting of
+everything after it.
+
+````markdown
+## 🔥 Roast — <PR title>
+
+> [!TIP]
+> **Clean pass.** Nothing blocking. <[M] judgment call(s) worth a glance.>
+
+| 🚨 Critical | ⚠️ Important | 💡 Minor | 🤔 Judgment calls |
+| :---: | :---: | :---: | :---: |
+| **[n]** | **[n]** | **[n]** | **[n]** |
+
+<details>
+<summary><b>🔭 Scope</b> — [✅ Pass / ❌ Issues / 🤔 Judgment call]</summary>
+<br>
+
+```diff
++ ✅ planned vs. shipped, no gaps
 ```
-## Review — <PR title>
 
-**Summary:** [N] issue(s) — [critical count] critical, [important count]
-important, [minor count] minor. [M] judgment call(s) not counted as issues,
-if any.
-
-<details>
-<summary><sub>Scope — [PASS / ISSUES]</sub></summary>
-
-<sub>
-
-planned vs. shipped
-
-</sub>
 </details>
 
 <details>
-<summary><sub>Policy compliance — [PASS / ISSUES]</sub></summary>
+<summary><b>📐 Policy compliance</b> — [status]</summary>
+<br>
 
-<sub>
-
-branch, commit, PR text vs. context/policies/
-
-</sub>
-</details>
-
-<details>
-<summary><sub>Code review — [PASS / ISSUES]</sub></summary>
-
-<sub>
-
-correctness, edge cases, consistency (see inline comments)
-
-</sub>
-</details>
-
-<details>
-<summary><sub>Unanchored findings ([count])</sub></summary>
-
-<sub>
-
-[SEVERITY] <finding> — <required remediation>, one per finding with no valid
-diff-line anchor.
-
-</sub>
-</details>
+```diff
++ ✅ branch name matches branch-policy.md
++ ✅ commit title/body follow commit-policy.md
+- ❌ [IMPORTANT] PR body missing Validation section — add what ran
 ```
+
+</details>
+
+<details>
+<summary><b>🔍 Code review</b> — [status]</summary>
+<br>
+
+```diff
++ ✅ no secrets in diff
+  🤔 [JUDGMENT CALL] <note> — see inline comment
+```
+
+</details>
+
+<details>
+<summary><b>📎 Unanchored findings</b> — [count]</summary>
+<br>
+
+```diff
+- ❌ [SEVERITY] <finding> — <required remediation>
+```
+
+</details>
+
+---
+
+<details>
+<summary>ℹ️ Review info</summary>
+<br>
+
+- **Commits:** `<base-sha>`..`<head-sha>` (<full review / delta since `<sha>`>)
+- **Files reviewed (<n>):** `<path>`, `<path>`
+- **Standards:** `context/policies/review-policy.md`, `context/policies/`
+
+</details>
+
+<!-- roast:review head=<head-sha> -->
+````
 
 Omit the `Unanchored findings` block entirely when there are none — don't
-post an empty collapsed section. Keep the `**Summary:**` line uncollapsed;
-it's the only part a reviewer needs without expanding anything.
+post an empty collapsed section.
 
-Write both in the tone required by
-`context/policies/writing-guidelines.md`: concise, technical, no emojis, no
-marketing language. Emoji handoff phrasing below applies to the chat response
-to the user only, never to anything posted on the PR.
+Write the finding text in the tone required by
+`context/policies/writing-guidelines.md`: concise, technical, no marketing
+language. The emoji, alerts, and color conventions above are this section's
+own formatting, not a `writing-guidelines.md` requirement, and don't extend to
+PR titles or descriptions.
 
 ## Guardrails
 
