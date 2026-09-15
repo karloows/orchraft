@@ -1,12 +1,13 @@
 ---
-name: review
-description: Have the AI review the current pull request's diff against the target repository's own policies and commit history — not an external ruleset — then post the findings as a PR review with inline comments and a summary. Use when the user says review, asks for a PR review, or wants CodeRabbit-style automated review after shipping.
+name: roast
+description: Have the AI review the current pull request's diff against the target repository's own policies and commit history — not an external ruleset — then post the findings as a PR review with inline comments and a summary. Use when the user says roast, review, asks for a PR review, or wants CodeRabbit-style automated review after shipping.
 ---
 
-# Review Workflow
+# Roast Workflow
 
-Use this skill when the user asks the AI to review a pull request, or right
-after `ship` opens/updates one and the user asks for a review pass on it.
+Use this skill when the user asks the AI to roast (review) a pull request, or
+right after `ship` opens/updates one and the user asks for a review pass on
+it.
 
 ## Contents
 
@@ -61,12 +62,12 @@ What the end user needs in place before this skill can work at all:
 
 ## Trigger Rules
 
-- Run when the user explicitly asks to review, review the PR, or check the
-  branch the way an automated reviewer would.
+- Run when the user explicitly asks to roast, review, review the PR, or check
+  the branch the way an automated reviewer would.
 - Run immediately after `ship` when the user asks `ship` to include a review,
-  or says so as a standing preference (e.g. "always review after you ship").
+  or says so as a standing preference (e.g. "always roast after you ship").
 - Do not run automatically on every `ship` unless the user has said so; `ship`
-  and `review` are separate skills with separate trigger rules.
+  and `roast` are separate skills with separate trigger rules.
 
 ## Sources Of Truth
 
@@ -107,6 +108,13 @@ policies above only.
   findings instead of posting against a stale one; if the PR was merged or
   closed while the review was being built, stop and report that instead of
   posting to a PR that's no longer open.
+- If the PR author matches the connected account from `get_me` (a self-review),
+  also request GitHub Copilot as a reviewer via `request_copilot_review`
+  before posting your own findings — a self-authored review isn't independent
+  input, and Copilot gives a genuinely separate second opinion. Skip this
+  silently if the tool isn't available in this session, the repo doesn't
+  support it, or Copilot has already been requested/reviewed on this PR; a
+  failure here never blocks the rest of the workflow.
 - Check for an existing pending review on the PR (`pull_request_review_write`
   method `get`/list, or the equivalent read). Never auto-discard it, even if
   it belongs to the connected account — account ownership doesn't tell you
@@ -247,8 +255,8 @@ to the user only, never to anything posted on the PR.
 
 - Only use the success phrasing below once the post is confirmed (a returned
   review ID/URL), not just because the API call didn't error.
-- Use a warm, lively one-line review phrase when the workflow succeeds, such
-  as `🔍 Review's in. The rabbit hole has been fully explored. ✨`
+- Use a warm, lively one-line roast phrase when the workflow succeeds, such
+  as `🔥 Roast's in. Nothing left unroasted. ✨`
 - Report the PR number and the finding counts by severity.
 - If there were zero findings, say so plainly and skip listing severities.
 - If posting stops or fails, skip the lively phrasing and state the blocker
@@ -267,7 +275,7 @@ PR #123: 0 issues found.
 Review with findings:
 
 ```text
-🔍 Review's in. The rabbit hole has been fully explored. ✨
+🔥 Roast's in. Nothing left unroasted. ✨
 
 PR #124: 3 issues found — 1 critical, 1 important, 1 minor.
 Posted as a PR review with inline comments plus a summary.
@@ -276,7 +284,7 @@ Posted as a PR review with inline comments plus a summary.
 Blocked review:
 
 ```text
-⚠️ Review is blocked: no open pull request on this branch yet.
+⚠️ Roast is blocked: no open pull request on this branch yet.
 
-Run `ship` first, then review. No comment or review was posted.
+Run `ship` first, then roast. No comment or review was posted.
 ```
