@@ -9,7 +9,8 @@ Orchraft is in early setup.
 ## Layout
 
 - `.agents/skills/`: canonical agent skills.
-- `.claude/skills/`: Claude skill symlinks for `/ship`, `/land`, and `/roast`.
+- `.claude/skills/`: Claude skill symlinks for `/ship`, `/land`, `/roast`, and
+  `/yap`.
 - `context/policies/`: reusable branch, commit, and PR writing policies.
 
 Edit the canonical skill files in `.agents/skills/`; the Claude skill files are
@@ -19,10 +20,11 @@ symlinks.
 
 Copy the parts you need into a target project:
 
-- `.agents/skills/` for the canonical `ship`, `land`, and `roast` workflows.
+- `.agents/skills/` for the canonical `ship`, `land`, `roast`, and `yap`
+  workflows.
 - `context/policies/` for branch, commit, and PR writing rules.
-- `.claude/skills/` when using Claude Code and you want `/ship`, `/land`, and
-  `/roast`.
+- `.claude/skills/` when using Claude Code and you want `/ship`, `/land`,
+  `/roast`, and `/yap`.
 
 Project-local instructions, PR templates, hooks, and CI checks should override
 these defaults.
