@@ -60,6 +60,10 @@ symlinks.
 /plugin install orchraft@orchraft
 ```
 
+If the install reports that the plugin isn't active yet, run
+`/reload-plugins` (or `/reload-plugins --force` if it warns about the prompt
+cache).
+
 The skills load as `/orchraft:ship`, `/orchraft:land`, `/orchraft:roast`, and
 `/orchraft:yap`. They read `context/policies/` from your repo when present
 and fall back to the policies bundled with the plugin.
@@ -79,6 +83,10 @@ target project:
 - `context/personality.md` for the orc voice the skills use in success lines.
 - `.claude/skills/` when using Claude Code and you want `/ship`, `/land`,
   `/roast`, and `/yap`.
+
+Copy `context/` together with the skills. The skills fall back to
+`${CLAUDE_PLUGIN_ROOT}/context/` only when running as the plugin; outside it,
+that path doesn't resolve.
 
 Project-local instructions, PR templates, hooks, and CI checks should override
 these defaults.
