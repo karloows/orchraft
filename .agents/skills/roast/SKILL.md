@@ -215,7 +215,14 @@ language as the review body, top to bottom:
 3. **🛠️ Fix**: the concrete remediation, starting with a verb.
 4. **Suggestion block** (optional): when the fix is a small change to the
    anchored lines, add a ` ```suggestion ` block so the author can apply it
-   in one click. Omit it when the fix spans other lines or files.
+   in one click. Anchor the comment's `startLine`..`line` (side `RIGHT`) to
+   exactly the lines the block replaces; omit it when the fix spans other
+   lines or files.
+5. **🤖 Prompt for AI agents**: a collapsed `<details>` holding a
+   ` ```text ` block the author can paste into any coding agent. Make it
+   self-contained, since the agent won't see the PR: file path and line
+   range, what's wrong, the fix, and how to confirm it worked. Keep it to
+   plain instructions with no emoji or alert markup.
 
 ````markdown
 > [!NOTE]
@@ -230,10 +237,23 @@ section (line 114). `land`'s Contents already lists it.
 - [Handoff](#handoff)
 - [Response Examples](#response-examples)
 ```
+
+<details>
+<summary>🤖 Prompt for AI agents</summary>
+
+```text
+In .agents/skills/yap/SKILL.md, the Contents list (lines 12-21) ends at
+"- [Handoff](#handoff)" but the file also has a "## Response Examples"
+section. Add "- [Response Examples](#response-examples)" after the Handoff
+entry. Confirm every "## " heading in the file has a matching Contents entry.
+```
+
+</details>
 ````
 
 When several findings share one line (see Default Path step 6), post one
-comment with an alert per finding, most severe first.
+comment with an alert per finding, most severe first, and at most one
+suggestion block. Keep one prompt per finding.
 
 Review-body summary (the `submit_pending` body, covers everything that isn't
 line-specific plus a rollup). Layout, top to bottom:
@@ -310,6 +330,16 @@ everything after it.
 ```diff
 - ❌ [SEVERITY] <finding> — <required remediation>
 ```
+
+<details>
+<summary>🤖 Prompts for AI agents</summary>
+
+```text
+1. <self-contained prompt for the first unanchored finding>
+2. <self-contained prompt for the next one>
+```
+
+</details>
 
 </details>
 

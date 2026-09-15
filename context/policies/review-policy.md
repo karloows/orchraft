@@ -55,8 +55,8 @@ Report each finding tied to a concrete file or behavior:
 - State the impact or risk, not just the symptom.
 - Omit praise, narration, or generic approval text.
 
-This line defines what a finding must contain. A review skill may present
-the same fields with its own formatting when it posts them.
+The format line above defines what a finding must contain. A review skill
+may present the same fields with its own formatting when it posts them.
 
 Findings should read like review notes another engineer can act on
 immediately. If a comment can't point to a concrete risk or fix, it usually
