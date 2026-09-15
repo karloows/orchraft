@@ -24,7 +24,7 @@ Use this skill when the user asks the AI to land work end to end.
 2. Confirm branch, PR, checks, permissions, and local worktree state.
 3. Merge using the repository or organization default merge method.
 4. Sync local `main`, delete the verified topic branch, and restore any
-   untracked-file stash created for this workflow.
+   local-changes stash created for this workflow.
 5. Report the result with the actual merge method and branch state.
 
 ## What This Is Not
@@ -58,9 +58,8 @@ Use this skill when the user asks the AI to land work end to end.
 - Confirm the pull request targets the expected base branch.
 - Confirm the pull request has no unresolved merge conflicts.
 - Confirm the connected account can merge the pull request.
-- Confirm there are no tracked or staged local changes.
-- If untracked files are present and there are no tracked or staged changes,
-  stash those untracked files before landing and record the stash ref.
+- If tracked, staged, or untracked local changes are present, stash all of
+  them (including untracked files) before landing and record the stash ref.
 
 ## Default Path
 
@@ -81,18 +80,19 @@ Use this skill when the user asks the AI to land work end to end.
 - After the merge completes, switch to `main` locally, sync local `main`, and
   confirm there are still no tracked or staged local changes before deleting
   the verified local topic branch.
-- After branch deletion, restore any untracked-file stash created for this
+- After branch deletion, restore any local-changes stash created for this
   workflow with `git stash pop` or the repository-equivalent restore command.
-- If landing stops after creating an untracked-file stash, restore it once the
-  worktree is usable.
+- If landing stops after creating a stash for this workflow, restore it once
+  the worktree is usable.
 
 ## Stop Conditions
 
 - Stop if the current branch is `main`.
 - Stop if HEAD is detached.
 - Stop if there is no branch pull request to merge.
-- Stop before merge or deletion if tracked or staged local changes are present.
-- Stop if an untracked-file stash created for this workflow cannot be restored;
+- Stop if local changes cannot be stashed cleanly (e.g. an existing conflicting
+  stash or a stash command failure); do not merge or delete the branch.
+- Stop if a stash created for this workflow cannot be restored after landing;
   report the stash ref for manual recovery.
 - Stop if local `HEAD` does not match the PR head before merging.
 - Stop if required jobs, checks, or mergeability status are pending, missing,
@@ -124,7 +124,7 @@ Successful landing:
 
 Merged PR #123 using the repository default merge method: squash.
 Local `main` is synced, and `fix/login-crash` was deleted.
-Restored the untracked-file stash.
+Restored the local stash.
 ```
 
 Successful landing with no stash:
