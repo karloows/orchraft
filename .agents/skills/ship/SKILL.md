@@ -56,7 +56,8 @@ Use this skill when the user asks the AI to ship work.
 
 - Read `context/policies/approval-policy.md`,
   `context/policies/branch-policy.md`,
-  `context/policies/commit-policy.md`, and
+  `context/policies/commit-policy.md`,
+  `context/policies/verification-policy.md`, and
   `context/policies/writing-guidelines.md`. Use the target repo's copy of each
   when it exists; otherwise use the bundled copy at
   `${CLAUDE_PLUGIN_ROOT}/context/policies/<file>`.
@@ -73,7 +74,7 @@ Use this skill when the user asks the AI to ship work.
 ## Default Path
 
 1. Inspect branch state and working tree.
-2. Validate the touched area.
+2. Validate the touched area per `context/policies/verification-policy.md`.
 3. If on `main`, create a policy-compliant branch from `main`; if already on a
    non-`main` branch, keep using it.
 4. Stage only the intended changes.

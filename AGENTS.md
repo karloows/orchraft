@@ -106,6 +106,9 @@ falling back to the copy bundled with the plugin.
   write a code comment or docstring (lore), and the shape it should take.
 - `context/policies/review-policy.md`: reviewer priority order, severity
   levels, and findings format for PR review.
+- `context/policies/verification-policy.md`: what counts as validation before
+  a change is reported ready to ship or land, how to report results honestly,
+  and edge cases like flaky or pre-existing failures.
 - `context/policies/writing-guidelines.md`: shared writing rules, PR title/body
   defaults, secret hygiene, and project-template override guidance.
 

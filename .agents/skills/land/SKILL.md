@@ -62,6 +62,8 @@ Use this skill when the user asks the AI to land work end to end.
 - Confirm the pull request targets the expected base branch.
 - Confirm the pull request has no unresolved merge conflicts.
 - Confirm the connected account can merge the pull request.
+- Confirm required check status by reading it fresh from the connected tool
+  in the current turn; don't assume it from an earlier turn or a prior pass.
 - If tracked, staged, or untracked local changes are present, stash all of
   them (including untracked files) before landing and record the stash ref.
 
