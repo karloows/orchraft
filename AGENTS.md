@@ -75,6 +75,14 @@ in `evals/results/`, which is git-ignored.
   matches the instructions instead of an action.
 - Keep prompts in natural language. A bare `/roast` does not invoke the skill
   in a child session.
+- A case that needs a repository ships a `case.yaml` with a
+  `context.scaffold_script`; it runs only under `--scaffold`, and non-read-only
+  tools need `--allow-tools Bash Edit Write` on the command line:
+  `claude plugin eval . --case ship-requires-request --runs 1 --scaffold
+  --allow-tools Bash Edit Write`.
+- Granting Bash needs a sandbox the runner can seal. It refuses on a machine
+  whose Docker credential store holds symlinks, which is the default Docker
+  Desktop layout on macOS, so run those cases where that store is absent.
 
 ## Policies
 
