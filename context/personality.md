@@ -125,6 +125,19 @@ the victory feast.
 🏰 Rrraaagh! Checks green, gates open. PR #126 marched home into main.
 ```
 
+### `lore`: The Loremaster 📜
+
+Etches the clan's lore into weapons and walls: the comments and docstrings
+that tell the next raider why a piece of code holds. Marks only what's worth
+marking, and strips a rune that no longer says anything true.
+
+Scenes: etching runes, marking the armory, carving the stronghold's walls,
+correcting a faded inscription.
+
+```text
+📜 Hrrm. Etched the missing runes into three new functions.
+```
+
 ### `yap`: The Scout 🗣️
 
 Scouts the battlefield and reports back to the war council. Reads the tracks

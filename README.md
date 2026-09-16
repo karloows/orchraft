@@ -30,8 +30,9 @@ the anvil as we cover the rest of the lifecycle.
 | `roast` | 🔥 Trialmaster | Reviews the pull request against your repo's policies and posts findings as inline comments with fixes and copy-paste AI prompts. |
 | `land` | 🏰 Haulmaster | Checks mergeability and CI, merges with the repo's default method, syncs `main`, and cleans up the branch. |
 | `yap` | 🗣️ Scout | Explains a PR, file, error, policy, or dependency, citing real sources instead of guessing. Read-only. |
+| `lore` | 📜 Loremaster | Adds or fixes code comments and docstrings across a diff, file, or PR to match your repo's lore policy. |
 
-Today's march is `ship` → `roast` → fix → `ship` → `land`, with `yap`
+Today's march is `lore` → `ship` → `roast` → fix → `ship` → `land`, with `yap`
 available at any point.
 
 ## Status
@@ -42,10 +43,10 @@ change between releases.
 ## Layout
 
 - `.agents/skills/`: canonical agent skills.
-- `.claude/skills/`: Claude skill symlinks for `/ship`, `/land`, `/roast`, and
-  `/yap`.
+- `.claude/skills/`: Claude skill symlinks for `/ship`, `/land`, `/roast`,
+  `/yap`, and `/lore`.
 - `.claude-plugin/`: Claude Code plugin manifest and marketplace.
-- `context/policies/`: reusable approval, branch, commit, review, and PR
+- `context/policies/`: reusable approval, branch, commit, lore, review, and PR
   writing policies.
 - `context/personality.md`: the orc's character and voice, and where it
   applies.
@@ -64,9 +65,9 @@ If the install reports that the plugin isn't active yet, run
 `/reload-plugins` (or `/reload-plugins --force` if it warns about the prompt
 cache).
 
-The skills load as `/orchraft:ship`, `/orchraft:land`, `/orchraft:roast`, and
-`/orchraft:yap`. They read `context/policies/` from your repo when present
-and fall back to the policies bundled with the plugin.
+The skills load as `/orchraft:ship`, `/orchraft:land`, `/orchraft:roast`,
+`/orchraft:yap`, and `/orchraft:lore`. They read `context/policies/` from your
+repo when present and fall back to the policies bundled with the plugin.
 
 To try a local checkout without installing, run
 `claude --plugin-dir /path/to/orchraft`.
@@ -76,13 +77,13 @@ To try a local checkout without installing, run
 For other agents, or to customize the files, copy the parts you need into a
 target project:
 
-- `.agents/skills/` for the canonical `ship`, `land`, `roast`, and `yap`
-  workflows.
-- `context/policies/` for approval, branch, commit, review, and PR writing
-  rules.
+- `.agents/skills/` for the canonical `ship`, `land`, `roast`, `yap`, and
+  `lore` workflows.
+- `context/policies/` for approval, branch, commit, lore, review, and PR
+  writing rules.
 - `context/personality.md` for the orc voice the skills use in success lines.
 - `.claude/skills/` when using Claude Code and you want `/ship`, `/land`,
-  `/roast`, and `/yap`.
+  `/roast`, `/yap`, and `/lore`.
 
 Copy `context/` together with the skills. The skills fall back to
 `${CLAUDE_PLUGIN_ROOT}/context/` only when running as the plugin; outside it,

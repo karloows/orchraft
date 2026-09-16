@@ -1,12 +1,12 @@
 # orchraft
 
 orchraft orchestrates the software development lifecycle for AI coding
-agents, with the user approving every mutating step. The current skills cover
-pull requests (`ship`, `roast`, `land`, `yap`); more workflows will cover the
-rest of the lifecycle. It is distributed as a Claude Code plugin and can also
-be copied into other projects. Keep this file as the map, not the rulebook:
-detailed branch, commit, PR, ship, roast, land, and yap behavior lives in the
-files linked below.
+agents, with the user approving every git and pull request mutation. The
+current skills cover pull requests (`ship`, `roast`, `land`, `yap`, `lore`);
+more workflows will cover the rest of the lifecycle. It is distributed as a
+Claude Code plugin and can also be copied into other projects. Keep this file
+as the map, not the rulebook: detailed branch, commit, PR, ship, roast, land,
+yap, and lore behavior lives in the files linked below.
 
 ## Non-Negotiable: Ask Before Every Mutating Action
 
@@ -53,15 +53,19 @@ hooks, and CI checks should win.
 - `.agents/skills/yap/SKILL.md`: AI-driven explainer workflow that explains a
   PR/diff, file, error/log, policy, or dependency grounded in real sources
   (code, git history, docs) with citations, read-only.
+- `.agents/skills/lore/SKILL.md`: AI-driven workflow that adds or fixes code
+  comments and docstrings across a diff, file, or PR to match
+  `context/policies/lore-policy.md`, without committing or pushing.
 - `.claude/skills/ship/SKILL.md`, `.claude/skills/land/SKILL.md`,
-  `.claude/skills/roast/SKILL.md`, and `.claude/skills/yap/SKILL.md`: Claude
-  skill symlinks so Claude sessions can use `/ship`, `/land`, `/roast`, and
-  `/yap` while reading the same canonical skill files.
+  `.claude/skills/roast/SKILL.md`, `.claude/skills/yap/SKILL.md`, and
+  `.claude/skills/lore/SKILL.md`: Claude skill symlinks so Claude sessions can
+  use `/ship`, `/land`, `/roast`, `/yap`, and `/lore` while reading the same
+  canonical skill files.
 - `.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json`: Claude
   Code plugin manifest and single-plugin marketplace. The manifest's `skills`
   path points at `.agents/skills/`, so installed users get `/orchraft:ship`,
-  `/orchraft:land`, `/orchraft:roast`, and `/orchraft:yap` from the same
-  canonical files.
+  `/orchraft:land`, `/orchraft:roast`, `/orchraft:yap`, and `/orchraft:lore`
+  from the same canonical files.
 
 ## Evals
 
@@ -98,6 +102,8 @@ falling back to the copy bundled with the plugin.
   branch examples.
 - `context/policies/commit-policy.md`: commit title format and when to add a
   free-form prose body.
+- `context/policies/lore-policy.md`: language-agnostic rules for when to
+  write a code comment or docstring (lore), and the shape it should take.
 - `context/policies/review-policy.md`: reviewer priority order, severity
   levels, and findings format for PR review.
 - `context/policies/writing-guidelines.md`: shared writing rules, PR title/body
