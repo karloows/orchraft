@@ -62,6 +62,11 @@ Use this skill when the user asks the AI to land work end to end.
 - Confirm the pull request targets the expected base branch.
 - Confirm the pull request has no unresolved merge conflicts.
 - Confirm the connected account can merge the pull request.
+- Read required check status from the connected tool in the current turn per
+  `context/policies/verification-policy.md` (the target repo's copy when it
+  exists, otherwise
+  `${CLAUDE_PLUGIN_ROOT}/context/policies/verification-policy.md`); don't
+  assume it from an earlier turn.
 - If tracked, staged, or untracked local changes are present, stash all of
   them (including untracked files) before landing and record the stash ref.
 
