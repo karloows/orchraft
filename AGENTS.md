@@ -63,6 +63,19 @@ hooks, and CI checks should win.
   `/orchraft:land`, `/orchraft:roast`, and `/orchraft:yap` from the same
   canonical files.
 
+## Evals
+
+`evals/` holds `claude plugin eval` cases that check skill behavior rather than
+file syntax. Each case is a prompt plus graders, run against the plugin and a
+no-plugin baseline: `claude plugin eval . --case <name> --runs 1`. Results land
+in `evals/results/`, which is git-ignored.
+
+- Grade tool calls with `tool_used`, not a `regex` over the trace — the trace
+  contains the skill's own text, so a regex for something like `git merge`
+  matches the instructions instead of an action.
+- Keep prompts in natural language. A bare `/roast` does not invoke the skill
+  in a child session.
+
 ## Policies
 
 Skills read `context/policies/<file>` from the target repo when it exists,
