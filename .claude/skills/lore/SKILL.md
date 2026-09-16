@@ -1,0 +1,1 @@
+../../../.agents/skills/lore/SKILL.md
