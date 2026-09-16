@@ -256,21 +256,27 @@ and Fix line; place the single suggestion block after the last finding.
 Review-body summary (the `submit_pending` body, covers everything that isn't
 line-specific plus a rollup). Layout, top to bottom:
 
-1. **Verdict callout** (always visible) — a GitHub alert, which renders as a
+1. **Header** — `## 🔥 Roasted — PR #<number>: <full review / delta since
+   `<sha>`>, <n> file(s)`. Build every field from this actual pass: the real
+   PR number, whether it covers the whole PR or only the delta since the
+   prior review's commit, and how many files this pass reviewed. Never copy
+   the placeholder text below verbatim or leave a stale count from a
+   different pass.
+2. **Verdict callout** (always visible) — a GitHub alert, which renders as a
    colored box: `[!TIP]` (green) for zero issues, `[!WARNING]` (amber) for
    important/minor issues only, `[!CAUTION]` (red) when anything is critical.
-2. **Scoreboard table** (always visible) — counts per severity plus judgment
+3. **Scoreboard table** (always visible) — counts per severity plus judgment
    calls.
-3. **One collapsed `<details>` per section** — bold name, topical emoji, and
+4. **One collapsed `<details>` per section** — bold name, topical emoji, and
    status in the `<summary>`. Put the section's checks in a ` ```diff ` block:
    `+` lines render green (passing check), `-` lines render red (issue),
    lines starting with a space stay neutral (judgment calls — not enforced).
    Hard-wrap at ~76 characters and repeat the same prefix on continuation
    lines; GitHub won't soft-wrap code blocks and an unprefixed continuation
    loses its color.
-4. **`---` then a collapsed "Review info" footer** — commit range, full vs.
+5. **`---` then a collapsed "Review info" footer** — commit range, full vs.
    delta review, files reviewed, standards used.
-5. **Hidden marker** `<!-- roast:review head=<sha> -->` as the last line, so a
+6. **Hidden marker** `<!-- roast:review head=<sha> -->` as the last line, so a
    later pass can find this skill's prior review and its commit reliably.
 
 Keep GitHub alerts and the table at the top level — alerts don't render
@@ -279,7 +285,7 @@ count them before posting, since one stray tag breaks the nesting of
 everything after it.
 
 ````markdown
-## 🔥 Roast — <PR title>
+## 🔥 Roasted — PR #<number>: <full review / delta since `<sha>`>, <n> file(s)
 
 > [!TIP]
 > **Clean pass.** Nothing blocking. <[M] judgment call(s) worth a glance.>
