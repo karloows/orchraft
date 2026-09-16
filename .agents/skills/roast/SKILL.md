@@ -125,18 +125,7 @@ policies above only.
   whether it's a stale leftover from an interrupted run or a still-active
   review from the same account running concurrently in another session. If
   one exists, stop and surface it to the user for confirmation before
-  proceeding, without requesting Copilot or making any other PR mutation
-  (see Stop Conditions).
-- If the PR author matches the connected account from `get_me` (a
-  self-review), a self-authored review isn't independent input. Requesting
-  GitHub Copilot as a reviewer via `request_copilot_review` is itself a PR
-  mutation, so it falls under `context/policies/approval-policy.md`, which
-  requires the user's explicit go-ahead in the current turn — running
-  `roast` does not itself authorize it. Ask the user once whether to request
-  Copilot as an independent second opinion before doing so; proceed with just
-  your own findings if they decline or don't respond in this turn. Skip asking
-  entirely if the tool isn't available in this session, the repo doesn't
-  support it, or Copilot has already been requested/reviewed on this PR.
+  proceeding, without making any other PR mutation (see Stop Conditions).
 - Check for this skill's prior review(s) on the PR: find the latest review
   body ending in the `<!-- roast:review head=<sha> -->` marker (see Comment
   Format), and use that SHA as the prior review's commit. If one exists, review

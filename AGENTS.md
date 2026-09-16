@@ -63,6 +63,30 @@ hooks, and CI checks should win.
   `/orchraft:land`, `/orchraft:roast`, and `/orchraft:yap` from the same
   canonical files.
 
+## Evals
+
+`evals/` holds `claude plugin eval` cases that check skill behavior rather than
+file syntax. Each case is a prompt plus graders, run against the plugin and a
+no-plugin baseline: `claude plugin eval . --case <name> --runs 1 --no-publish`.
+Results land in `evals/results/`, which is git-ignored. Pass `--no-publish`
+every time — without it, an account that supports report publishing uploads
+the HTML report (prompts, transcripts, grader verdicts) to claude.ai by
+default.
+
+- Grade tool calls with `tool_used`, not a `regex` over the trace — the trace
+  contains the skill's own text, so a regex for something like `git merge`
+  matches the instructions instead of an action.
+- Keep prompts in natural language. A bare `/roast` does not invoke the skill
+  in a child session.
+- A case that needs a repository ships a `case.yaml` with a
+  `context.scaffold_script`; it runs only under `--scaffold`, and non-read-only
+  tools need `--allow-tools Bash Edit Write` on the command line:
+  `claude plugin eval . --case ship-requires-request --runs 1 --scaffold
+  --allow-tools Bash Edit Write --no-publish`.
+- Granting Bash needs a sandbox the runner can seal. It refuses on a machine
+  whose Docker credential store holds symlinks, which is the default Docker
+  Desktop layout on macOS, so run those cases where that store is absent.
+
 ## Policies
 
 Skills read `context/policies/<file>` from the target repo when it exists,
