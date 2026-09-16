@@ -257,7 +257,7 @@ Review-body summary (the `submit_pending` body, covers everything that isn't
 line-specific plus a rollup). Layout, top to bottom:
 
 1. **Header** — `## 🔥 Roasted — PR #<number>: <full review / delta since
-   `<sha>`>, <n> file(s)`. Build every field from this actual pass: the real
+   <sha>>, <n> file(s)`. Build every field from this actual pass: the real
    PR number, whether it covers the whole PR or only the delta since the
    prior review's commit, and how many files this pass reviewed. Never copy
    the placeholder text below verbatim or leave a stale count from a
