@@ -33,8 +33,11 @@ convention (JSDoc, Google-style Python, Rustdoc, Javadoc, godoc, etc.):
    constraint isn't obvious from their name and type; skip tags that would
    just repeat the type signature.
 
-Stop at the first line that's already true. A function whose name and types
-are self-explanatory gets a summary line and nothing else.
+Stop at the first line that's already true. When a docstring is warranted at
+all, a self-explanatory function still gets only the one-line summary — no
+elaboration or tags. A function whose name and types need no docstring at all
+(see When To Write Something) stays undocumented; this shape only governs
+what a warranted docstring contains.
 
 ## Rules
 

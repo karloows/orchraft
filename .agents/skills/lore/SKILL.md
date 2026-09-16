@@ -57,8 +57,10 @@ comments and docstrings — the clan calls this "lore."
 The diff and file targets need nothing beyond local git and file access. The
 pull request target additionally needs a GitHub MCP connector configured for
 this session (read access is enough — this skill never posts to GitHub), or
-`gh` installed and authenticated as a fallback. Without either, fall back to
-the diff or file target instead of failing the whole request.
+`gh` installed and authenticated as a fallback. Without either, stop and tell
+the user the PR target isn't reachable and ask whether to use the local diff
+or a named file instead — don't silently substitute a different scope for
+the one they asked for.
 
 ## Prerequisites
 
@@ -73,8 +75,9 @@ the diff or file target instead of failing the whole request.
 ## Targets
 
 - **Current diff (default)** — unstaged and staged changes from
-  `git diff` / `git diff --staged`. Scope lore edits to the functions,
-  classes, and modules the diff actually touches or adds.
+  `git diff` / `git diff --staged`, plus new files reported as untracked by
+  `git status --short` (`git diff` alone won't show them). Scope lore edits
+  to the functions, classes, and modules the diff actually touches or adds.
 - **File(s)** — when the user names a file or path, scope to that file only.
 - **Pull request** — when the user names a PR, fetch its diff through the
   GitHub MCP connector (falling back to `gh`) and scope to the files it
@@ -110,6 +113,9 @@ the diff or file target instead of failing the whole request.
   "documenting" the bug away.
 - Stop if the file's existing doc-comment convention is unclear and no repo
   example resolves it — ask instead of guessing a format.
+- Stop if the user asked for the pull request target and neither the GitHub
+  MCP connector nor `gh` is available — ask whether to use the diff or a
+  named file instead of silently switching targets.
 
 ## Handoff
 
