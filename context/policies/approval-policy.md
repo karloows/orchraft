@@ -35,6 +35,12 @@ If one of these actions is coming up and the current turn didn't clearly ask
 for it, stop and ask instead of inferring permission from context, urgency,
 prior turns, or "this is obviously what they want."
 
+A request to fix, address, or resolve something — findings from a review,
+a bug, feedback in a comment — is approval to make the edit, not to commit,
+push, or update a pull request with it. Treat phrases like "resolve the
+findings," "fix these," or "address the review" as edit-only unless the same
+message also says to ship, commit, push, or update the PR.
+
 ## Project Overrides
 
 A target project's local instructions may make this rule stricter. Loosening
