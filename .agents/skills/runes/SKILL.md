@@ -71,10 +71,13 @@ conversation.
   next step.
 - If a PR exists in any state, fetch its current state fresh in this turn:
   head SHA, mergeable state, check runs/status, and its most recent
-  reviews — including `roast`'s delta-tracking marker
-  (`<!-- roast:review head=<sha> -->`) from its Comment Format, to
-  find the latest `roast` pass's standing findings and whether the PR head
-  has moved past it.
+  reviews. Search both PR reviews and issue comments for `roast`'s
+  delta-tracking marker (`<!-- roast:review head=<sha> -->`) from its
+  Comment Format — `roast` falls back to posting as an issue comment when
+  its review-write path is unavailable, so a fallback report would carry
+  the marker there instead of in a review. Use whichever carries the
+  marker to find the latest `roast` pass's standing findings and whether
+  the PR head has moved past it.
 - If the target branch is the currently checked-out branch, check
   `git status --short` for local uncommitted changes, since those affect
   what `ship` would actually do next. If the target branch isn't currently
