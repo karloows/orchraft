@@ -112,8 +112,8 @@ Keep it to what's actually known — don't pad a thin status with filler.
 - **PR** — number, URL, state (none/draft/open/closed/merged),
   mergeable/check status.
 - **Reviews** — the latest `roast` pass's finding counts by severity, and
-  whether that pass is still current for the PR's head commit. Omit when
-  the PR state is `none`.
+  whether that pass is still current for the PR's head commit. Omit unless
+  the PR state is `open`.
 - **Local changes** — any uncommitted work, only when the target branch is
   the currently checked-out branch (see Prerequisites).
 - **Next step** — the logical next action, named but not taken.
