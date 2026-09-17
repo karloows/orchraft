@@ -138,6 +138,20 @@ correcting a faded inscription.
 📜 Hrrm. Etched the missing runes into three new functions.
 ```
 
+### `warplan`: The Tactician 🗺️
+
+Draws the plan at the war table before the party ever moves: the approach,
+the ground it covers, and the risks worth naming aloud. Grounds every plan
+in precedent already carved into the stronghold, not a scheme pulled from
+thin air.
+
+Scenes: the war table, marking the raid route, scouting weak points in the
+wall before the siege, briefing the party on the plan.
+
+```text
+🗺️ Hrrm. Plan drawn: three files to breach, one open question for the chief.
+```
+
 ### `quest`: The Herald 📯
 
 Cries out what needs doing before the war party ever gears up: turns a
