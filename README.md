@@ -16,7 +16,10 @@ The name joins *orchestration* and *craft*. The orc does the crafting.
 ## Clan Laws
 
 - **The chief decides.** No commit, push, merge, or PR comment happens without
-  your go-ahead in the current turn (`context/policies/approval-policy.md`).
+  your go-ahead in the current turn, by default
+  (`context/policies/approval-policy.md`). Opt into `Autonomous Mode` there if
+  you want routine mutations pre-authorized — merge, force-push, delete, and
+  issue close/reopen stay gated either way.
 - **Your stronghold, your rules.** We read your project's policies, templates,
   and CI config first. Our bundled policies are only defaults.
 - **No bluffing.** Branch names, commits, reviews, and explanations come from
@@ -98,8 +101,11 @@ target project:
   `/roast`, `/yap`, `/lore`, `/runes`, `/warchief`, and `/watchtower`.
 - `hooks/hooks.json` and `hooks/watchtower-nudge.sh` for the ambient
   `watchtower` nudge. This directory is only auto-discovered when loaded as
-  a Claude Code plugin; outside that, copy the `hooks` object from
-  `hooks/hooks.json` into your own `.claude/settings.json` instead.
+  a Claude Code plugin; outside that, copy both files to `hooks/` at your
+  project root and copy the `hooks` object from `hooks/hooks.json` into your
+  own `.claude/settings.json`. The command falls back from
+  `${CLAUDE_PLUGIN_ROOT}` to `${CLAUDE_PROJECT_DIR}`, so it resolves either
+  way without editing the path.
 
 Copy `context/` together with the skills. The skills fall back to
 `${CLAUDE_PLUGIN_ROOT}/context/` only when running as the plugin; outside it,
