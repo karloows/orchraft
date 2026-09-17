@@ -118,13 +118,27 @@ if [ $? -eq 0 ] && [ -n "$owner_repo" ]; then
       ok=0
       break
     fi
-    page_count=$(printf '%s' "$graphql_json" | jq '[.data.repository.pullRequest.reviewThreads.nodes[]? | select(.isResolved==false)] | length' 2>/dev/null)
+    # repository.pullRequest(number:...) is nullable in GitHub's schema even
+    # though reviewThreads is non-null on the PullRequest type itself -- a
+    # null pullRequest (transient hiccup, a race with the PR closing) makes
+    # the whole nested path null with no GraphQL error, so gh still exits 0.
+    # Validate the actual shape before trusting it as a real page of data,
+    # instead of letting a null silently become "0 unresolved, no next page."
+    shape_ok=$(printf '%s' "$graphql_json" | jq -r '
+      (.data.repository.pullRequest.reviewThreads.nodes | type) == "array"
+      and (.data.repository.pullRequest.reviewThreads.pageInfo.hasNextPage | type) == "boolean"
+    ' 2>/dev/null)
+    if [ "$shape_ok" != "true" ]; then
+      ok=0
+      break
+    fi
+    page_count=$(printf '%s' "$graphql_json" | jq '[.data.repository.pullRequest.reviewThreads.nodes[] | select(.isResolved==false)] | length' 2>/dev/null)
     if [ -z "$page_count" ]; then
       ok=0
       break
     fi
     total=$((total + page_count))
-    has_next=$(printf '%s' "$graphql_json" | jq -r '.data.repository.pullRequest.reviewThreads.pageInfo.hasNextPage // false' 2>/dev/null)
+    has_next=$(printf '%s' "$graphql_json" | jq -r '.data.repository.pullRequest.reviewThreads.pageInfo.hasNextPage')
     [ "$has_next" = "true" ] || break
     cursor=$(printf '%s' "$graphql_json" | jq -r '.data.repository.pullRequest.reviewThreads.pageInfo.endCursor // empty')
     if [ -z "$cursor" ]; then
