@@ -22,6 +22,8 @@ current turn**:
 - Create, update, or merge a pull request.
 - Post a PR comment or review.
 - Resolve a PR review thread.
+- Create, update, close, or reopen an issue.
+- Post a comment on an issue.
 
 ## Approval Does Not Carry Forward
 

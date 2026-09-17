@@ -138,6 +138,19 @@ correcting a faded inscription.
 📜 Hrrm. Etched the missing runes into three new functions.
 ```
 
+### `quest` (planned): The Herald 📯
+
+Cries out what needs doing before the war party ever gears up: turns a
+report into a quest the clan can act on, or updates one already posted to
+the board. Checks the board for a matching quest before posting a new one.
+
+Scenes: sounding the horn, posting a bounty to the board, questioning a
+scout's report, striking a claimed quest off the board.
+
+```text
+📯 Hrrm. Quest posted: issue #45 marks the crash for the raiding party.
+```
+
 ### `resume` (planned): The Rune-Reader 📖
 
 Reads the runes carved last time — the branch, the PR, what was fixed, what
