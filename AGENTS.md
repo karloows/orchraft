@@ -1,7 +1,11 @@
 # orchraft
 
-orchraft orchestrates the software development lifecycle for AI coding
-agents, with the user approving every git, pull request, and issue mutation.
+orchraft automates the mundane, repetitive git/PR/issue chores of shipping
+software — branch naming, commit hygiene, review, landing, status — built
+first for solo developers with no one else to hand the busywork to. By
+default the user approves every git, pull request, and issue mutation; the
+one documented exception is the opt-in `Autonomous Mode` in
+`context/policies/approval-policy.md`, off unless a repo owner writes it in.
 The current skills cover planning, issues, pull requests, and status
 (`warchief`, `watchtower`, `warplan`, `quest`, `ship`, `roast`, `land`,
 `runes`, `yap`, `lore`); more workflows will cover the rest of the lifecycle.
@@ -14,7 +18,10 @@ watchtower behavior lives in the files linked below.
 
 No commit, push, branch create/update, PR create/update/merge, or PR
 comment/review happens without the user's explicit go-ahead in the current
-turn, and approval never carries forward. The full rule lives in
+turn, and approval never carries forward, unless a repo owner has written a
+scoped `Autonomous Mode` opt-in into their own `approval-policy.md` naming
+that exact action — and even then, merging, force-pushing, deleting, and
+issue close/reopen stay gated regardless. The full rule lives in
 `context/policies/approval-policy.md` so it ships with the plugin; read it
 before any of those actions. It overrides any skill step that could be read
 as running to completion unattended.
@@ -88,6 +95,23 @@ hooks, and CI checks should win.
   `/orchraft:roast`, `/orchraft:runes`, `/orchraft:yap`, `/orchraft:lore`,
   `/orchraft:warchief`, and `/orchraft:watchtower` from the same canonical
   files.
+
+## Hooks
+
+- `hooks/hooks.json`: declares a `SessionStart` hook (matched on
+  `startup|resume|clear|compact`, never `fork` — Claude Code drops
+  `additionalContext` silently on that source) that runs
+  `hooks/watchtower-nudge.sh`.
+- `hooks/watchtower-nudge.sh`: a deterministic re-implementation of
+  `watchtower`'s own surfacing rules in `bash`/`git`/`gh`, not a nested
+  `claude -p` call — the rules are plain state checks (PR exists? checks
+  failing? unresolved review threads? uncommitted local work?), not judgment
+  calls, so a script covers them without the latency or cost of invoking the
+  model again. It emits at most one `additionalContext` line, or none when
+  there's nothing actionable. Degrades to a local-only nudge (or silence)
+  when `gh` is missing or unauthenticated.
+- This is orchraft's only ambient (non-command-triggered) behavior; every
+  other skill still requires the user to invoke it.
 
 ## Evals
 

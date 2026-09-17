@@ -8,6 +8,13 @@ description: Have the AI surface a short read-only status nudge about open PR wo
 Use this skill to give the chief a quiet status nudge at session start or
 resume, before the user has re-explained what work is in flight.
 
+When installed as the plugin, `hooks/hooks.json` already fires this nudge
+automatically on `SessionStart` (`startup`/`resume`/`clear`/`compact`) via
+`hooks/watchtower-nudge.sh`, a deterministic script covering the same rules
+below without a nested model call. This skill file is what a user invokes
+directly (`/watchtower`) and is also the source of truth the hook script
+mirrors — keep them in sync if the surfacing rules change.
+
 ## At A Glance
 
 1. Inspect live state for the current branch and its pull request, following
