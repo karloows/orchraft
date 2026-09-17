@@ -62,7 +62,7 @@ if [ "$(printf '%s' "$pr_json" | jq -r '.state // empty')" != "OPEN" ]; then
 fi
 
 number=$(printf '%s' "$pr_json" | jq -r '.number')
-states=$(printf '%s' "$pr_json" | jq -r '[.statusCheckRollup[]? | (.conclusion // .state // "")] | join(",")')
+states=$(printf '%s' "$pr_json" | jq -r '[.statusCheckRollup[]? | (.conclusion // .status // .state // "")] | join(",")')
 
 if printf '%s' "$states" | grep -qiE 'failure|error|cancelled|timed_out'; then
   emit "Chief, PR #$number has a failing check."
