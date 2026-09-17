@@ -100,12 +100,16 @@ issue, or triage/update one that already exists — the lifecycle stage before
 Use only after the GitHub MCP connector has been tried and is unavailable or
 blocked, per `context/policies/writing-guidelines.md`'s MCP-first rule.
 
-- Never interpolate drafted title, body, or comment text directly into a
-  double-quoted shell string — backticks or `$(...)` inside report-derived
-  text would run as shell commands before `gh` ever sees them. Write body
-  and comment text to a temp file first and pass it with `--body-file
-  <path>`; keep titles to one literal line passed as its own argument, never
-  built by concatenating raw report text into a larger quoted string.
+- Never build these commands as one interpolated shell string. Pass each
+  flag and value as its own literal argument (an argv list) — backticks or
+  `$(...)` inside report-derived text only run as shell commands when that
+  text gets concatenated into a larger quoted string, not when it's passed
+  as a standalone argument. Write body and comment text to a temp file
+  first and pass it with `--body-file <path>`, since `gh` has no
+  `--title-file` equivalent for the title. If only a single shell string is
+  available, single-quote the title and escape embedded single quotes
+  (`'` → `'\''`) rather than double-quoting it, since `$(...)` and
+  backticks aren't special inside single quotes.
 - Create: `gh issue create --repo <owner>/<repo> --title "<title>"
   --body-file <path> --label "<label>"` (repeat `--label` for each label).
 - Update title, body, or labels: `gh issue edit <number> --repo
