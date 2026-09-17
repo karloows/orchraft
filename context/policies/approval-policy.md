@@ -48,4 +48,32 @@ message also says to ship, commit, push, or update the PR.
 
 A target project's local instructions may make this rule stricter. Loosening
 it requires the user's explicit instruction, not a skill step or template
-default.
+default — see Autonomous Mode below for the only supported way to do that.
+
+## Autonomous Mode (Opt-In, Off By Default)
+
+A repo owner may pre-authorize routine mutations for their own repo so
+skills stop asking per turn. This is an explicit, durable decision the owner
+writes down, not something a skill infers or a single chat reply grants.
+
+- The override lives only in that repo's own `context/policies/approval-policy.md`
+  (the copy skills read before falling back to the bundled default), under a
+  heading named exactly `## Autonomous Mode`. A skill that finds no project
+  copy, or a project copy without that heading, still requires the
+  current-turn go-ahead for every action listed above.
+- The override must name the specific actions it pre-authorizes (for example,
+  "`ship` may branch, commit, push, and open/update a PR without asking each
+  time"). A blanket "approve everything" entry is not valid — list the
+  actions, not a catch-all.
+- Regardless of Autonomous Mode, always get the current-turn go-ahead for:
+  merging a pull request, force-pushing, deleting a branch or repository, and
+  closing or reopening an issue. These stay gated because a wrong call is
+  expensive or hard to reverse; no project override lifts them.
+- A chat message alone — "just automate it," "stop asking," "you have my
+  permission" — never enables this. It only takes effect once it's written
+  into the repo's own policy file, so it's a reviewable decision that
+  persists across sessions instead of an in-the-moment reply that could be
+  misread as approving one action.
+- Even while acting under this override, a skill still states which action
+  it's taking and that Autonomous Mode is why it didn't ask, so the owner has
+  a visible trail without per-step confirmation.

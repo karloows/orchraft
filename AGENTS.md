@@ -89,6 +89,23 @@ hooks, and CI checks should win.
   `/orchraft:warchief`, and `/orchraft:watchtower` from the same canonical
   files.
 
+## Hooks
+
+- `hooks/hooks.json`: declares a `SessionStart` hook (matched on
+  `startup|resume|clear|compact`, never `fork` — Claude Code drops
+  `additionalContext` silently on that source) that runs
+  `hooks/watchtower-nudge.sh`.
+- `hooks/watchtower-nudge.sh`: a deterministic re-implementation of
+  `watchtower`'s own surfacing rules in `bash`/`git`/`gh`, not a nested
+  `claude -p` call — the rules are plain state checks (PR exists? checks
+  failing? unresolved review threads? uncommitted local work?), not judgment
+  calls, so a script covers them without the latency or cost of invoking the
+  model again. It emits at most one `additionalContext` line, or none when
+  there's nothing actionable. Degrades to a local-only nudge (or silence)
+  when `gh` is missing or unauthenticated.
+- This is orchraft's only ambient (non-command-triggered) behavior; every
+  other skill still requires the user to invoke it.
+
 ## Evals
 
 `evals/` holds `claude plugin eval` cases that check skill behavior rather than
