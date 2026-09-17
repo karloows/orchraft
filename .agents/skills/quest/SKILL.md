@@ -17,6 +17,7 @@ issue, or triage/update one that already exists — the lifecycle stage before
 - [Requirements](#requirements)
 - [Prerequisites](#prerequisites)
 - [Default Path](#default-path)
+- [gh Fallback](#gh-fallback)
 - [Naming And Text](#naming-and-text)
 - [Guardrails](#guardrails)
 - [Stop Conditions](#stop-conditions)
@@ -58,7 +59,7 @@ issue, or triage/update one that already exists — the lifecycle stage before
 - A GitHub MCP connector configured for this session, authenticated as an
   account with issue write access to the repository, for any create, update,
   or comment action. Without write access, a draft can still be produced but
-  never posted.
+  never posted. A search/triage-only pass needs nothing beyond read access.
 - `gh` installed and authenticated as a fallback path, for when the MCP
   connector is unavailable mid-session.
 
@@ -92,6 +93,27 @@ issue, or triage/update one that already exists — the lifecycle stage before
 5. Confirm the write call actually returned an issue number, URL, or comment
    id before declaring success — a call that didn't error is not proof it
    posted.
+
+## gh Fallback
+
+Use only after the GitHub MCP connector has been tried and is unavailable or
+blocked, per `context/policies/writing-guidelines.md`'s MCP-first rule.
+
+- Create: `gh issue create --repo <owner>/<repo> --title "<title>" --body
+  "<body>" --label "<label>"` (repeat `--label` for each label).
+- Update title, body, or labels: `gh issue edit <number> --repo
+  <owner>/<repo> --title "<title>" --body "<body>" --add-label "<label>"
+  --remove-label "<label>"`.
+- Close or reopen: `gh issue close <number> --repo <owner>/<repo>` or
+  `gh issue reopen <number> --repo <owner>/<repo>`.
+- Comment: `gh issue comment <number> --repo <owner>/<repo> --body
+  "<comment>"`.
+- `gh` has no equivalent for issue `type` or custom project fields — those
+  are GraphQL-only. If the MCP connector is down and either is required to
+  fulfill the request, say so and stop instead of silently dropping the
+  field.
+- Confirm success the same way as the MCP path (step 5 above): read back
+  what `gh` just returned before declaring success.
 
 ## Naming And Text
 

@@ -138,7 +138,7 @@ correcting a faded inscription.
 📜 Hrrm. Etched the missing runes into three new functions.
 ```
 
-### `quest` (planned): The Herald 📯
+### `quest`: The Herald 📯
 
 Cries out what needs doing before the war party ever gears up: turns a
 report into a quest the clan can act on, or updates one already posted to
