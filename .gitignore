@@ -8,3 +8,6 @@ node_modules/
 .mcp.json
 # per-machine Claude Code permission overrides
 .claude/settings.local.json
+# internal roadmap, not for the shipped plugin
+ROADMAP.md
+*/config.toml
