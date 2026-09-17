@@ -90,6 +90,12 @@ Use this skill when the user asks the AI to ship work.
 10. Create or update the branch pull request through the GitHub MCP connector
    when it is available in the session. Use `gh` only after the MCP path has
    been tried and is unavailable or blocked.
+11. If the PR has open review threads from a prior `roast` pass and this
+    diff fixes the finding one flags, resolve that specific thread via
+    `pull_request_review_write` (method `resolve_thread`) once the user gives
+    the current-turn go-ahead per `context/policies/approval-policy.md`.
+    Match each resolution to the finding it actually fixes; do not resolve
+    threads wholesale or resolve one whose finding this diff doesn't address.
 
 ## Naming And Text
 
@@ -121,6 +127,8 @@ Use this skill when the user asks the AI to ship work.
   correct git commands before changing the branch name. Retry with approval
   when the failure may be permission or sandbox related. Do not switch to a
   less accurate type or unrelated branch name just to bypass the error.
+- Never resolve a review thread whose finding this diff doesn't actually fix,
+  and never resolve one without the user's current-turn go-ahead.
 
 ## Stop Conditions
 
@@ -146,6 +154,8 @@ Use this skill when the user asks the AI to ship work.
 - Report the commit title.
 - Report the pull request URL or say why PR creation/update was blocked.
 - Report validation that ran, or why validation could not run.
+- Report which review threads, if any, were resolved and which finding each
+  one fixed.
 - If shipping stops or fails, skip the shipping phrase and state the blocker
   plainly.
 
