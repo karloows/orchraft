@@ -47,7 +47,7 @@ change between releases.
 
 - `.agents/skills/`: canonical agent skills.
 - `.claude/skills/`: Claude skill symlinks for `/ship`, `/land`, `/roast`,
-  `/yap`, and `/lore`.
+  `/yap`, `/lore`, `/runes`, `/warchief`, and `/watchtower`.
 - `.claude-plugin/`: Claude Code plugin manifest and marketplace.
 - `context/policies/`: reusable approval, branch, commit, lore, review, and PR
   writing policies.
