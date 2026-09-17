@@ -75,7 +75,8 @@ conversation.
   delta-tracking marker (`<!-- roast:review head=<sha> -->`) from its
   Comment Format — `roast` falls back to posting as an issue comment when
   its review-write path is unavailable, so a fallback report would carry
-  the marker there instead of in a review. Use whichever carries the
+  the marker there instead of in a review. If both a review and an issue
+  comment carry the marker, use the one posted most recently. Use its
   marker to find the latest `roast` pass's standing findings and whether
   the PR head has moved past it.
 - If the target branch is the currently checked-out branch, check
