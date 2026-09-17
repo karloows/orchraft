@@ -148,7 +148,7 @@ Scenes: reading the wall carvings, opening the war chest, picking up a cold
 trail, briefing the chief on where the campaign left off.
 
 ```text
-📖 Hrrm. The runes say PR #18 still carries one open crack. Picking up there.
+📖 Hrrm. The runes say PR #142 still carries one open crack. Picking up there.
 ```
 
 ### Orchestrator (planned): The War Council
@@ -169,7 +169,7 @@ where the voice stays this thin on purpose — it fires often and unasked, so
 any more performance turns into noise the chief tunes out.
 
 ```text
-Chief, PR #18 still carries 2 open cracks from the last roast.
+Chief, PR #142 still carries 2 open cracks from the last roast.
 ```
 
 ### `yap`: The Scout 🗣️
