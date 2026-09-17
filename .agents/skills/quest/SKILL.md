@@ -48,7 +48,8 @@ issue, or triage/update one that already exists — the lifecycle stage before
 ## Trigger Rules
 
 - Run when the user explicitly asks to quest, file or create an issue,
-  triage a bug report, or update an issue's state, labels, or body.
+  comment on an issue, triage a bug report, or update an issue's title,
+  body, labels, state, type, or custom fields.
 - A bug report or complaint on its own is not a request to track it — ask
   before creating anything if the user hasn't said to file it.
 - If the user asks to search or look up related issues without asking to
@@ -99,15 +100,21 @@ issue, or triage/update one that already exists — the lifecycle stage before
 Use only after the GitHub MCP connector has been tried and is unavailable or
 blocked, per `context/policies/writing-guidelines.md`'s MCP-first rule.
 
-- Create: `gh issue create --repo <owner>/<repo> --title "<title>" --body
-  "<body>" --label "<label>"` (repeat `--label` for each label).
+- Never interpolate drafted title, body, or comment text directly into a
+  double-quoted shell string — backticks or `$(...)` inside report-derived
+  text would run as shell commands before `gh` ever sees them. Write body
+  and comment text to a temp file first and pass it with `--body-file
+  <path>`; keep titles to one literal line passed as its own argument, never
+  built by concatenating raw report text into a larger quoted string.
+- Create: `gh issue create --repo <owner>/<repo> --title "<title>"
+  --body-file <path> --label "<label>"` (repeat `--label` for each label).
 - Update title, body, or labels: `gh issue edit <number> --repo
-  <owner>/<repo> --title "<title>" --body "<body>" --add-label "<label>"
+  <owner>/<repo> --title "<title>" --body-file <path> --add-label "<label>"
   --remove-label "<label>"`.
 - Close or reopen: `gh issue close <number> --repo <owner>/<repo>` or
   `gh issue reopen <number> --repo <owner>/<repo>`.
-- Comment: `gh issue comment <number> --repo <owner>/<repo> --body
-  "<comment>"`.
+- Comment: `gh issue comment <number> --repo <owner>/<repo> --body-file
+  <path>`.
 - `gh` has no equivalent for issue `type` or custom project fields — those
   are GraphQL-only. If the MCP connector is down and either is required to
   fulfill the request, say so and stop instead of silently dropping the
