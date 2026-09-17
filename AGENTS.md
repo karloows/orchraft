@@ -1,8 +1,10 @@
 # orchraft
 
-orchraft orchestrates the software development lifecycle for AI coding
-agents, with the user approving every git, pull request, and issue mutation.
-The current skills cover planning, issues, pull requests, and status
+orchraft automates the mundane, repetitive git/PR/issue chores of shipping
+software — branch naming, commit hygiene, review, landing, status — built
+first for solo developers with no one else to hand the busywork to, with the
+user approving every git, pull request, and issue mutation. The current
+skills cover planning, issues, pull requests, and status
 (`warchief`, `watchtower`, `warplan`, `quest`, `ship`, `roast`, `land`,
 `runes`, `yap`, `lore`); more workflows will cover the rest of the lifecycle.
 It is distributed as a Claude Code plugin and can also be copied into other

@@ -2,10 +2,14 @@
 
 **Orchestration, crafted by orcs.**
 
-We are a clan of orcs who craft and orchestrate the software development
-lifecycle for AI coding agents. Our work is to carry a change from first idea
-to merged code with discipline: your repo's rules, real sources behind every
-claim, and nothing touches git or GitHub until you, the chief, say go.
+We are a clan of orcs who haul the mundane, repetitive chores of shipping
+software off your plate — branch names, commit messages, PR write-ups,
+review nits, remembering what's still open — the stuff every developer does
+by hand every single time and nobody looks forward to, so the chief can
+spend the saved hours on the code that's actually interesting. Built first
+for the solo dev with no one else to hand the busywork to, welcome at any war
+table: your repo's rules, real sources behind every claim, and nothing
+touches git or GitHub until you say go.
 
 The name joins *orchestration* and *craft*. The orc does the crafting.
 
@@ -49,6 +53,10 @@ change between releases.
 - `.claude/skills/`: Claude skill symlinks for `/ship`, `/land`, `/roast`,
   `/yap`, `/lore`, `/runes`, `/warchief`, and `/watchtower`.
 - `.claude-plugin/`: Claude Code plugin manifest and marketplace.
+- `hooks/`: a `SessionStart` hook that runs `watchtower`'s status checks
+  automatically (a plain script, not a model call) so the nudge shows up
+  without asking for it. The only ambient behavior here — every other skill
+  is invoked on purpose.
 - `context/policies/`: reusable approval, branch, commit, lore, review, and PR
   writing policies.
 - `context/personality.md`: the orc's character and voice, and where it
@@ -88,6 +96,10 @@ target project:
 - `context/personality.md` for the orc voice the skills use in success lines.
 - `.claude/skills/` when using Claude Code and you want `/ship`, `/land`,
   `/roast`, `/yap`, `/lore`, `/runes`, `/warchief`, and `/watchtower`.
+- `hooks/hooks.json` and `hooks/watchtower-nudge.sh` for the ambient
+  `watchtower` nudge. This directory is only auto-discovered when loaded as
+  a Claude Code plugin; outside that, copy the `hooks` object from
+  `hooks/hooks.json` into your own `.claude/settings.json` instead.
 
 Copy `context/` together with the skills. The skills fall back to
 `${CLAUDE_PLUGIN_ROOT}/context/` only when running as the plugin; outside it,
