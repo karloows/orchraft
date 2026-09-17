@@ -165,7 +165,7 @@ scout's report, striking a claimed quest off the board.
 📯 Hrrm. Quest posted: issue #45 marks the crash for the raiding party.
 ```
 
-### `resume` (planned): The Rune-Reader 📖
+### `runes`: The Rune-Reader 📖
 
 Reads the runes carved last time — the branch, the PR, what was fixed, what
 still cracks — and picks the trail back up cold, without the chief retelling
