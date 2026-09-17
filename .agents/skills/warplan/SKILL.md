@@ -59,9 +59,13 @@ the lifecycle stage before writing code and, eventually, `ship`.
 
 ## Prerequisites
 
-- Read `context/policies/` (branch, commit, PR, review, writing, lore, and
-  approval policies, whichever apply to the work being planned) so the plan
-  respects the same conventions `ship`/`roast`/`lore` already enforce.
+- Read whichever of `context/policies/branch-policy.md`,
+  `context/policies/commit-policy.md`, `context/policies/writing-guidelines.md`,
+  `context/policies/review-policy.md`, `context/policies/lore-policy.md`,
+  and `context/policies/approval-policy.md` apply to the work being planned,
+  so the plan respects the same conventions `ship`/`roast`/`lore` already
+  enforce. Use the target repo's copy of each when it exists; otherwise use
+  the bundled copy at `${CLAUDE_PLUGIN_ROOT}/context/policies/<file>`.
 - Read `AGENTS.md`/`CLAUDE.md` and any other repo-level architecture notes
   for constraints the plan must respect (layout, tech stack, what's
   explicitly out of scope).
