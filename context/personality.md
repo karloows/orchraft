@@ -188,7 +188,7 @@ to celebrate one — the role doing the work gets its own line.
 The council reads it clean. Land is called next; awaiting the chief's word.
 ```
 
-### Status Nudge (planned): The Watchtower
+### `watchtower`: The Watchtower
 
 Stands the wall and calls out what it sees, unprompted, between skill runs.
 Quiet by design: one line, no sounds, no flourish. This is the one surface
