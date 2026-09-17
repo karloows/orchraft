@@ -2,12 +2,13 @@
 
 orchraft orchestrates the software development lifecycle for AI coding
 agents, with the user approving every git, pull request, and issue mutation.
-The current skills cover planning, issues, and pull requests (`warplan`,
-`quest`, `ship`, `roast`, `land`, `yap`, `lore`); more workflows will cover
-the rest of the lifecycle. It is distributed as a Claude Code plugin and can
-also be copied into other projects. Keep this file as the map, not the
-rulebook: detailed branch, commit, PR, warplan, quest, ship, roast, land,
-yap, and lore behavior lives in the files linked below.
+The current skills cover planning, issues, pull requests, and status
+(`warplan`, `quest`, `ship`, `roast`, `land`, `runes`, `yap`, `lore`); more
+workflows will cover the rest of the lifecycle. It is distributed as a
+Claude Code plugin and can also be copied into other projects. Keep this
+file as the map, not the rulebook: detailed branch, commit, PR, warplan,
+quest, ship, roast, land, runes, yap, and lore behavior lives in the files
+linked below.
 
 ## Non-Negotiable: Ask Before Every Mutating Action
 
@@ -62,18 +63,23 @@ hooks, and CI checks should win.
 - `.agents/skills/lore/SKILL.md`: AI-driven workflow that adds or fixes code
   comments and docstrings across a diff, file, or PR to match
   `context/policies/lore-policy.md`, without committing or pushing.
+- `.agents/skills/runes/SKILL.md`: AI-driven status workflow that
+  summarizes a branch's live state — its PR, checks, and unresolved `roast`
+  findings — so the user doesn't have to re-explain where things stand.
+  Read-only.
 - `.claude/skills/warplan/SKILL.md`, `.claude/skills/quest/SKILL.md`,
   `.claude/skills/ship/SKILL.md`, `.claude/skills/land/SKILL.md`,
-  `.claude/skills/roast/SKILL.md`, `.claude/skills/yap/SKILL.md`, and
-  `.claude/skills/lore/SKILL.md`: Claude skill symlinks so Claude sessions
-  can use `/warplan`, `/quest`, `/ship`, `/land`, `/roast`, `/yap`, and
-  `/lore` while reading the same canonical skill files.
+  `.claude/skills/roast/SKILL.md`, `.claude/skills/runes/SKILL.md`,
+  `.claude/skills/yap/SKILL.md`, and `.claude/skills/lore/SKILL.md`: Claude
+  skill symlinks so Claude sessions can use `/warplan`, `/quest`, `/ship`,
+  `/land`, `/roast`, `/runes`, `/yap`, and `/lore` while reading the same
+  canonical skill files.
 - `.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json`: Claude
   Code plugin manifest and single-plugin marketplace. The manifest's `skills`
   path points at `.agents/skills/`, so installed users get
   `/orchraft:warplan`, `/orchraft:quest`, `/orchraft:ship`, `/orchraft:land`,
-  `/orchraft:roast`, `/orchraft:yap`, and `/orchraft:lore` from the same
-  canonical files.
+  `/orchraft:roast`, `/orchraft:runes`, `/orchraft:yap`, and
+  `/orchraft:lore` from the same canonical files.
 
 ## Evals
 
