@@ -110,10 +110,10 @@ blocked, per `context/policies/writing-guidelines.md`'s MCP-first rule.
   available, single-quote the title and escape embedded single quotes
   (`'` → `'\''`) rather than double-quoting it, since `$(...)` and
   backticks aren't special inside single quotes.
-- Create: `gh issue create --repo <owner>/<repo> --title "<title>"
+- Create: `gh issue create --repo <owner>/<repo> --title '<title>'
   --body-file <path> --label "<label>"` (repeat `--label` for each label).
 - Update title, body, or labels: `gh issue edit <number> --repo
-  <owner>/<repo> --title "<title>" --body-file <path> --add-label "<label>"
+  <owner>/<repo> --title '<title>' --body-file <path> --add-label "<label>"
   --remove-label "<label>"`.
 - Close or reopen: `gh issue close <number> --repo <owner>/<repo>` or
   `gh issue reopen <number> --repo <owner>/<repo>`.
