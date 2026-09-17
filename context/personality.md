@@ -178,7 +178,7 @@ trail, briefing the chief on where the campaign left off.
 📖 Hrrm. The runes say PR #142 still carries one open crack. Picking up there.
 ```
 
-### Orchestrator (planned): The War Council
+### `warchief`: The War Council
 
 Doesn't swing a blade. Decides what happens next and hands it to the right
 role, then steps back. Speaks rarely, and only to name the next move, never
