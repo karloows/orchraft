@@ -31,6 +31,9 @@ the anvil as we cover the rest of the lifecycle.
 | `land` | 🏰 Haulmaster | Checks mergeability and CI, merges with the repo's default method, syncs `main`, and cleans up the branch. |
 | `yap` | 🗣️ Scout | Explains a PR, file, error, policy, or dependency, citing real sources instead of guessing. Read-only. |
 | `lore` | 📜 Loremaster | Adds or fixes code comments and docstrings across a diff, file, or PR to match your repo's lore policy. |
+| `runes` | 📖 Rune-Reader | Summarizes the live state of a branch, PR, checks, and standing review findings. Read-only. |
+| `warchief` | War Council | Chooses the next lifecycle role without treating orchestration as approval for mutations. |
+| `watchtower` | Watchtower | Surfaces a short read-only nudge about actionable PR state. |
 
 Today's march is `lore` → `ship` → `roast` → fix → `ship` → `land`, with `yap`
 available at any point.
@@ -66,8 +69,9 @@ If the install reports that the plugin isn't active yet, run
 cache).
 
 The skills load as `/orchraft:ship`, `/orchraft:land`, `/orchraft:roast`,
-`/orchraft:yap`, and `/orchraft:lore`. They read `context/policies/` from your
-repo when present and fall back to the policies bundled with the plugin.
+`/orchraft:yap`, `/orchraft:lore`, `/orchraft:runes`, `/orchraft:warchief`,
+and `/orchraft:watchtower`. They read `context/policies/` from your repo when
+present and fall back to the policies bundled with the plugin.
 
 To try a local checkout without installing, run
 `claude --plugin-dir /path/to/orchraft`.
@@ -77,13 +81,13 @@ To try a local checkout without installing, run
 For other agents, or to customize the files, copy the parts you need into a
 target project:
 
-- `.agents/skills/` for the canonical `ship`, `land`, `roast`, `yap`, and
-  `lore` workflows.
+- `.agents/skills/` for the canonical `ship`, `land`, `roast`, `yap`, `lore`,
+  `runes`, `warchief`, and `watchtower` workflows.
 - `context/policies/` for approval, branch, commit, lore, review, and PR
   writing rules.
 - `context/personality.md` for the orc voice the skills use in success lines.
 - `.claude/skills/` when using Claude Code and you want `/ship`, `/land`,
-  `/roast`, `/yap`, and `/lore`.
+  `/roast`, `/yap`, `/lore`, `/runes`, `/warchief`, and `/watchtower`.
 
 Copy `context/` together with the skills. The skills fall back to
 `${CLAUDE_PLUGIN_ROOT}/context/` only when running as the plugin; outside it,
