@@ -62,42 +62,60 @@ conversation.
 
 - Determine the target branch: the current branch by default, or the one the
   user names.
-- Confirm the target branch has an upstream and, if so, whether it has an
-  open, non-draft pull request — via the GitHub MCP connector, falling back
-  to `gh` when the connector is unavailable or blocked.
-- If a PR exists, fetch its current state fresh in this turn: head SHA,
-  mergeable state, check runs/status, and its most recent reviews —
-  including this skill's own delta-tracking marker
-  (`<!-- roast:review head=<sha> -->`) from `roast`'s Comment Format, to
+- Look up whether the target branch has a pull request via the GitHub MCP
+  connector (falling back to `gh` when unavailable or blocked), by branch
+  name — not by whether the local branch has an upstream configured, since
+  a PR can exist on GitHub even when the local branch has no upstream
+  tracking ref set. Classify the result explicitly: none, draft, open,
+  closed, or merged. Only a confirmed `none` justifies naming `ship` as the
+  next step.
+- If a PR exists in any state, fetch its current state fresh in this turn:
+  head SHA, mergeable state, check runs/status, and its most recent
+  reviews — including `roast`'s delta-tracking marker
+  (`<!-- roast:review head=<sha> -->`) from its Comment Format, to
   find the latest `roast` pass's standing findings and whether the PR head
   has moved past it.
-- Check `git status --short` for local uncommitted changes on the target
-  branch, since those affect what `ship` would actually do next.
+- If the target branch is the currently checked-out branch, check
+  `git status --short` for local uncommitted changes, since those affect
+  what `ship` would actually do next. If the target branch isn't currently
+  checked out, its own uncommitted-changes state can't be read without
+  switching to it (this skill doesn't check out branches) — say that
+  plainly instead of attributing the current worktree's changes to it.
 
 ## Default Path
 
 1. Resolve the target branch (see Prerequisites).
-2. If the branch has no PR, report that plainly — the next step is `ship`,
-   not a status summary of a PR that doesn't exist.
-3. If it has a PR, gather: PR number/URL/state, check/mergeability status,
-   the latest `roast` review's finding counts by severity, and whether any
-   of its threads are still unresolved.
-4. Note whether the PR head has moved since that `roast` review's marker
+2. If the PR state is `none`, report that plainly — the next step is
+   `ship`, not a status summary of a PR that doesn't exist.
+3. If the PR state is `draft`, report it as a draft explicitly — the next
+   step is finishing and marking it ready, not `ship` (which would try to
+   open a duplicate) or `land`.
+4. If the PR state is `closed` or `merged`, report that plainly — the
+   branch is stale relative to it; the next step is likely starting fresh
+   or cleaning up the branch, not shipping more commits onto it.
+5. If the PR state is `open`, gather: PR number/URL, check/mergeability
+   status, the latest `roast` review's finding counts by severity, and
+   whether any of its threads are still unresolved.
+6. Note whether the PR head has moved since that `roast` review's marker
    commit — if so, say the standing findings may be stale rather than
    presenting them as current.
-5. Note any local uncommitted changes on the branch.
-6. Name the next logical step (e.g. "roast hasn't run yet", "2 findings
+7. Note local uncommitted changes per the Prerequisites' checked-out-branch
+   caveat.
+8. Name the next logical step (e.g. "roast hasn't run yet", "2 findings
    still unresolved", "clean and land-ready") without taking it.
 
 ## Summary Format
 
 Keep it to what's actually known — don't pad a thin status with filler.
 
-- **Branch** — name and whether it has an upstream/PR.
-- **PR** — number, URL, state (open/merged/closed), mergeable/check status.
+- **Branch** — name and whether it has an upstream.
+- **PR** — number, URL, state (none/draft/open/closed/merged),
+  mergeable/check status.
 - **Reviews** — the latest `roast` pass's finding counts by severity, and
-  whether that pass is still current for the PR's head commit.
-- **Local changes** — any uncommitted work on the branch, if present.
+  whether that pass is still current for the PR's head commit. Omit when
+  the PR state is `none`.
+- **Local changes** — any uncommitted work, only when the target branch is
+  the currently checked-out branch (see Prerequisites).
 - **Next step** — the logical next action, named but not taken.
 
 ## Guardrails
@@ -107,6 +125,10 @@ Keep it to what's actually known — don't pad a thin status with filler.
   moved past that review's marker commit — say they may be stale instead.
 - Never invent a status for something that couldn't be checked (e.g. no
   GitHub access) — say what's unverifiable instead of guessing.
+- Never attribute the currently checked-out worktree's uncommitted changes
+  to a target branch that isn't actually checked out.
+- Never recommend `ship` as the next step without a confirmed `none` PR
+  state — a missed PR lookup is not the same as no PR existing.
 
 ## Stop Conditions
 
