@@ -1,8 +1,10 @@
 # AI Writing & Naming Policy
 
-Never include secrets, tokens, keys, or environment variable values in branch
-names, commit messages, PR text, or user-facing summaries. Reference variable
-names only.
+Never include secrets, tokens, API keys, or environment variable values in
+branch names, commit messages, PR text, or user-facing summaries. Reference
+variable names only. This does not apply to a non-secret external tracker
+ticket key (e.g. `CPD-142`) used per `context/policies/branch-policy.md`'s
+Optional Ticket Key section — that's an issue reference, not a credential.
 
 ## Workflow Requirements
 
@@ -63,8 +65,14 @@ These rules override default LLM behavior.
 Format:
     <type>: <short technical summary>
 
-This format applies to PR titles only. PR titles intentionally omit scope.
-Commit messages must follow the commit-specific prompt rules.
+This format applies to PR titles only. PR titles intentionally omit scope,
+with one exception: when the work is tracked in an external system (Jira,
+Trello, Linear, or similar) and the user supplies the ticket key in the
+request, or the target project's own local PR policy requires one, use it as
+the scope instead — `<type>(TICKET-KEY): <short technical summary>` (e.g.
+`feat(CPD-142): add offline cache for user profile`). Never invent, guess, or
+derive a ticket key from the change itself. Commit messages must follow the
+commit-specific prompt rules.
 
 Allowed types:
 
