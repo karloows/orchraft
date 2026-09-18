@@ -55,8 +55,14 @@ These rules override default LLM behavior.
 Format:
     <type>: <short technical summary>
 
-This format applies to PR titles only. PR titles intentionally omit scope.
-Commit messages must follow the commit-specific prompt rules.
+This format applies to PR titles only. PR titles intentionally omit scope,
+with one exception: when the work is tracked in an external system (Jira,
+Trello, Linear, or similar) and the user supplies the ticket key in the
+request, or the target project's own local PR policy requires one, use it as
+the scope instead — `<type>(TICKET-KEY): <short technical summary>` (e.g.
+`feat(CPD-142): add offline cache for user profile`). Never invent, guess, or
+derive a ticket key from the change itself. Commit messages must follow the
+commit-specific prompt rules.
 
 Allowed types:
 

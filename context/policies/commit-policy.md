@@ -37,7 +37,12 @@ the body exists only for changes where the diff isn't self-explanatory.
 ## Title Rules
 
 - Use the conventional type that best matches the staged changes.
-- Use the narrowest scope that fits the dominant diff.
+- Use the narrowest scope that fits the dominant diff. When the work is
+  tracked in an external system (Jira, Trello, Linear, or similar), the
+  ticket key may be used as the scope instead — e.g. `fix(CPD-142): ...` —
+  but only when the user supplies that key in the request or the target
+  project's own local commit policy names one. Never invent, guess, or
+  derive a ticket key from the diff.
 - Keep the summary technical, specific, and written in imperative mood.
 - Do not use vague summaries such as `update docs` or `fix stuff`.
 - Keep the subject concise enough to stay readable in release notes and merge

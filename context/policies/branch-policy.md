@@ -27,6 +27,23 @@ Where:
 - `<type>` is one of the conventional commit types (see Section 3)
 - `<short-kebab-description>` is a maximum of **3 words**, lowercase, hyphen-separated, summarizing the change
 
+### Optional Ticket Key
+
+When the work is tracked in an external system (Jira, Trello, Linear, or
+similar) and the user supplies the ticket key in the request, or the target
+project's own local branch policy requires one, prepend it right after
+`<type>/`, uppercase, own hyphen segment:
+
+    <type>/<TICKET-KEY>-<short-kebab-description>
+
+    feat/CPD-142-offline-cache
+    fix/TRELLO-88-null-token-crash
+
+Never invent, guess, or derive a ticket key from the change description —
+only use one the user gave you or one a project-local policy names. No
+ticket key given and no project-local rule requiring one → use the plain
+`<type>/<short-kebab-description>` format.
+
 ### Examples
 
     feat/offline-cache
