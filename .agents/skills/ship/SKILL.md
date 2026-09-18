@@ -96,6 +96,10 @@ Use this skill when the user asks the AI to ship work.
     the current-turn go-ahead per `context/policies/approval-policy.md`.
     Match each resolution to the finding it actually fixes; do not resolve
     threads wholesale or resolve one whose finding this diff doesn't address.
+    A finding posted as an "outside diff range" or general PR comment (common
+    from CodeRabbit and similar bots, since GitHub only allows threads on
+    lines inside a diff hunk) has no review thread to resolve at all — say so
+    plainly instead of treating it as resolved just because the diff fixes it.
 
 ## Naming And Text
 
@@ -166,7 +170,7 @@ Opening lines are samples of the orc voice; write a fresh one each time.
 Successful ship:
 
 ```text
-🚢 Grah! War party launched. PR #123 holds the beach for review, chief. ✨
+🚀 Grah! War party launched. PR #123 holds the beach for review, chief. ✨
 
 Branch: `fix/login-null-token`
 Commit: `fix(auth): guard null login token`
@@ -177,7 +181,7 @@ Validation: `<project validation command>`
 Successful ship with docs only:
 
 ```text
-🚢 Battle scrolls packed for the march. The docs PR has taken the field.
+🚀 Battle scrolls packed for the march. The docs PR has taken the field.
 
 Branch: `docs/land-workflow`
 Commit: `docs(agents): clarify land workflow`
@@ -188,7 +192,7 @@ Validation: reviewed markdown changes
 Successful ship on existing branch:
 
 ```text
-🚢 Reinforcements sent to the same front. PR #124 holds the new line.
+🚀 Reinforcements sent to the same front. PR #124 holds the new line.
 
 Branch: `docs/land-workflow`
 Commit: `docs(agents): document land trigger rules`
