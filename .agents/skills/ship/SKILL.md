@@ -76,7 +76,13 @@ Use this skill when the user asks the AI to ship work.
 1. Inspect branch state and working tree.
 2. Validate the touched area per `context/policies/verification-policy.md`.
 3. If on `main`, create a policy-compliant branch from `main`; if already on a
-   non-`main` branch, keep using it.
+   non-`main` branch, keep using it. Before creating or renaming any branch,
+   count the words after `/` (excluding an Optional Ticket Key segment, if
+   used) against `context/policies/branch-policy.md`'s limit and check the
+   allowed characters — verify the generated name against the policy text
+   itself, not just against the rule from memory, before running `git
+   checkout -b` or a rename. A name that fails this check gets fixed before
+   it's used, not caught later by `roast`.
 4. Stage only the intended changes.
 5. Write a commit title using `<type>(<scope>): <summary>`.
 6. Add a commit body only when the title doesn't fully explain the change,
