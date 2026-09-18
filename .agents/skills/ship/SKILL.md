@@ -96,6 +96,16 @@ Use this skill when the user asks the AI to ship work.
     the current-turn go-ahead per `context/policies/approval-policy.md`.
     Match each resolution to the finding it actually fixes; do not resolve
     threads wholesale or resolve one whose finding this diff doesn't address.
+12. If a review thread's finding — from `roast`, CodeRabbit, or a human
+    reviewer — is being declined rather than fixed (a false positive, a
+    deliberate tradeoff, out of scope for this PR), do not resolve it
+    silently and do not leave it hanging with no response either. Draft a
+    short, technical reply stating the concrete reason it won't be fixed,
+    and once the user gives the current-turn go-ahead per
+    `context/policies/approval-policy.md`, post it via
+    `add_reply_to_pull_request_comment` (or the `gh` fallback). A reply is
+    not a resolution: leave the thread unresolved unless the user separately
+    asks to resolve it too.
 
 ## Naming And Text
 
@@ -129,6 +139,10 @@ Use this skill when the user asks the AI to ship work.
   less accurate type or unrelated branch name just to bypass the error.
 - Never resolve a review thread whose finding this diff doesn't actually fix,
   and never resolve one without the user's current-turn go-ahead.
+- Never post a decline reply to a review thread without the user's
+  current-turn go-ahead, and never resolve a thread just because a decline
+  reply was posted to it — a reply and a resolution are separate actions,
+  each needing its own go-ahead.
 
 ## Stop Conditions
 
@@ -155,7 +169,7 @@ Use this skill when the user asks the AI to ship work.
 - Report the pull request URL or say why PR creation/update was blocked.
 - Report validation that ran, or why validation could not run.
 - Report which review threads, if any, were resolved and which finding each
-  one fixed.
+  one fixed, and which threads, if any, got a decline reply and why.
 - If shipping stops or fails, skip the shipping phrase and state the blocker
   plainly.
 
