@@ -154,7 +154,16 @@ policies above only.
    checked-in build output) for this correctness pass only — no human
    authored those lines. If the diff is too large to read in one pass,
    review file-by-file, prioritizing logic and security-sensitive files over
-   docs/config, rather than silently truncating or skipping the rest.
+   docs/config, rather than silently truncating or skipping the rest. Past a
+   handful of files, split the file-by-file pass across parallel read-only
+   subagents (e.g. `Explore`) instead of working through them serially —
+   each takes a disjoint subset of files plus the sources from
+   [Sources Of Truth](#sources-of-truth) and returns findings only, with no
+   git/GitHub write tools and no ability to post anything itself. This skill
+   still merges, ranks, and formats every returned finding, and still owns
+   posting the review — a subagent gathers evidence, it never becomes a
+   second reviewer with its own voice or a shortcut around the rest of this
+   Default Path.
 6. Rank findings by severity (see below). Group findings that land on the
    same file/line into a single inline comment instead of stacking multiple
    comments on one line.
@@ -381,6 +390,10 @@ PR titles or descriptions.
 - Do not invent policies this repo does not have. If something looks wrong
   but no policy or visible convention covers it, tag it `[JUDGMENT CALL]`
   per `context/policies/review-policy.md`, not a severity.
+- A subagent used for the parallel file-review pass gets read-only tools
+  only — it must not be able to comment, review, commit, or push. Its
+  findings are input to this skill's own ranking and posting, never posted
+  directly.
 
 ## Stop Conditions
 
