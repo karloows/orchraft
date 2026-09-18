@@ -45,10 +45,10 @@ findings," "fix these," or "address the review" as edit-only unless the same
 message also says to ship, commit, push, or update the PR.
 
 Deciding a review finding won't be fixed, and explaining why, is not
-exempt from this either. A reply that states that reasoning on the PR is
-itself a mutation (posting a comment) and needs its own current-turn
-go-ahead, the same as resolving the thread would — a decision reached in
-chat does not auto-post to GitHub.
+exempt from this either. Posting that reasoning as a reply on the PR is
+itself a mutation (a comment) and needs the same current-turn go-ahead as
+resolving the thread would — a decision reached in chat does not auto-post
+to GitHub.
 
 ## Project Overrides
 
