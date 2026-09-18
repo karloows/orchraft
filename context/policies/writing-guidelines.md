@@ -1,8 +1,10 @@
 # AI Writing & Naming Policy
 
-Never include secrets, tokens, keys, or environment variable values in branch
-names, commit messages, PR text, or user-facing summaries. Reference variable
-names only.
+Never include secrets, tokens, API keys, or environment variable values in
+branch names, commit messages, PR text, or user-facing summaries. Reference
+variable names only. This does not apply to a non-secret external tracker
+ticket key (e.g. `CPD-142`) used per `context/policies/branch-policy.md`'s
+Optional Ticket Key section — that's an issue reference, not a credential.
 
 ## Workflow Requirements
 

@@ -29,20 +29,26 @@ Where:
 
 ### Optional Ticket Key
 
-When the work is tracked in an external system (Jira, Trello, Linear, or
-similar) and the user supplies the ticket key in the request, or the target
-project's own local branch policy requires one, prepend it right after
-`<type>/`, uppercase, own hyphen segment:
+When the work is tracked in an external system (Jira, Linear, or similar,
+including a tracker like Trello where the team has agreed on its own
+short reference for a card) and the user supplies the ticket key in the
+request, or the target project's own local branch policy requires one,
+prepend it right after `<type>/`, uppercase, as its own hyphen-separated
+segment:
 
     <type>/<TICKET-KEY>-<short-kebab-description>
 
     feat/CPD-142-offline-cache
-    fix/TRELLO-88-null-token-crash
+    fix/ENG-88-null-token-crash
 
 Never invent, guess, or derive a ticket key from the change description —
 only use one the user gave you or one a project-local policy names. No
 ticket key given and no project-local rule requiring one → use the plain
 `<type>/<short-kebab-description>` format.
+
+The lowercase, allowed-character, and max-3-word limits in Section 4 apply
+only to `<short-kebab-description>`. `<TICKET-KEY>` keeps its own uppercase
+format and is not counted toward that 3-word limit.
 
 ### Examples
 
