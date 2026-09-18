@@ -19,6 +19,14 @@ names only.
 - Prefer the GitHub MCP connector for PR creation or updates when it is
   available in the session. Use `gh` only after the MCP path has been tried
   and is unavailable or blocked.
+- A plain `git push` can fail, or silently push under the wrong identity, if
+  the local credential helper or `gh` has multiple GitHub accounts configured
+  and the active one isn't the repo owner. A 403 on push is a credential
+  problem, not a permissions grant to work around — verify the connected
+  identity (`gh auth status`, or the GitHub MCP connector's `get_me`) and, if
+  it lacks write access, fall back to the MCP connector's branch/push/PR
+  tools (which authenticate independently of local git) instead of retrying
+  the same push.
 
 Recommended execution sequence:
 

@@ -96,6 +96,10 @@ Use this skill when the user asks the AI to ship work.
     the current-turn go-ahead per `context/policies/approval-policy.md`.
     Match each resolution to the finding it actually fixes; do not resolve
     threads wholesale or resolve one whose finding this diff doesn't address.
+    A finding posted as an "outside diff range" or general PR comment (common
+    from CodeRabbit and similar bots, since GitHub only allows threads on
+    lines inside a diff hunk) has no review thread to resolve at all — say so
+    plainly instead of treating it as resolved just because the diff fixes it.
 12. If a review thread's finding — from `roast`, CodeRabbit, or a human
     reviewer — is being declined rather than fixed (a false positive, a
     deliberate tradeoff, out of scope for this PR), do not resolve it
