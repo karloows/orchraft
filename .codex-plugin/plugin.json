@@ -1,0 +1,24 @@
+{
+  "name": "orchraft",
+  "version": "0.1.0",
+  "description": "A clan of orcs that crafts and orchestrates the software development lifecycle for AI coding agents.",
+  "author": {
+    "name": "karloows",
+    "url": "https://github.com/karloows"
+  },
+  "homepage": "https://github.com/karloows/orchraft",
+  "repository": "https://github.com/karloows/orchraft",
+  "license": "Apache-2.0",
+  "keywords": [
+    "skills",
+    "agentic-workflow",
+    "pull-requests",
+    "code-review",
+    "git"
+  ],
+  "skills": "./.agents/skills/",
+  "hooks": "./hooks/hooks.json",
+  "interface": {
+    "displayName": "Orchraft"
+  }
+}
