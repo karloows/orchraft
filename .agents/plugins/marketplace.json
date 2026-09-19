@@ -1,0 +1,21 @@
+{
+  "name": "orchraft",
+  "interface": {
+    "displayName": "Orchraft"
+  },
+  "plugins": [
+    {
+      "name": "orchraft",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/karloows/orchraft.git",
+        "ref": "main"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}
