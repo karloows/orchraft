@@ -161,9 +161,12 @@ policies above only.
    [Sources Of Truth](#sources-of-truth) and returns findings only, with no
    git/GitHub write tools and no ability to post anything itself. Before
    splitting, skim the diff for cross-file relationships — a shared
-   type/interface, schema, or config touched in more than one file — and
-   keep each such group in one subagent's subset rather than letting it
-   split across two; a change one subagent can't see the other half of
+   type/interface, schema, or config touched in more than one file.
+   Merge overlapping relationships into connected file groups (if group
+   {A, B} and group {B, C} share a file, treat {A, B, C} as one group),
+   then keep each complete group in one subagent's subset rather than
+   letting it split across two; a change one subagent can't see the
+   other half of
    reads as correct in isolation and wrong in combination. After subagent
    findings return, if the skim found any cross-file groups, do one
    final pass yourself over just those flagged file groups, checking
