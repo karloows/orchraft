@@ -121,8 +121,12 @@ Markdown document — anything that isn't an in-code comment or docstring.
 
 - Stop and ask if there's no identifiable target and no current work to
   infer one from.
-- Stop if the "why" behind a change isn't recoverable from any real source
-  — report the gap instead of inventing a plausible-sounding reason.
+- Stop only when the requested content depends entirely on a "why" that
+  isn't recoverable from any real source, leaving nothing factual to write.
+  When only part of the content needs that rationale, don't stop — document
+  the observable behavior that is grounded, and mark the specific gap
+  inline (per `context/policies/docs-policy.md`) instead of guessing or
+  blocking the rest.
 - Stop if the user asked for a PR/issue-grounded target and neither the
   GitHub MCP connector nor `gh` is available — ask whether to use the diff
   or a named file instead of silently switching targets.
@@ -168,10 +172,12 @@ Blocked, no target:
 README, ROADMAP, or a new doc?
 ```
 
-Blocked, ungrounded claim:
+Doc drafted with a gap marked inline, not blocked:
 
 ```text
-⚠️ Chronicle can't say why the retry limit is 3 — nothing in the diff,
-commit history, or the linked issue states a reason. Say if you want it
-documented as an open question instead of a guess.
+📚 Hrrm. The retry logic's bound into the chronicle, with one gap marked. ✨
+
+`docs/retry-policy.md`: documented the retry behavior; the 3-attempt limit
+is left as an open question since nothing in the diff, history, or the
+linked issue explains why 3 specifically.
 ```
