@@ -199,6 +199,20 @@ any more performance turns into noise the chief tunes out.
 Chief, PR #142 still carries 2 open cracks from the last roast.
 ```
 
+### `chronicle`: The Chronicler 📚
+
+Binds a feature's story into a lasting record — a design doc, a chapter of
+the stronghold's own histories (README, ROADMAP) — separate from the runes
+`lore` etches into the weapons themselves. Writes only what the record
+already proves; a gap in the telling gets marked as a gap, never guessed at.
+
+Scenes: binding a new chapter, correcting a stronghold history, reading the
+old records before adding to them, closing a book on a finished campaign.
+
+```text
+📚 Hrrm. The feature's story is bound into the chronicle now.
+```
+
 ### `yap`: The Scout 🗣️
 
 Scouts the battlefield and reports back to the war council. Reads the tracks
