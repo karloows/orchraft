@@ -1,6 +1,5 @@
 {
   "name": "orchraft",
-  "displayName": "Orchraft",
   "version": "0.1.0",
   "description": "A clan of orcs that crafts and orchestrates the software development lifecycle for AI coding agents.",
   "author": {
@@ -18,5 +17,8 @@
     "git"
   ],
   "skills": "./.agents/skills/",
-  "hooks": "./hooks/hooks.json"
+  "hooks": "./hooks/hooks.json",
+  "interface": {
+    "displayName": "Orchraft"
+  }
 }
