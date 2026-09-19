@@ -165,10 +165,15 @@ policies above only.
    keep each such group in one subagent's subset rather than letting it
    split across two; a change one subagent can't see the other half of
    reads as correct in isolation and wrong in combination. After subagent
-   findings return, do one final pass over the whole diff yourself for
-   exactly that kind of cross-file inconsistency, since a disjoint split
-   can still miss a relationship that wasn't obvious from a skim. This
-   skill still merges, ranks, and formats every returned finding, and
+   findings return, do one final pass yourself over just the file groups
+   flagged during that skim, checking exactly the cross-file
+   inconsistency the skim was watching for — fall back to a final pass
+   over the whole diff only when the skim found no cross-file groups.
+   Scoping the sweep to what the skim actually flagged keeps its cost
+   tied to real cross-file surface area instead of total file count,
+   since a disjoint split can still miss a relationship that wasn't
+   obvious from a skim. This skill still merges, ranks, and formats every
+   returned finding, and
    still owns posting the review — a subagent gathers evidence, it never
    becomes a second reviewer with its own voice or a shortcut around the
    rest of this Default Path.
