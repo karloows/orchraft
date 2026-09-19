@@ -115,7 +115,10 @@ Use this skill when the user asks the AI to ship work.
     `context/policies/approval-policy.md`, post it via
     `add_reply_to_pull_request_comment` (or the `gh` fallback). A reply is
     not a resolution: leave the thread unresolved unless the user separately
-    asks to resolve it too.
+    asks to resolve it too. End the reply's visible text with a blank line
+    and the hidden marker `<!-- orchraft:declined -->` so `reckoning` can
+    find it later; the marker is metadata for that skill, not part of the
+    stated reason itself.
 
 ## Naming And Text
 
