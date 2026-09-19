@@ -1,6 +1,6 @@
 ---
 name: chronicle
-description: Have the AI draft or update a standalone Markdown doc — a feature write-up, design doc, or a section of README/ROADMAP — grounded in the real diff, code, commit history, or PR/issue text. Use when the user says chronicle, asks to write documentation, draft a design doc, or update a doc file, or wants a feature explained outside of in-code comments.
+description: Have the AI draft or update a standalone Markdown doc — a feature write-up, design doc, or a section of README/ROADMAP — grounded in the real diff, code, commit history, or PR/issue text. Use when the user says chronicle, asks to write documentation, draft a design doc, or update a named doc file such as README or ROADMAP.
 ---
 
 # Chronicle Workflow
