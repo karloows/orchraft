@@ -52,6 +52,19 @@ Today's march is `warplan` → `quest` → `lore` → `ship` → `roast` → fix
 Early (0.x). The forge is hot: skill behavior and policy formats may still
 change between releases.
 
+## Requirements
+
+- Local `git` and file access — enough for `lore` on a diff or file, and for
+  `warchief`, which routes to the right skill without reading GitHub state
+  itself.
+- A GitHub MCP connector configured for the session, authenticated with
+  write access (not just read) for `ship`, `roast`, `land`, and `quest` —
+  they create/update pull requests, post reviews, merge, and manage issues.
+  `gh` installed and authenticated works as a fallback when the MCP
+  connector is unavailable mid-session.
+- Read-only GitHub access is enough for `runes`, `watchtower`, `yap`, and
+  `warplan` when they're only reading PR/issue state, not changing it.
+
 ## Layout
 
 - `.agents/skills/`: canonical agent skills.
@@ -69,6 +82,8 @@ change between releases.
   writing policies.
 - `context/personality.md`: the orc's character and voice, and where it
   applies.
+- `evals/`: `claude plugin eval` cases that check skill behavior (e.g. `ship`
+  refusing to commit without a request) rather than file syntax.
 
 Edit the canonical skill files in `.agents/skills/`; the Claude skill files are
 symlinks.
@@ -134,9 +149,11 @@ these defaults.
 
 ## Releases
 
-Versioning and `CHANGELOG.md` are managed by
+Versioning and [`CHANGELOG.md`](CHANGELOG.md) are managed by
 [release-please](https://github.com/googleapis/release-please). Merge a
 release PR to publish a new version; do not edit `CHANGELOG.md` by hand.
+The file doesn't exist yet — release-please creates it on the first release
+PR merge, at which point this link resolves.
 
 ## License
 
