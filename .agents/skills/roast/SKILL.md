@@ -168,17 +168,16 @@ policies above only.
    letting it split across two. A change whose other half a subagent
    cannot see can appear correct in isolation but be wrong in
    combination. After subagent
-   findings return, if the skim found any cross-file groups, do one
-   final pass yourself over just those flagged file groups, checking
-   exactly the cross-file inconsistency the skim was watching for. If the
-   skim found none, skip this pass entirely — there is nothing cross-file
-   left to check. Either way, this keeps the sweep's cost tied to real
-   cross-file surface area instead of total file count. The pre-split
-   skim only reduces the odds of missing a relationship, so treat its
-   flagged groups as a floor, not a guarantee: if a subagent's own
-   findings surface a cross-file issue the skim didn't catch, review
-   that too. This skill still merges, ranks, and formats every
-   returned finding, and
+   findings return, run a final pass yourself over any cross-file groups
+   the skim flagged, checking exactly the cross-file inconsistency the
+   skim was watching for, plus any cross-file issue a subagent's own
+   findings surfaced that the skim didn't catch — the skim only reduces
+   the odds of missing a relationship, it doesn't guarantee catching all
+   of them. Skip this final pass only when neither the skim nor the
+   subagent findings turned up anything cross-file to check. Either way,
+   this keeps the sweep's cost tied to real cross-file surface area
+   instead of total file count. This skill still merges, ranks, and
+   formats every returned finding, and
    still owns posting the review — a subagent gathers evidence, it never
    becomes a second reviewer with its own voice or a shortcut around the
    rest of this Default Path.
