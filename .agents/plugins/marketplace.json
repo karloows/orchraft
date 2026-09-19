@@ -9,7 +9,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/karloows/orchraft.git",
-        "ref": "main"
+        "ref": "166085f0a36297950687f7d011ad28ad284efab8"
       },
       "policy": {
         "installation": "AVAILABLE",
