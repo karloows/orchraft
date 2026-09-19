@@ -165,9 +165,9 @@ policies above only.
    Merge overlapping relationships into connected file groups (if group
    {A, B} and group {B, C} share a file, treat {A, B, C} as one group),
    then keep each complete group in one subagent's subset rather than
-   letting it split across two; a change one subagent can't see the
-   other half of
-   reads as correct in isolation and wrong in combination. After subagent
+   letting it split across two. A change whose other half a subagent
+   cannot see can appear correct in isolation but be wrong in
+   combination. After subagent
    findings return, if the skim found any cross-file groups, do one
    final pass yourself over just those flagged file groups, checking
    exactly the cross-file inconsistency the skim was watching for. If the
