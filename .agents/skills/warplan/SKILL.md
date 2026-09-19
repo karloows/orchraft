@@ -78,8 +78,9 @@ the lifecycle stage before writing code and, eventually, `ship`.
   serially — each takes a disjoint area to search plus the relevant sources
   above and returns findings only. It may read git history and GitHub
   PRs/issues to find precedent (the same lookups this step already uses),
-  but holds no write tools of any kind — it cannot write code, commit, push,
-  or touch a PR or issue. This skill still evaluates every returned lead,
+  but holds no write tools of any kind — it cannot write code, create commits,
+  push, or create, modify, comment on, or otherwise mutate PRs or issues.
+  This skill still evaluates every returned lead,
   decides which precedent actually grounds the plan, and writes the plan
   itself — a subagent gathers candidate precedent, it never decides what the
   plan says.
