@@ -159,11 +159,19 @@ policies above only.
    subagents (e.g. `Explore`) instead of working through them serially —
    each takes a disjoint subset of files plus the sources from
    [Sources Of Truth](#sources-of-truth) and returns findings only, with no
-   git/GitHub write tools and no ability to post anything itself. This skill
-   still merges, ranks, and formats every returned finding, and still owns
-   posting the review — a subagent gathers evidence, it never becomes a
-   second reviewer with its own voice or a shortcut around the rest of this
-   Default Path.
+   git/GitHub write tools and no ability to post anything itself. Before
+   splitting, skim the diff for cross-file relationships — a shared
+   type/interface, schema, or config touched in more than one file — and
+   keep each such group in one subagent's subset rather than letting it
+   split across two; a change one subagent can't see the other half of
+   reads as correct in isolation and wrong in combination. After subagent
+   findings return, do one final pass over the whole diff yourself for
+   exactly that kind of cross-file inconsistency, since a disjoint split
+   can still miss a relationship that wasn't obvious from a skim. This
+   skill still merges, ranks, and formats every returned finding, and
+   still owns posting the review — a subagent gathers evidence, it never
+   becomes a second reviewer with its own voice or a shortcut around the
+   rest of this Default Path.
 6. Rank findings by severity (see below). Group findings that land on the
    same file/line into a single inline comment instead of stacking multiple
    comments on one line.
