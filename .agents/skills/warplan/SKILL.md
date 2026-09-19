@@ -71,7 +71,19 @@ the lifecycle stage before writing code and, eventually, `ship`.
   explicitly out of scope).
 - Search the repo for the closest existing precedent: a similar feature,
   a comparable past PR (via git log or the GitHub MCP connector), or an
-  existing pattern the new work should follow rather than reinvent.
+  existing pattern the new work should follow rather than reinvent. When the
+  scope spans several plausible precedent areas (e.g. a change touching more
+  than one skill, policy, or subsystem), split that search across parallel
+  read-only subagents (e.g. `Explore`) instead of working through them
+  serially — each takes a disjoint area to search plus the relevant sources
+  above and returns findings only. It may read git history and GitHub
+  PRs/issues to find precedent (the same lookups this step already uses),
+  but holds no write tools of any kind — it cannot write code, create
+  commits, push, or create, modify, comment on, or otherwise mutate PRs or
+  issues. This skill still evaluates every returned lead, decides which
+  precedent actually grounds the plan, and writes the plan itself — a
+  subagent gathers candidate precedent, it never decides what the plan
+  says.
 
 ## Default Path
 
@@ -113,6 +125,11 @@ Keep it scoped to what was asked — not a tour of the whole codebase.
   instead of stating it as established practice.
 - Don't pad the plan with sections that don't apply (e.g. Tradeoffs when
   there's only one reasonable approach).
+- A subagent used for the parallel precedent search may read git history and
+  GitHub PRs/issues but gets no write tools of any kind — it must not be
+  able to write code, create commits, push, or create, modify, comment on,
+  or otherwise mutate PRs or issues. Its findings are input to this skill's
+  own evaluation and plan, and are never treated as the plan itself.
 
 ## Stop Conditions
 
