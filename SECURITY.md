@@ -30,9 +30,12 @@ solo-maintainer project, so please be patient with turnaround time on a fix.
 ## Scope
 
 orchraft is a set of Claude Code skills, policies, and shell hooks that
-propose git/GitHub actions for the user to approve — it does not execute
-mutations without a current-turn go-ahead (`context/policies/approval-policy.md`).
-Security-relevant reports include anything that could:
+propose git/GitHub actions for the user to approve, per
+`context/policies/approval-policy.md`. By default that means no mutation
+happens without the user's current-turn go-ahead; a repo owner can opt into
+a scoped `Autonomous Mode` for their own repo, but merging, force-pushing,
+deleting, and issue close/reopen stay gated either way. Security-relevant
+reports include anything that could:
 
 - Cause a skill or hook to perform a git/GitHub mutation without the
   required approval.
