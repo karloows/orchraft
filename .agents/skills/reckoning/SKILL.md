@@ -68,19 +68,33 @@ the whole repo's.
 - Confirm which repo to search: the current one by default, or one the user
   names.
 - Enumerate every pull request in that repo — `list_pull_requests` with
-  `state: all` (falling back to `gh pr list --state all --json number`) —
-  since debt survives a merge and this must cover open, merged, and closed
-  without merging alike.
+  `state: all`, paginating through every page rather than stopping at the
+  first (a single page defaults to fewer than all of a repo's PRs).
+  Falling back to `gh pr list --state all --limit 1000 --json
+  number,url,state` when MCP is unavailable — the explicit `--limit` and
+  field list matter, since `gh pr list`'s own default limit is 30 and its
+  default fields don't include `url`/`state`, either of which would
+  silently under-cover the search. This must cover open, merged, and
+  closed without merging alike, since debt survives a merge.
 - For each PR, fetch its review threads via `pull_request_read` method
   `get_review_comments`, which returns each thread's `is_resolved` status
-  and its full comment list (original finding plus any replies) in one
-  call. Falling back to a `gh api graphql` query for that PR's
-  `reviewThreads` (`isResolved`, and each thread's `comments.nodes.body`)
-  when the MCP connector is unavailable.
+  and its full comment list (original finding plus any replies, each with
+  author/created_at/path/line) in one call — paginate past the first page
+  if a PR has more threads than one page returns. Falling back to a `gh
+  api graphql` query for that PR's `reviewThreads(first: 100, after:
+  $cursor)`, requesting `pageInfo { hasNextPage endCursor }` plus each
+  thread's `isResolved` and `comments(first: 100, after: $commentCursor) {
+  pageInfo { hasNextPage endCursor } nodes { body author { login }
+  createdAt path line } }` — loop both the thread page and each thread's
+  own comment page until `hasNextPage` is false, when the MCP connector is
+  unavailable. Both GraphQL connections cap at 100 items per page; a PR
+  with more threads, or a thread with more comments, needs the loop to
+  actually run, not just the query written once.
 - Within each thread's comment list, find any reply containing the
   `<!-- orchraft:declined -->` marker; its thread's other comments hold the
-  original finding text, and the thread's `is_resolved` field is the
-  settled/standing check — no separate lookup needed for either.
+  original finding text, author, file/line, and timestamp, and the
+  thread's `is_resolved` field is the settled/standing check — no separate
+  lookup needed for any of these.
 
 ## Default Path
 
