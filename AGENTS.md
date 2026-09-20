@@ -139,6 +139,9 @@ hooks, and CI checks should win.
   `ship`'s own legitimate commits far more often than it would ever catch a
   real bypass, which is exactly the noise `watchtower-nudge.sh` is designed
   to avoid becoming.
+- Both hook scripts require `jq` to parse their JSON stdin input and exit
+  silently (not with an error) when it's missing — a missing soft
+  dependency degrades to no nudge, never a failure the user has to notice.
 - These are orchraft's only ambient (non-command-triggered) behaviors; every
   other skill still requires the user to invoke it.
 
