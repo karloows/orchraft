@@ -1,5 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="900" height="300" viewBox="0 0 900 300" role="img" aria-label="Hrrm. Another branch named &quot;test-final-2&quot;? Say the word — we name it, commit it, open the PR. Nothing touches main until you say go, chief.">
 <title>Hrrm. Another branch named &quot;test-final-2&quot;?</title>
+<!-- Geometry: the horizontal centre is the bubble rect's x + width/2 (597).
+     Every text x, clipPath rect x/width, .r0-.r2 transform-origin and the
+     caret x derive from it, so moving the bubble means moving all of them.
+     Clip widths carry ~12% slack over the text so a monospace fallback
+     wider than 0.6em is not silently truncated. -->
 <defs><clipPath id="c0"><rect class="r0" x="357.1" y="93" width="479.8" height="27"/></clipPath><clipPath id="c1"><rect class="r1" x="311.4" y="133" width="571.2" height="27"/></clipPath><clipPath id="c2"><rect class="r2" x="340.0" y="173" width="514.1" height="27"/></clipPath></defs>
 <style>
   .orc { animation: orcIn 12s ease-out infinite; }
