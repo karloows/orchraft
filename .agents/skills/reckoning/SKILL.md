@@ -67,20 +67,29 @@ the whole repo's.
 
 - Confirm which repo to search: the current one by default, or one the user
   names.
-- Search that repo's pull requests — open, closed, and merged, since debt
-  survives a merge — for review-comment replies containing the
-  `<!-- orchraft:declined -->` marker.
-- For each match, read the comment thread it replies to for the original
-  finding text, and confirm the thread's current resolved state (a debt
-  someone later resolved manually on GitHub is settled, not standing).
+- Enumerate every pull request in that repo — `list_pull_requests` with
+  `state: all` (falling back to `gh pr list --state all --json number`) —
+  since debt survives a merge and this must cover open, merged, and closed
+  without merging alike.
+- For each PR, fetch its review threads via `pull_request_read` method
+  `get_review_comments`, which returns each thread's `is_resolved` status
+  and its full comment list (original finding plus any replies) in one
+  call. Falling back to a `gh api graphql` query for that PR's
+  `reviewThreads` (`isResolved`, and each thread's `comments.nodes.body`)
+  when the MCP connector is unavailable.
+- Within each thread's comment list, find any reply containing the
+  `<!-- orchraft:declined -->` marker; its thread's other comments hold the
+  original finding text, and the thread's `is_resolved` field is the
+  settled/standing check — no separate lookup needed for either.
 
 ## Default Path
 
 1. Resolve the target repo (see Prerequisites).
 2. Search for marked decline replies across all PR states.
 3. For each one still on an unresolved thread, record: PR number/URL and
-   state (open/closed/merged), file and line, the original finding
-   (severity if stated), the decline reason, and who declined it.
+   state (open, merged, or closed without merging), file and line, the
+   original finding (severity if stated), the decline reason, and who
+   declined it.
 4. Drop any match whose thread was later resolved — the marker means it was
    declined at the time, not that it must stay open forever; a human
    resolving it later is a legitimate settling of that debt.
@@ -91,8 +100,8 @@ the whole repo's.
 
 Keep it to what was actually found — don't pad an empty result with filler.
 
-- **Repo** — name, and how many PRs were searched (open/closed/merged
-  counts).
+- **Repo** — name, and how many PRs were searched (open, merged, and
+  closed-without-merging counts, mutually exclusive).
 - **Standing debt** — one entry per unresolved declined finding: PR
   number/URL and state, file:line, the original finding, the decline
   reason.
@@ -135,7 +144,8 @@ Standing debt found (illustrative — actual output names real PRs/files):
 ```text
 🗂️ Hrrm. Two debts still stand on the books. ✨
 
-Repo: <owner>/<repo> (N PRs searched: X open, Y merged)
+Repo: <owner>/<repo> (N PRs searched: X open, Y merged, Z closed without
+merging)
 - PR #<n> (<state>): `<path>:<line>` — <one-line finding summary>;
   declined because <the stated reason from the reply itself>.
 - PR #<n> (<state>): `<path>:<line>` — <one-line finding summary>;
@@ -147,7 +157,8 @@ Clean books:
 ```text
 🗂️ Hah! The books read clean — nothing declined stands open.
 
-Repo: <owner>/<repo> (N PRs searched: X open, Y merged)
+Repo: <owner>/<repo> (N PRs searched: X open, Y merged, Z closed without
+merging)
 ```
 
 Blocked, no GitHub access:

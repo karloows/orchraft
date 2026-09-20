@@ -113,12 +113,19 @@ Use this skill when the user asks the AI to ship work.
     short, technical reply stating the concrete reason it won't be fixed,
     and once the user gives the current-turn go-ahead per
     `context/policies/approval-policy.md`, post it via
-    `add_reply_to_pull_request_comment` (or the `gh` fallback). A reply is
-    not a resolution: leave the thread unresolved unless the user separately
-    asks to resolve it too. End the reply's visible text with a blank line
-    and the hidden marker `<!-- orchraft:declined -->` so `reckoning` can
-    find it later; the marker is metadata for that skill, not part of the
-    stated reason itself.
+    `add_reply_to_pull_request_comment`. If that MCP path is unavailable,
+    fall back to `gh api --method POST
+    repos/<owner>/<repo>/pulls/<number>/comments -f body=<reply> -F
+    in_reply_to=<parent_review_comment_id>` — never `gh pr comment`, which
+    creates a top-level PR comment instead of a review-thread reply, so
+    `reckoning` would never find it. Validate the response's `id`/
+    `html_url` before reporting success, the same way `roast`'s own `gh`
+    fallback does. A reply is not a resolution: leave the thread unresolved
+    unless the user separately asks to resolve it too. End the reply's
+    visible text with a blank line and the hidden marker
+    `<!-- orchraft:declined -->` so `reckoning` can find it later; the
+    marker is metadata for that skill, not part of the stated reason
+    itself.
 
 ## Naming And Text
 
