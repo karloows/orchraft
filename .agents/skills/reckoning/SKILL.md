@@ -70,12 +70,13 @@ the whole repo's.
 - Enumerate every pull request in that repo — `list_pull_requests` with
   `state: all`, paginating through every page rather than stopping at the
   first (a single page defaults to fewer than all of a repo's PRs).
-  Falling back to `gh pr list --state all --limit 1000 --json
-  number,url,state` when MCP is unavailable — the explicit `--limit` and
-  field list matter, since `gh pr list`'s own default limit is 30 and its
-  default fields don't include `url`/`state`, either of which would
-  silently under-cover the search. This must cover open, merged, and
-  closed without merging alike, since debt survives a merge.
+  Falling back to `gh api --paginate "repos/$owner/$repo/pulls?state=all"
+  --jq '.[] | {number, html_url, state}'` when MCP is unavailable — `gh
+  api --paginate` follows GitHub's own pagination until exhausted, unlike
+  `gh pr list`, whose `--limit` is always some fixed number and would
+  under-cover a repo whose PR count happens to exceed it. This must cover
+  open, merged, and closed without merging alike, since debt survives a
+  merge.
 - For each PR, fetch its review threads via `pull_request_read` method
   `get_review_comments`, which returns each thread's `is_resolved` status
   and its full comment list (original finding plus any replies, each with
