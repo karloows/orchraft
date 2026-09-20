@@ -197,6 +197,8 @@ falling back to the copy bundled with the plugin.
 
 - Add workflow behavior to the relevant skill.
 - Add reusable naming or writing rules to the relevant policy.
+- When adding or removing a skill, update the skill-count badge in
+  `README.md`; nothing enforces that number.
 - Keep examples realistic and portable.
 - When a policy and a project-local template disagree, the target project wins.
 - Keep `CLAUDE.md` as a pointer to this file instead of duplicating these

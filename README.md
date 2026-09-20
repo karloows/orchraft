@@ -144,6 +144,10 @@ change between releases.
   applies.
 - `evals/`: `claude plugin eval` cases that check skill behavior (e.g. `ship`
   refusing to commit without a request) rather than file syntax.
+- `assets/`: art used by this README. `orc.png` is the mascot in the header,
+  `orc-intro.svg` is the animated banner, and `orc-armor.png` is the source
+  illustration that banner embeds — kept so the banner can be rebuilt, not
+  referenced directly by any page.
 
 Edit the canonical skill files in `.agents/skills/`; the Claude skill files are
 symlinks.
