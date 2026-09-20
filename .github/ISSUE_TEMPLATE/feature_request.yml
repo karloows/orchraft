@@ -1,0 +1,61 @@
+name: Feature request
+description: Propose a new skill, policy rule, or workflow behavior
+title: "feat: <short summary>"
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the idea. orchraft ships **portable defaults** for the
+        git/PR/issue lifecycle — see "Design Intent" in
+        [AGENTS.md](https://github.com/karloows/orchraft/blob/main/AGENTS.md).
+        Requests scoped to one project's own stack, CI provider, or hosting
+        platform usually belong in that project's local instructions instead.
+
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What kind of change is this?
+      options:
+        - New skill (a new lifecycle stage, e.g. after `land`)
+        - Change to an existing skill's behavior
+        - New or changed policy rule (context/policies/)
+        - New eval case
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: gap
+    attributes:
+      label: What's missing
+      description: What part of the ship/review/land/etc. lifecycle isn't covered, or where existing behavior falls short.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+      description: |
+        What the skill or policy should do. If it's a new skill, note where
+        it fits relative to the existing lifecycle (see the table in
+        README.md / AGENTS.md) and which policies it would read from.
+    validations:
+      required: true
+
+  - type: textarea
+    id: portability
+    attributes:
+      label: Why this belongs in orchraft rather than project-local config
+      description: Explain why this is generic enough to ship as a repo default rather than something a project should configure locally.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Any other approach you considered and why you didn't propose it instead.
+    validations:
+      required: false

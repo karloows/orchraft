@@ -1,0 +1,100 @@
+name: Bug report
+description: Something a skill, policy, or hook did wrong
+title: "fix: <short summary>"
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug. Please check
+        [existing issues](https://github.com/karloows/orchraft/issues) first
+        to avoid a duplicate.
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Which skill, policy, or hook?
+      description: Pick the one closest to where the bug happened.
+      options:
+        - warplan
+        - quest
+        - ship
+        - roast
+        - land
+        - yap
+        - lore
+        - chronicle
+        - runes
+        - warchief
+        - watchtower
+        - "hooks/watchtower-nudge.sh"
+        - "context/policies (naming/writing rule)"
+        - "evals/ (eval case itself)"
+        - Other / not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What the agent actually did. Paste the relevant part of its output or transcript.
+      placeholder: |
+        e.g. `ship` pushed directly to `main` without asking for confirmation first.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+      description: What it should have done instead, per this repo's own skills/policies (link the relevant file/section if you know it).
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: Minimal steps, including the prompt you gave the agent.
+      placeholder: |
+        1. In a repo with an open PR, run `/land`
+        2. ...
+        3. ...
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: orchraft version or commit SHA
+      placeholder: v0.1.0, or a commit SHA
+    validations:
+      required: true
+
+  - type: dropdown
+    id: install-method
+    attributes:
+      label: Installed as
+      options:
+        - Claude Code plugin
+        - Copied into a project (.agents/skills + context/policies)
+    validations:
+      required: true
+
+  - type: input
+    id: cc-version
+    attributes:
+      label: Claude Code version
+      description: Output of `claude --version`
+    validations:
+      required: false
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs or config
+      description: Any additional transcript, hook output, or `.claude/settings.json`/`approval-policy.md` override that's relevant. This field auto-formats as code — no secrets or tokens, please.
+      render: shell
+    validations:
+      required: false
