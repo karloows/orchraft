@@ -75,6 +75,8 @@ change between releases.
 - `.claude-plugin/`: Claude Code plugin manifest and marketplace.
 - `.codex-plugin/` and `.agents/plugins/marketplace.json`: Codex CLI plugin
   manifest and marketplace, reading the same `.agents/skills/`.
+- `.grok-plugin/`: Grok Build plugin marketplace, reading the same
+  `.agents/skills/`.
 - `hooks/`: a `SessionStart` hook that runs `watchtower`'s status checks
   automatically (a plain script, not a model call) so the nudge shows up
   without asking for it. The only ambient behavior here — every other skill
@@ -117,6 +119,17 @@ codex plugin add orchraft@orchraft
 ```
 
 The skills load the same way as in Claude Code, from the same
+`.agents/skills/` files, and read `context/policies/` from your repo the
+same way.
+
+## Install As A Grok Build Plugin
+
+```shell
+grok plugin marketplace add karloows/orchraft
+grok plugin install orchraft --trust
+```
+
+The skills load the same way as in Claude Code and Codex, from the same
 `.agents/skills/` files, and read `context/policies/` from your repo the
 same way.
 

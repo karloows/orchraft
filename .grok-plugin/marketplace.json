@@ -1,0 +1,16 @@
+{
+  "name": "orchraft",
+  "description": "A clan of orcs that crafts and orchestrates the software development lifecycle for AI coding agents.",
+  "owner": {
+    "name": "karloows",
+    "url": "https://github.com/karloows"
+  },
+  "plugins": [
+    {
+      "name": "orchraft",
+      "description": "A clan of orcs that crafts and orchestrates the software development lifecycle for AI coding agents.",
+      "source": "./",
+      "category": "productivity"
+    }
+  ]
+}
