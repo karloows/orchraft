@@ -1,6 +1,20 @@
-# Orchraft
+<p align="center">
+  <img src="assets/orc.png" alt="The orchraft orc" width="210">
+</p>
 
-**Orchestration, crafted by orcs.**
+<h1 align="center">Orchraft</h1>
+
+<p align="center">
+  <strong>You write the code. We haul the chores.</strong><br>
+  <em>Nothing touches git until you say go, chief.</em>
+</p>
+
+<p align="center">
+  <a href="https://github.com/karloows/orchraft/actions/workflows/validate-plugin.yaml"><img alt="Plugin validation" src="https://img.shields.io/github/actions/workflow/status/karloows/orchraft/validate-plugin.yaml?style=flat-square&label=checks&color=6B7A4B"></a>
+  <img alt="12 skills" src="https://img.shields.io/badge/skills-12-6B7A4B?style=flat-square">
+  <img alt="Runs on Claude Code, Codex and Grok Build" src="https://img.shields.io/badge/runs%20on-Claude%20Code%20%C2%B7%20Codex%20%C2%B7%20Grok-1B1712?style=flat-square">
+  <a href="LICENSE"><img alt="License Apache 2.0" src="https://img.shields.io/badge/license-Apache--2.0-1B1712?style=flat-square"></a>
+</p>
 
 We are a clan of orcs who haul the mundane, repetitive chores of shipping
 software off your plate — branch names, commit messages, PR write-ups,
@@ -12,6 +26,10 @@ table: your repo's rules, real sources behind every claim, and nothing
 touches git or GitHub until you say go.
 
 The name joins *orchestration* and *craft*. The orc does the crafting.
+
+<p align="center">
+  <img src="assets/orc-intro.svg" alt="An orc sizes up a branch named test-final-2 and offers to name it, commit it, and open the PR — nothing touches main until you say go" width="820">
+</p>
 
 ## Clan Laws
 
@@ -48,6 +66,38 @@ the anvil as we cover the rest of the lifecycle.
 
 Today's march is `warplan` → `quest` → `lore` → `chronicle` → `ship` →
 `roast` → fix → `ship` → `land`, with `yap` available at any point.
+
+## What A March Looks Like
+
+`ship` reads the real diff, validates it, proposes the branch, commit, and PR
+text — then stops. Nothing is committed, pushed, or opened until you give the
+word in that same turn.
+
+```text
+chief ▸ ship it
+
+orc   ▸ We read before we swing: 3 files, all under src/auth.
+        Validation: `npm test -- auth` → passed.
+
+        Branch:  fix/login-null-token
+        Commit:  fix(auth): guard null login token
+        PR:      "Guard null login token" → main
+
+        The chief decides. Say the word and the war party launches.
+
+chief ▸ go
+
+orc   ▸ 🚢 Grah! War party launched. PR #123 holds the beach for review, chief. ✨
+
+        Branch: `fix/login-null-token`
+        Commit: `fix(auth): guard null login token`
+        PR: https://github.com/example/repo/pull/123
+        Validation: `npm test -- auth`
+```
+
+Every skill holds the same shape: read the real state, propose, wait for the
+word. `roast` posts no review, `land` merges nothing, and `quest` closes no
+issue until you say so.
 
 ## Status
 
