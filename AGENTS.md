@@ -121,7 +121,8 @@ hooks, and CI checks should win.
 - `hooks/hooks.json`: declares a `SessionStart` hook (matched on
   `startup|resume|clear|compact`, never `fork` — Claude Code drops
   `additionalContext` silently on that source) that runs
-  `hooks/watchtower-nudge.sh`.
+  `hooks/watchtower-nudge.sh`, and a `PreToolUse` hook (matched on `Bash`)
+  that runs `hooks/main-commit-nudge.sh`.
 - `hooks/watchtower-nudge.sh`: a deterministic re-implementation of
   `watchtower`'s own surfacing rules in `bash`/`git`/`gh`, not a nested
   `claude -p` call — the rules are plain state checks (PR exists? checks
@@ -130,7 +131,15 @@ hooks, and CI checks should win.
   model again. It emits at most one `additionalContext` line, or none when
   there's nothing actionable. Degrades to a local-only nudge (or silence)
   when `gh` is missing or unauthenticated.
-- This is orchraft's only ambient (non-command-triggered) behavior; every
+- `hooks/main-commit-nudge.sh`: nudges (never blocks — always
+  `permissionDecision: allow`) when a `Bash` command is about to run `git
+  commit` or `git push` while the current branch is `main`/`master`, the
+  one bypass `ship`'s own Guardrails single out. Deliberately scoped to
+  `main`/`master` only, not every commit: a broader version would fire on
+  `ship`'s own legitimate commits far more often than it would ever catch a
+  real bypass, which is exactly the noise `watchtower-nudge.sh` is designed
+  to avoid becoming.
+- These are orchraft's only ambient (non-command-triggered) behaviors; every
   other skill still requires the user to invoke it.
 
 ## Evals
