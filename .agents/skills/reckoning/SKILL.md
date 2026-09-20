@@ -71,7 +71,10 @@ the whole repo's.
   `state: all`, paginating through every page rather than stopping at the
   first (a single page defaults to fewer than all of a repo's PRs).
   Falling back to `gh api --paginate "repos/$owner/$repo/pulls?state=all"
-  --jq '.[] | {number, html_url, state}'` when MCP is unavailable — `gh
+  --jq '.[] | {number, html_url, state, merged_at}'` when MCP is
+  unavailable — GitHub reports both merged and unmerged pull requests as
+  `state: "closed"`, so `merged_at` is what actually distinguishes
+  "merged" from "closed without merging" in this fallback path. `gh
   api --paginate` follows GitHub's own pagination until exhausted, unlike
   `gh pr list`, whose `--limit` is always some fixed number and would
   under-cover a repo whose PR count happens to exceed it. This must cover
