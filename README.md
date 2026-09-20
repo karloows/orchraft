@@ -126,7 +126,7 @@ same way.
 
 ```shell
 grok plugin marketplace add karloows/orchraft
-grok plugin install karloows/orchraft --trust
+grok plugin install orchraft --trust
 ```
 
 The skills load the same way as in Claude Code and Codex, from the same
