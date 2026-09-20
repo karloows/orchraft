@@ -67,6 +67,9 @@ change between releases.
 - Read-only GitHub access is enough for `runes`, `reckoning`, `watchtower`,
   `yap`, and `warplan` when they're only reading PR/issue state, not
   changing it.
+- `jq` for the two ambient hooks (`watchtower-nudge.sh` and
+  `main-commit-nudge.sh`) to parse their JSON input — both degrade to
+  silence, not an error, when it's missing.
 
 ## Layout
 
@@ -81,8 +84,10 @@ change between releases.
   `.agents/skills/`.
 - `hooks/`: a `SessionStart` hook that runs `watchtower`'s status checks
   automatically (a plain script, not a model call) so the nudge shows up
-  without asking for it. The only ambient behavior here — every other skill
-  is invoked on purpose.
+  without asking for it, and a `PreToolUse` hook that nudges — never
+  blocks — when a `git commit`/`push` is about to run directly against
+  `main`/`master`. The only ambient behaviors here — every other skill is
+  invoked on purpose.
 - `context/policies/`: reusable approval, branch, commit, lore, docs,
   review, and PR writing policies.
 - `context/personality.md`: the orc's character and voice, and where it
@@ -150,13 +155,15 @@ target project:
 - `.claude/skills/` when using Claude Code and you want `/warplan`,
   `/quest`, `/ship`, `/land`, `/roast`, `/yap`, `/lore`, `/chronicle`,
   `/runes`, `/reckoning`, `/warchief`, and `/watchtower`.
-- `hooks/hooks.json` and `hooks/watchtower-nudge.sh` for the ambient
-  `watchtower` nudge. This directory is only auto-discovered when loaded as
-  a Claude Code plugin; outside that, copy both files to `hooks/` at your
-  project root and copy the `hooks` object from `hooks/hooks.json` into your
-  own `.claude/settings.json`. The command falls back from
-  `${CLAUDE_PLUGIN_ROOT}` to `${CLAUDE_PROJECT_DIR}`, so it resolves either
-  way without editing the path.
+- `hooks/hooks.json`, `hooks/watchtower-nudge.sh`, and
+  `hooks/main-commit-nudge.sh` for the ambient `watchtower` nudge and the
+  direct-to-`main`/`master` commit/push nudge. This directory is only
+  auto-discovered when loaded as a Claude Code plugin; outside that, copy
+  all three files to `hooks/` at your project root and copy the `hooks`
+  object from `hooks/hooks.json` into your own `.claude/settings.json`.
+  Each command falls back from `${CLAUDE_PLUGIN_ROOT}` to
+  `${CLAUDE_PROJECT_DIR}`, so it resolves either way without editing the
+  path.
 
 Copy `context/` together with the skills. The skills fall back to
 `${CLAUDE_PLUGIN_ROOT}/context/` only when running as the plugin; outside it,
