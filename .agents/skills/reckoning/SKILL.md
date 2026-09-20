@@ -122,7 +122,7 @@ Keep it to what was actually found — don't pad an empty result with filler.
   closed-without-merging counts, mutually exclusive).
 - **Standing debt** — one entry per unresolved declined finding: PR
   number/URL and state, file:line, the original finding, the decline
-  reason.
+  reason, and who declined it.
 - **None found** — say so plainly if the search turned up nothing, and
   distinguish that from "couldn't search" (see Requirements).
 
@@ -140,6 +140,13 @@ Keep it to what was actually found — don't pad an empty result with filler.
 
 - Stop and say so if neither the GitHub MCP connector nor `gh` is
   available — don't report a partial or guessed list as complete.
+- Stop and say so if any individual repository search, paginated
+  pull-request request, or thread request fails partway through — a
+  search that started with GitHub access available can still fail
+  mid-run (a single page erroring, rate limiting, a transient network
+  fault). Report which part failed and that the result is incomplete;
+  never present a partial list gathered before the failure as the full
+  standing debt.
 - Stop after presenting the summary; do not proceed into `ship`, `roast`,
   or any mutation without the user separately asking for it.
 
@@ -165,9 +172,9 @@ Standing debt found (illustrative — actual output names real PRs/files):
 Repo: <owner>/<repo> (N PRs searched: X open, Y merged, Z closed without
 merging)
 - PR #<n> (<state>): `<path>:<line>` — <one-line finding summary>;
-  declined because <the stated reason from the reply itself>.
+  declined by <decliner> because <the stated reason from the reply itself>.
 - PR #<n> (<state>): `<path>:<line>` — <one-line finding summary>;
-  declined because <the stated reason from the reply itself>.
+  declined by <decliner> because <the stated reason from the reply itself>.
 ```
 
 Clean books:
