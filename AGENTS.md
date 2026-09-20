@@ -101,6 +101,8 @@ hooks, and CI checks should win.
   `/orchraft:roast`, `/orchraft:runes`, `/orchraft:yap`, `/orchraft:lore`,
   `/orchraft:chronicle`, `/orchraft:warchief`, and `/orchraft:watchtower`
   from the same canonical files.
+- `.codex-plugin/plugin.json`: Codex CLI plugin manifest, reading the same
+  `.agents/skills/` files.
 - `.grok-plugin/marketplace.json`: self-hosted marketplace listing for Grok
   Build, the same bypass-the-central-catalog mechanism Claude Code's own
   `.claude-plugin/marketplace.json` uses — separate from xAI's central
