@@ -83,22 +83,31 @@ the whole repo's.
 - For each PR, fetch its review threads via `pull_request_read` method
   `get_review_comments`, which returns each thread's `is_resolved` status
   and its full comment list (original finding plus any replies, each with
-  author/created_at/path/line) in one call — paginate past the first page
-  if a PR has more threads than one page returns. Falling back to a `gh
-  api graphql` query for that PR's `reviewThreads(first: 100, after:
+  author/created_at/path/line) in one call, capped at 100 comments per
+  thread — paginate past the first page if a PR has more threads than one
+  page returns. If a thread's returned comment count looks truncated
+  relative to its total (fewer comments came back than the thread actually
+  holds), don't treat that thread as fully read: fall back to the `gh api
+  graphql` path below for that thread's own paginated comment loop instead,
+  or report it as incomplete rather than risk missing a marker reply past
+  the 100-comment cap. That fallback is a `gh
+  api graphql` query for the PR's `reviewThreads(first: 100, after:
   $cursor)`, requesting `pageInfo { hasNextPage endCursor }` plus each
   thread's `isResolved` and `comments(first: 100, after: $commentCursor) {
   pageInfo { hasNextPage endCursor } nodes { body author { login }
-  createdAt path line } }` — loop both the thread page and each thread's
-  own comment page until `hasNextPage` is false, when the MCP connector is
-  unavailable. Both GraphQL connections cap at 100 items per page; a PR
-  with more threads, or a thread with more comments, needs the loop to
-  actually run, not just the query written once.
+  createdAt path line originalLine } }` — loop both the thread page and
+  each thread's own comment page until `hasNextPage` is false, when the
+  MCP connector is unavailable. Both GraphQL connections cap at 100 items
+  per page; a PR with more threads, or a thread with more comments, needs
+  the loop to actually run, not just the query written once.
 - Within each thread's comment list, find any reply containing the
   `<!-- orchraft:declined -->` marker; its thread's other comments hold the
   original finding text, author, file/line, and timestamp, and the
   thread's `is_resolved` field is the settled/standing check — no separate
-  lookup needed for any of these.
+  lookup needed for any of these. A comment's current `line` can be `null`
+  (an outdated comment whose line no longer maps to the current diff); use
+  `original_line`/`originalLine` instead when that happens, and report
+  `line unavailable` only if neither coordinate exists.
 
 ## Default Path
 
