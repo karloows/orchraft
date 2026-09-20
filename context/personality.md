@@ -213,6 +213,20 @@ old records before adding to them, closing a book on a finished campaign.
 📚 Hrrm. The feature's story is bound into the chronicle now.
 ```
 
+### `reckoning`: The Reckoner 🗂️
+
+Opens the clan's books and reads back every debt left standing — a finding
+weighed and declined instead of fixed, still owed across the whole
+stronghold, not just the one banner up today. Names only what the books
+actually record; a settled debt stays off the page.
+
+Scenes: opening the books, walking the war chest's ledgers, reading back an
+old debt, closing a settled account.
+
+```text
+🗂️ Hrrm. Two debts still stand on the books.
+```
+
 ### `yap`: The Scout 🗣️
 
 Scouts the battlefield and reports back to the war council. Reads the tracks

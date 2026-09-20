@@ -42,6 +42,7 @@ the anvil as we cover the rest of the lifecycle.
 | `lore` | 📜 Loremaster | Adds or fixes code comments and docstrings across a diff, file, or PR to match your repo's lore policy. |
 | `chronicle` | 📚 Chronicler | Drafts or updates standalone Markdown docs — feature write-ups, design docs, README/ROADMAP sections — grounded in the real diff, code, or history. |
 | `runes` | 📖 Rune-Reader | Summarizes the live state of a branch, PR, checks, and standing review findings. Read-only. |
+| `reckoning` | 🗂️ Reckoner | Lists every review finding consciously declined rather than fixed, across the whole repo's pull requests. Read-only. |
 | `warchief` | ⚔️ War Council | Chooses the next lifecycle role without treating orchestration as approval for mutations. |
 | `watchtower` | 👁️ Watchtower | Surfaces a short read-only nudge about actionable PR state. |
 
@@ -63,15 +64,16 @@ change between releases.
   they create/update pull requests, post reviews, merge, and manage issues.
   `gh` installed and authenticated works as a fallback when the MCP
   connector is unavailable mid-session.
-- Read-only GitHub access is enough for `runes`, `watchtower`, `yap`, and
-  `warplan` when they're only reading PR/issue state, not changing it.
+- Read-only GitHub access is enough for `runes`, `reckoning`, `watchtower`,
+  `yap`, and `warplan` when they're only reading PR/issue state, not
+  changing it.
 
 ## Layout
 
 - `.agents/skills/`: canonical agent skills.
 - `.claude/skills/`: Claude skill symlinks for `/warplan`, `/quest`, `/ship`,
-  `/land`, `/roast`, `/yap`, `/lore`, `/chronicle`, `/runes`, `/warchief`,
-  and `/watchtower`.
+  `/land`, `/roast`, `/yap`, `/lore`, `/chronicle`, `/runes`, `/reckoning`,
+  `/warchief`, and `/watchtower`.
 - `.claude-plugin/`: Claude Code plugin manifest and marketplace.
 - `.codex-plugin/` and `.agents/plugins/marketplace.json`: Codex CLI plugin
   manifest and marketplace, reading the same `.agents/skills/`.
@@ -104,9 +106,10 @@ cache).
 
 The skills load as `/orchraft:warplan`, `/orchraft:quest`, `/orchraft:ship`,
 `/orchraft:land`, `/orchraft:roast`, `/orchraft:yap`, `/orchraft:lore`,
-`/orchraft:chronicle`, `/orchraft:runes`, `/orchraft:warchief`, and
-`/orchraft:watchtower`. They read `context/policies/` from your repo when
-present and fall back to the policies bundled with the plugin.
+`/orchraft:chronicle`, `/orchraft:runes`, `/orchraft:reckoning`,
+`/orchraft:warchief`, and `/orchraft:watchtower`. They read
+`context/policies/` from your repo when present and fall back to the
+policies bundled with the plugin.
 
 To try a local checkout without installing, run
 `claude --plugin-dir /path/to/orchraft`.
@@ -139,14 +142,14 @@ For other agents, or to customize the files, copy the parts you need into a
 target project:
 
 - `.agents/skills/` for the canonical `warplan`, `quest`, `ship`, `land`,
-  `roast`, `yap`, `lore`, `chronicle`, `runes`, `warchief`, and `watchtower`
-  workflows.
+  `roast`, `yap`, `lore`, `chronicle`, `runes`, `reckoning`, `warchief`,
+  and `watchtower` workflows.
 - `context/policies/` for approval, branch, commit, lore, docs, review, and
   PR writing rules.
 - `context/personality.md` for the orc voice the skills use in success lines.
 - `.claude/skills/` when using Claude Code and you want `/warplan`,
   `/quest`, `/ship`, `/land`, `/roast`, `/yap`, `/lore`, `/chronicle`,
-  `/runes`, `/warchief`, and `/watchtower`.
+  `/runes`, `/reckoning`, `/warchief`, and `/watchtower`.
 - `hooks/hooks.json` and `hooks/watchtower-nudge.sh` for the ambient
   `watchtower` nudge. This directory is only auto-discovered when loaded as
   a Claude Code plugin; outside that, copy both files to `hooks/` at your
