@@ -69,23 +69,20 @@ Today's march is `warplan` → `quest` → `lore` → `chronicle` → `ship` →
 
 ## What A March Looks Like
 
-`ship` reads the real diff, validates it, proposes the branch, commit, and PR
-text — then stops. Nothing is committed, pushed, or opened until you give the
-word in that same turn.
+Asking for a fix gets you the fix and nothing more. Asking to ship is what
+sends it: `ship it` in the current turn authorizes that whole run — branch,
+commit, push, and pull request.
 
 ```text
-chief ▸ ship it
+chief ▸ the login crashes on a null token — fix it
 
-orc   ▸ We read before we swing: 3 files, all under src/auth.
+orc   ▸ We read before we swing: the guard was missing in
+        src/auth/session.ts. Patched it.
         Validation: `npm test -- auth` → passed.
 
-        Branch:  fix/login-null-token
-        Commit:  fix(auth): guard null login token
-        PR:      "Guard null login token" → main
+        Nothing committed. Say the word when you want it shipped.
 
-        The chief decides. Say the word and the war party launches.
-
-chief ▸ go
+chief ▸ ship it
 
 orc   ▸ 🚢 Grah! War party launched. PR #123 holds the beach for review, chief. ✨
 
@@ -95,9 +92,11 @@ orc   ▸ 🚢 Grah! War party launched. PR #123 holds the beach for review, chi
         Validation: `npm test -- auth`
 ```
 
-Every skill holds the same shape: read the real state, propose, wait for the
-word. `roast` posts no review, `land` merges nothing, and `quest` closes no
-issue until you say so.
+The gate sits between the work and git, not inside `ship`: a request to fix,
+address, or resolve something is approval to edit, never to commit. It does
+not carry forward either — the next push to that branch needs the word again.
+`roast` posts no review, `land` merges nothing, and `quest` closes no issue
+until you say so.
 
 ## Status
 
