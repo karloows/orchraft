@@ -120,6 +120,17 @@ The skills load the same way as in Claude Code, from the same
 `.agents/skills/` files, and read `context/policies/` from your repo the
 same way.
 
+## Install As A Grok Build Plugin
+
+```shell
+grok plugin marketplace add karloows/orchraft
+grok plugin install karloows/orchraft --trust
+```
+
+The skills load the same way as in Claude Code and Codex, from the same
+`.agents/skills/` files, and read `context/policies/` from your repo the
+same way.
+
 ## Copy Into A Project
 
 For other agents, or to customize the files, copy the parts you need into a

@@ -102,9 +102,8 @@ hooks, and CI checks should win.
   `/orchraft:chronicle`, `/orchraft:warchief`, and `/orchraft:watchtower`
   from the same canonical files.
 - `.grok-plugin/marketplace.json`: self-hosted marketplace listing for Grok
-  Build's `grok plugin marketplace add karloows/orchraft`, the same
-  bypass-the-central-catalog mechanism Claude Code's own
-  `/plugin marketplace add <repo>` uses — separate from xAI's central
+  Build, the same bypass-the-central-catalog mechanism Claude Code's own
+  `.claude-plugin/marketplace.json` uses — separate from xAI's central
   `xai-org/plugin-marketplace` catalog, which needs its own PR to list
   orchraft there.
 
