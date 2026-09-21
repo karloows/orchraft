@@ -95,8 +95,9 @@ who use the project rather than the people who built it.
    the base branch) and map each to its pull request: the `(#123)` suffix a
    squash merge leaves, the `Merge pull request #123` subject a merge commit
    leaves, or the platform's commit-to-pull-request lookup for a rebase
-   merge, which leaves neither. A commit with no pull request is still part
-   of the release; use its own message.
+   merge, which leaves neither. A commit pushed straight to the base branch
+   has no pull request but is still part of the release; use its own message,
+   and cite its short SHA where a pull request number would go.
 3. Read each pull request's title and body, and the issues it closes. These
    say what changed and why; the commit titles alone often don't.
 4. Drop what users never see: release pull requests themselves (such as
@@ -131,7 +132,8 @@ who use the project rather than the people who built it.
   may be a breaking change.
 - One bullet per change, in plain language, stating what a user can now do
   or what stopped going wrong. End each with its pull request number, such
-  as `(#42)`. Several pull requests that deliver one change share a bullet.
+  as `(#42)`, or the short SHA of a direct commit that has none, such as
+  `(a1b2c3d)`. Several pull requests that deliver one change share a bullet.
 - Every breaking change says what to do about it.
 - No marketing language, no emoji, and no orc voice. Release notes are
   release text, which `context/personality.md` keeps plain.
