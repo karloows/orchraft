@@ -37,7 +37,10 @@ fi
 # here instead of reading tool_input.command for one. Every Bash call still
 # reaches this script -- matcher "Bash" has no narrower selector Claude Code
 # offers -- but a non-git cwd never gets its command text examined.
-git rev-parse --is-inside-work-tree >/dev/null 2>&1 || exit 0
+# Check the printed result, not just the exit status: a bare repository
+# prints "false" but still exits 0, so an exit-status-only check would
+# wrongly treat it as a work tree and fall through to command matching.
+[ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" = true ] || exit 0
 
 command_str=$(printf '%s' "$input" | jq -r '.tool_input.command // empty')
 [ -n "$command_str" ] || exit 0
