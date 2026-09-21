@@ -214,9 +214,11 @@ branch.
   `.orchraft.example.jsonc` in the same PR. Search `context/policies/` too —
   `autonomous` is read by `approval-policy.md` and a search of only the
   skills and hooks finds nothing for it — but don't count the match in
-  `config-policy.md`, which defines every key and so always matches. A documented setting nothing reads
-  is worse than an undocumented one: it silently does nothing while the docs
-  promise otherwise. This has slipped through twice.
+  `config-policy.md`, which defines every key and so always matches, or a
+  hit that only uses the key as an ordinary word, as prose does with
+  "validate". A documented setting nothing reads is worse than an
+  undocumented one: it silently does nothing while the docs promise
+  otherwise. This has slipped through twice.
 
 ## Code of conduct and security
 

@@ -221,7 +221,8 @@ falling back to the copy bundled with the plugin.
   consumer that actually reads it —
   `grep -rn <key> .agents/skills/ hooks/ context/policies/` should name one
   other than `config-policy.md`, which always matches because it defines
-  the key.
+  the key, and one that reads it as a setting rather than using the word
+  in prose, as many files do with "validate".
   A setting nothing reads silently does nothing while the docs promise
   otherwise; that shipped twice on the branch that added the config file.
 - Keep examples realistic and portable.
