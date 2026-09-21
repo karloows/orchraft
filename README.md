@@ -137,8 +137,12 @@ change between releases.
   blocks — when a `git commit`/`push` is about to run directly against
   `main`/`master`. The only ambient behaviors here — every other skill is
   invoked on purpose.
-- `context/policies/`: reusable approval, branch, commit, lore, docs,
-  review, and PR writing policies.
+- `context/policies/`: reusable approval, branch, commit, config, lore,
+  docs, review, and PR writing policies.
+- `.orchraft.example.jsonc`: every setting a repo can override, set to its
+  default. Copy it to `.orchraft.jsonc` to change one — currently the merge
+  method `land` uses and whether it deletes the local branch. Optional; the
+  skills work with no config file at all.
 - `context/personality.md`: the orc's character and voice, and where it
   applies.
 - `evals/`: `claude plugin eval` cases that check skill behavior (e.g. `ship`

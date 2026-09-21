@@ -22,6 +22,20 @@ fi
 
 git rev-parse --is-inside-work-tree >/dev/null 2>&1 || exit 0
 
+# Opt out via the repo's own config (context/policies/config-policy.md).
+# Comments are stripped first: the format allows them, jq does not. A
+# missing file, a missing key, or an unparseable one all leave the nudge on,
+# so a broken config never silently disables the thing it configures.
+for cfg in .orchraft.jsonc .orchraft.json; do
+  [ -f "$cfg" ] || continue
+  # tostring, not `// empty`: jq's alternative operator treats a literal
+  # false as absent, so `.enabled // empty` can never see "disabled".
+  enabled=$(sed 's://.*::' "$cfg" 2>/dev/null \
+    | jq -r '.hooks.watchtower.enabled | tostring' 2>/dev/null)
+  [ "$enabled" = "false" ] && exit 0
+  break
+done
+
 branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null) || exit 0
 status_output=$(git status --porcelain 2>/dev/null) || exit 0
 dirty=""

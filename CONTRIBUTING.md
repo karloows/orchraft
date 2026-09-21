@@ -50,6 +50,7 @@ reimplementing:
 | `approval-policy.md` | Which git/PR/issue actions need the user's current-turn go-ahead, and the opt-in `Autonomous Mode` exception. |
 | `branch-policy.md` | Branch name format (`<type>/<short-kebab-description>`), allowed conventional-commit types, examples. |
 | `commit-policy.md` | Commit title format (Conventional Commits), when to add a body, footer rules. |
+| `config-policy.md` | The optional `.orchraft.jsonc` (or `.orchraft.json`) a target repo can add for fixed choices such as merge method, and how it ranks against platform constraints. |
 | `lore-policy.md` | Language-agnostic rules for when a code comment/docstring is warranted and what shape it takes. |
 | `docs-policy.md` | When to draft/update a standalone Markdown doc, sourcing every claim, tone and shape. |
 | `review-policy.md` | Reviewer priority order, severity levels, findings format for PR review. |

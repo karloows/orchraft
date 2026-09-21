@@ -180,6 +180,9 @@ falling back to the copy bundled with the plugin.
   branch examples.
 - `context/policies/commit-policy.md`: commit title format and when to add a
   free-form prose body.
+- `context/policies/config-policy.md`: the optional `.orchraft.jsonc` a target
+  repo can add for fixed choices such as merge method, and how it ranks
+  against platform constraints and the prose policies.
 - `context/policies/lore-policy.md`: language-agnostic rules for when to
   write a code comment or docstring (lore), and the shape it should take.
 - `context/policies/docs-policy.md`: rules for when to draft or update a
@@ -203,6 +206,13 @@ falling back to the copy bundled with the plugin.
   `README.md` holds a number rather than names, so check it separately.
   Nothing enforces either — `reckoning` reached `main` missing from
   `CONTRIBUTING.md`.
+- The same applies to policies: `context/policies/` is the inventory, and
+  `grep -rn commit-policy *.md` finds the docs that list them by filename.
+  `README.md`'s Layout entry names them in prose instead, so a filename
+  search misses it — check that one by eye.
+- A new config setting goes in two places in the same change:
+  `context/policies/config-policy.md`, which documents it, and
+  `.orchraft.example.jsonc`, which is supposed to show every field.
 - Keep examples realistic and portable.
 - When a policy and a project-local template disagree, the target project wins.
 - Keep `CLAUDE.md` as a pointer to this file instead of duplicating these

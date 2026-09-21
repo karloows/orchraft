@@ -1,0 +1,53 @@
+{
+  // Copy this to .orchraft.json (or .orchraft.jsonc) and keep only what you
+  // want to change. Every key is optional, and the values here are the
+  // defaults, so this file as-is changes nothing. Full reference, including
+  // how these rank against your repository's own settings:
+  //   context/policies/config-policy.md
+
+  // The command run before work is reported ready to ship or land.
+  // Unset means discovering it from the repo (package.json, Makefile, CI).
+  // "validate": "npm test",
+
+  // The branch topic branches are cut from and land back into.
+  // Unset means the repository's own default branch.
+  // "baseBranch": "main",
+
+  "merge": {
+    // Which merge method `land` uses.
+    //   "repo"   — resolve it from the repository (default)
+    //   "merge"  — a merge commit; every commit reaches the base branch
+    //   "squash" — one commit, its subject taken from the PR title
+    //   "rebase" — the branch's commits replayed onto the base branch
+    // A method your repository disallows is refused, not silently swapped.
+    "method": "repo",
+
+    // Delete the local topic branch after a successful landing.
+    // Set false to keep topic branches locally. Deleting the *remote*
+    // branch is your hosting platform's setting, not this one.
+    "deleteLocalBranch": true
+  },
+
+  "hooks": {
+    "watchtower": {
+      // The session-start nudge about open PR work.
+      // Set false to silence it without uninstalling anything.
+      "enabled": true
+    }
+  }
+
+  // Pre-authorize routine mutations so skills stop asking each turn.
+  // Absent by default: every mutation needs your go-ahead in that turn.
+  //
+  // Read context/policies/approval-policy.md before enabling this. It is
+  // honored only when it matches your repository's DEFAULT BRANCH, because
+  // a config file on a checked-out branch can come from anyone's pull
+  // request. Name actions explicitly; a blanket value is ignored. Merging,
+  // force-pushing, deleting, and closing/reopening issues stay gated
+  // regardless. It is a setting a cooperating agent honors, not an enforced
+  // boundary — use your agent platform's permission rules for that.
+  //
+  // "autonomous": {
+  //   "ship": ["branch", "commit", "push", "pr"]
+  // }
+}

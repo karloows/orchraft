@@ -10,4 +10,9 @@ node_modules/
 .claude/settings.local.json
 # internal roadmap, not for the shipped plugin
 ROADMAP.md
+# a maintainer's own orchraft settings; the shipped template is
+# .orchraft.example.jsonc. Projects that install orchraft normally commit
+# theirs so the whole repo shares one answer.
+.orchraft.json
+.orchraft.jsonc
 */config.toml

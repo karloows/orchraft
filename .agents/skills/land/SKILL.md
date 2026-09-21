@@ -22,9 +22,9 @@ Use this skill when the user asks the AI to land work end to end.
 
 1. Decide whether the current user message is approval to land.
 2. Confirm branch, PR, checks, permissions, and local worktree state.
-3. Merge using the repository or organization default merge method.
-4. Sync local `main`, delete the verified topic branch, and restore any
-   local-changes stash created for this workflow.
+3. Resolve the merge method, then merge.
+4. Sync local `main`, verify the branch actually landed before deleting it,
+   and restore any local-changes stash created for this workflow.
 5. Report the result with the actual merge method and branch state.
 
 ## What This Is Not
@@ -55,6 +55,13 @@ Use this skill when the user asks the AI to land work end to end.
 
 ## Preconditions
 
+- Read the target repo's config file — `.orchraft.jsonc`, else
+  `.orchraft.json` — when one exists, per `context/policies/config-policy.md`
+  (the target repo's copy when it exists, otherwise
+  `${CLAUDE_PLUGIN_ROOT}/context/policies/config-policy.md`). Both allow `//`
+  comments. A missing file is the normal case and means the documented
+  defaults apply. The config file is always read from the repository being
+  worked in, never from the plugin's own directory.
 - Confirm the current branch is a named non-`main` branch.
 - Confirm the branch has an upstream remote and the local `HEAD` is pushed.
 - Confirm the current branch has an open, non-draft pull request.
@@ -69,12 +76,25 @@ Use this skill when the user asks the AI to land work end to end.
 
 ## Default Path
 
-- Prefer connected GitHub tools to merge the branch pull request using the
-  repository or organization default merge method.
-- Before merging, inspect the pull request and repository settings when
-  available to confirm which merge methods are allowed. Use the default method
-  exposed by the tool; do not force squash, merge commit, or rebase unless the
-  user or repository policy requires it.
+- Prefer connected GitHub tools to merge the branch pull request.
+- Resolve the merge method before merging, stopping at the first source that
+  answers, per the config policy named in Preconditions:
+  1. What the user asked for in the current turn.
+  2. `merge.method` in the target repo's config file, when set to
+     something other than `"repo"`.
+  3. The repository's allowed methods. GitHub exposes `allow_merge_commit`,
+     `allow_squash_merge`, and `allow_rebase_merge` — which methods are
+     *permitted*, not which is preferred, and they read as `null` for an
+     account without push access. When exactly one is allowed, that is the
+     answer and no further step runs.
+  4. The base branch's recent history, when more than one method is allowed
+     and nothing above chose. A merge commit has two parents; a squashed
+     commit has one and usually a trailing `(#123)`. Follow what the
+     repository actually does, and say in the handoff that the method was
+     inferred rather than configured.
+  5. Ask the user, when the history is empty or mixed.
+- A method the repository forbids is a stop, not a fallback: report that the
+  requested method is disallowed instead of quietly using another one.
 - Before merging, verify whether the GitHub MCP connector exposes the specific
   merge action for the session, such as `_merge_pull_request`, and use that
   MCP action when it is available.
@@ -85,7 +105,25 @@ Use this skill when the user asks the AI to land work end to end.
   passing before merging.
 - After the merge completes, switch to `main` locally, sync local `main`, and
   confirm there are still no tracked or staged local changes before deleting
-  the verified local topic branch.
+  the verified local topic branch. Skip the deletion entirely when
+  `merge.deleteLocalBranch` is `false` in the target repo's config file,
+  and say so in the handoff.
+- Verify the branch actually landed before deleting it, using the check that
+  matches the merge method:
+  - **Merge commit** — the branch's tip is an ancestor of the base branch, so
+    `git branch --merged main` lists it and `git branch -d` succeeds. Use
+    `-d` and let it refuse if something is wrong.
+  - **Squash or rebase** — the commits on the base branch are new objects, so
+    the topic branch's tip is *not* an ancestor of it. `git branch --merged`
+    will not list the branch and `git branch -d` will refuse with "not fully
+    merged" even though the work landed correctly. Confirm the landing
+    another way before deleting: the pull request reports `merged: true` with
+    a merge commit SHA, and `git diff <base> <branch>` is empty, meaning the
+    branch's content reached the base branch. Only then delete with
+    `git branch -D`.
+- Never reach for `git branch -D` because `-d` refused. Establish that the
+  work landed first; a refusal that has not been explained is a stop, not a
+  prompt to force.
 - After branch deletion, restore any local-changes stash created for this
   workflow with `git stash pop` or the repository-equivalent restore command.
 - If landing stops after creating a stash for this workflow, restore it once
@@ -107,7 +145,12 @@ Use this skill when the user asks the AI to land work end to end.
   to force landing in the current turn and the connected account has permission
   to override repository protections.
 - Account for the actual merge method used when validating that local branch
-  deletion is safe.
+  deletion is safe; see the Default Path for the check each method needs.
+- Stop if the merge method resolved from the config file or from the user is
+  one the repository does not allow.
+- Stop if `git branch -d` refuses after a merge-commit landing — that means
+  the branch did not land as expected. Do not escalate to `-D` to get past
+  it.
 - If a required git or GitHub command is blocked by sandbox permissions, rerun
   it with approval instead of abandoning the workflow.
 
@@ -119,8 +162,12 @@ Use this skill when the user asks the AI to land work end to end.
   `${CLAUDE_PLUGIN_ROOT}/context/personality.md`). If they did, open with the
   plain result instead.
 - Report the final branch state.
-- Say which merge method was used.
-- Say whether the verified local branch was deleted.
+- Say which merge method was used and where it came from: the user,
+  the config file, the only method the repository allows, or an inference
+  from the base branch's history. An inferred method is reported as inferred.
+- Say whether the verified local branch was deleted, and when it was kept,
+  why — `merge.deleteLocalBranch` being `false`, or a landing that could not
+  be verified.
 - If landing stops or fails, skip the landing phrase and state the blocker
   plainly.
 
@@ -133,7 +180,7 @@ Successful landing:
 ```text
 🏰 Rrraaagh! Victory march into main. The branch banner rests with honor. ✨
 
-Merged PR #123 using the repository default merge method: squash.
+Merged PR #123 with squash, the only method this repository allows.
 Local `main` is synced, and `fix/login-crash` was deleted.
 Restored the local stash.
 ```
@@ -143,7 +190,7 @@ Successful landing with no stash:
 ```text
 🏰 Gates opened on green. Spoils carried home, feast hall ready.
 
-Merged PR #124 using the repository default merge method: merge commit.
+Merged PR #124 with a merge commit, inferred from the base branch's history.
 Local `main` is synced, and `feat/offline-cache` was deleted.
 No local stash was needed.
 ```
