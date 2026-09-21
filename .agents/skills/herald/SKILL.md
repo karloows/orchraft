@@ -28,9 +28,10 @@ who use the project rather than the people who built it.
 1. Resolve the range: a named tag against the tag before it, or the last tag
    to the base branch's head for unreleased work.
 2. Collect the pull requests merged in that range, with their titles,
-   bodies, and linked issues.
+   bodies, and linked issues, plus any commit that reached the base branch
+   without one.
 3. Draft notes grouped by what changed for users, each item citing its pull
-   request.
+   request, or its commit when there is none.
 4. Show the draft in chat. Stop there unless the user asks to publish it.
 5. On the user's current-turn go-ahead, write the notes into the GitHub
    release for that tag.
@@ -45,7 +46,8 @@ who use the project rather than the people who built it.
   Release notes live on the hosting platform's release, not in a file.
 - Not a release tool. It never creates a tag, bumps a version, merges a
   release pull request, or publishes a draft release.
-- Not permission to describe changes the merged pull requests don't show.
+- Not permission to describe changes the merged pull requests and commits
+  in the range don't show.
 
 ## Trigger Rules
 
@@ -171,7 +173,8 @@ who use the project rather than the people who built it.
   `${CLAUDE_PLUGIN_ROOT}/context/personality.md`). If they did, open with
   the plain result instead. The line is the skill's own message, never part
   of the notes.
-- Report the range and how many pull requests it covered.
+- Report the range, and how many pull requests and direct commits it
+  covered.
 - Show the drafted notes.
 - After publishing, report the release URL and which write happened: the
   notes added above the existing body, the block from an earlier run
