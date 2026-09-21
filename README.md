@@ -238,11 +238,10 @@ these defaults.
 
 ## Releases
 
-Versioning and [`CHANGELOG.md`](CHANGELOG.md) are managed by
-[release-please](https://github.com/googleapis/release-please). Merge a
-release PR to publish a new version; do not edit `CHANGELOG.md` by hand.
-The file doesn't exist yet — release-please creates it on the first release
-PR merge, at which point this link resolves.
+Versioning and `CHANGELOG.md` are managed by
+[release-please](https://github.com/googleapis/release-please). Merge the open
+release PR to publish a new version; release-please writes the changelog
+itself, so never edit `CHANGELOG.md` by hand.
 
 ## License
 
