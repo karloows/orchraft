@@ -25,7 +25,7 @@ Use this skill when the user asks the AI to ship work.
 1. Inspect the current branch, status, and actual diff.
 2. Validate the touched area.
 3. Use the current topic branch, or create a policy-compliant branch from the
-   base branch when currently on it.
+   base branch when currently on it or on the repository's default branch.
 4. Stage only intended changes, commit with a policy-compliant message, then
    push.
 5. Create or update the pull request and report the branch, commit, PR, and
@@ -88,14 +88,17 @@ Use this skill when the user asks the AI to ship work.
    the command that ran is reported as written.
 3. Resolve the base branch first: `baseBranch` from the config file when set,
    otherwise the repository's default branch. Do not assume `main` — a
-   repository on `master` or `develop` does not use it. If on the base
-   branch, create a policy-compliant branch from it; if already on a topic
-   branch, keep using it. Before creating or renaming any branch,
-   count the words after `/` (excluding an Optional Ticket Key segment, if
-   used) against `context/policies/branch-policy.md`'s limit and check the
-   allowed characters — verify the generated name against the policy text
-   itself, not just against the rule from memory, before running `git
-   checkout -b` or a rename. A name that fails this check gets fixed before
+   repository on `master` or `develop` does not use it. When `baseBranch`
+   names a branch other than the default, the default branch is not a topic
+   branch either: every rule in this skill that refers to the base branch —
+   the guardrail, the stop condition, not pushing to it — applies to both.
+   If on either, create a policy-compliant branch from the base branch; if
+   already on a topic branch, keep using it. Before creating or renaming any
+   branch, count the words after `/` (excluding an Optional Ticket Key
+   segment, if used) against `context/policies/branch-policy.md`'s limit and
+   check the allowed characters — verify the generated name against the
+   policy text itself, not just against the rule from memory, before running
+   `git checkout -b` or a rename. A name that fails this check gets fixed before
    it's used, not caught later by `roast`.
 4. Stage only the intended changes.
 5. Write a commit title using `<type>(<scope>): <summary>`.
