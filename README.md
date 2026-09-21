@@ -102,8 +102,10 @@ until you say so.
 
 ## Status
 
-Early (0.x). The forge is hot: skill behavior and policy formats may still
-change between releases.
+Stable enough to build on. The public surface is the skill names, the policy
+filenames and what they promise, and the `.orchraft.jsonc` keys — a breaking
+change to any of those comes with a major version bump, so an upgrade never
+moves the ground under an installed copy.
 
 ## Requirements
 
