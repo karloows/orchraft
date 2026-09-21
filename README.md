@@ -55,7 +55,7 @@ the anvil as we cover the rest of the lifecycle.
 | `quest` | 📯 Herald | Triages, creates, or updates a GitHub issue before implementation starts. |
 | `ship` | 🚢 Raid Captain | Creates a policy-compliant branch, commit, push, and pull request from the actual diff. |
 | `roast` | 🔥 Trialmaster | Reviews the pull request against your repo's policies and posts findings as inline comments with fixes and copy-paste AI prompts. |
-| `land` | 🏰 Haulmaster | Checks mergeability and CI, merges with the repo's default method, syncs `main`, and cleans up the branch. |
+| `land` | 🏰 Haulmaster | Checks mergeability and CI, merges with the method your repository allows or your config names, syncs the base branch, and cleans up the branch. |
 | `yap` | 🗣️ Scout | Explains a PR, file, error, policy, or dependency, citing real sources instead of guessing. Read-only. |
 | `lore` | 📜 Loremaster | Adds or fixes code comments and docstrings across a diff, file, or PR to match your repo's lore policy. |
 | `chronicle` | 📚 Chronicler | Drafts or updates standalone Markdown docs — feature write-ups, design docs, README/ROADMAP sections — grounded in the real diff, code, or history. |

@@ -1,6 +1,6 @@
 ---
 name: land
-description: Have the AI finish a topic branch end to end by merging its PR, removing the branch, and syncing local main. Use when the user says land or asks to run the repo landing workflow.
+description: Have the AI finish a topic branch end to end by merging its PR, removing the branch, and syncing the local base branch. Use when the user says land or asks to run the repo landing workflow.
 ---
 
 # Land Workflow
