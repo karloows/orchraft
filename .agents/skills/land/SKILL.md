@@ -67,10 +67,13 @@ Use this skill when the user asks the AI to land work end to end.
 - Confirm the branch has an upstream remote and the local `HEAD` is pushed.
 - Confirm the current branch has an open, non-draft pull request.
 - Confirm the pull request head commit matches local `HEAD`.
-- Confirm the pull request targets the expected base branch. That branch —
-  the pull request's own `base.ref`, or `baseBranch` from the config file
-  when set — is the base branch every later step means; do not substitute a
-  literal `main`, which a repository on `master` or `develop` does not use.
+- Confirm the pull request targets the expected base branch. Every later step
+  means that branch — the pull request's own `base.ref`, which is where the
+  merge actually lands. Do not substitute a literal `main`, which a
+  repository on `master` or `develop` does not use. When `baseBranch` in the
+  config names a different branch than the pull request targets, stop and
+  report the mismatch rather than following either: the config says where
+  work is meant to land, and this pull request says otherwise.
 - Confirm the pull request has no unresolved merge conflicts.
 - Confirm the connected account can merge the pull request.
 - Confirm required check status by reading it fresh from the connected tool

@@ -77,7 +77,7 @@ Rules for reading it:
   answers is worse than either answer.
 - A malformed file (invalid JSON) is worth one plain line to the user, then
   continue with the defaults. Never guess at what the user meant to write.
-- Never create or edit `.orchraft.json` on the user's behalf unless they ask
+- Never create or edit the config file on the user's behalf unless they ask
   for that specific change.
 
 ## Precedence
@@ -90,7 +90,7 @@ For any setting, stop at the first source that answers:
    repository that disallows squash merges cannot be squash-merged, whatever
    a config file says. A constraint is not a preference: a platform that
    permits three merge methods has expressed no opinion about which to use.
-3. **`.orchraft.json` in the target repo.**
+3. **The config file in the target repo.**
 4. **A prose policy in the target repo's `context/policies/`.**
 5. **The default documented below.**
 
