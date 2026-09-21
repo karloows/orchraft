@@ -70,6 +70,11 @@ Rules for reading it:
 - An unknown key is ignored. Do not fail, and do not rewrite the user's file
   to remove it — it may belong to a newer version of these skills than the
   one running.
+- A key whose value is the wrong type falls back to the documented default,
+  the same as if it were absent. `"enabled": "false"` is a string, not the
+  boolean the setting takes, and a consumer that accepted it would disagree
+  with one that did not — two readers of the same file reaching different
+  answers is worse than either answer.
 - A malformed file (invalid JSON) is worth one plain line to the user, then
   continue with the defaults. Never guess at what the user meant to write.
 - Never create or edit `.orchraft.json` on the user's behalf unless they ask

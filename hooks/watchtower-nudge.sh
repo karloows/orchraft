@@ -51,11 +51,13 @@ strip_jsonc() {
 
 for cfg in .orchraft.jsonc .orchraft.json; do
   [ -f "$cfg" ] || continue
-  # tostring, not `// empty`: jq's alternative operator treats a literal
-  # false as absent, so `.enabled // empty` can never see "disabled".
-  enabled=$(strip_jsonc "$cfg" \
-    | jq -r '.hooks.watchtower.enabled | tostring' 2>/dev/null)
-  [ "$enabled" = "false" ] && exit 0
+  # `== false` rather than `// empty` or a tostring compare: the alternative
+  # operator treats a literal false as absent so it could never see
+  # "disabled", and tostring would also accept the string "false", which is
+  # the wrong type and per config-policy.md falls back to the default.
+  disabled=$(strip_jsonc "$cfg" \
+    | jq -r '(.hooks.watchtower.enabled == false) | tostring' 2>/dev/null)
+  [ "$disabled" = "true" ] && exit 0
   break
 done
 

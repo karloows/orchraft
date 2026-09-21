@@ -180,9 +180,10 @@ falling back to the copy bundled with the plugin.
   branch examples.
 - `context/policies/commit-policy.md`: commit title format and when to add a
   free-form prose body.
-- `context/policies/config-policy.md`: the optional `.orchraft.jsonc` a target
-  repo can add for fixed choices such as merge method, and how it ranks
-  against platform constraints and the prose policies.
+- `context/policies/config-policy.md`: the optional `.orchraft.jsonc` (or
+  `.orchraft.json`) a target repo can add for fixed choices such as merge
+  method, and how it ranks against platform constraints and the prose
+  policies.
 - `context/policies/lore-policy.md`: language-agnostic rules for when to
   write a code comment or docstring (lore), and the shape it should take.
 - `context/policies/docs-policy.md`: rules for when to draft or update a
