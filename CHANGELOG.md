@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.2](https://github.com/karloows/orchraft/compare/v1.0.1...v1.0.2) (2026-09-21)
+
+
+### Bug Fixes
+
+* **release:** sync the Codex manifest into release-please's extra-files ([5ac6322](https://github.com/karloows/orchraft/commit/5ac63229d0acbe01350edc8d0be33fc2f4d0f3e7))
+* sync the Codex manifest and rewrite the plugin description ([ebefe88](https://github.com/karloows/orchraft/commit/ebefe88425df669ceff22c5de0f2c58625fd021a))
+
 ## [1.0.1](https://github.com/karloows/orchraft/compare/v1.0.0...v1.0.1) (2026-09-21)
 
 
