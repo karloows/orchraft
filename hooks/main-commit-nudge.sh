@@ -10,7 +10,7 @@
 #
 # The branch comes from origin/HEAD, so a repository whose default is
 # develop is covered without this script learning to parse the config file.
-# It deliberately does not read baseBranch from .orchraft.json: that would
+# It deliberately does not read baseBranch from the config file: that would
 # mean a second copy of the JSONC comment-stripping in watchtower-nudge.sh,
 # and two copies of a parser drift. A repo whose default branch and
 # baseBranch differ gets the nudge for the default branch only.
