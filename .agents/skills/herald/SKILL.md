@@ -104,14 +104,15 @@ who use the project rather than the people who built it.
    change, and CI or tooling changes. Keep a dependency bump that fixes a
    vulnerability or changes supported versions.
 5. Draft the notes per [Notes Format](#notes-format) and show them in chat.
-6. When the user asks to publish, check the release for that tag:
-   - **It exists** — wrap the notes between the hidden markers
-     `<!-- herald:start -->` and `<!-- herald:end -->`. When the body already
-     holds that block from an earlier run, replace only what lies between
-     the markers; otherwise put the block above the current body, separated
-     by a horizontal rule. Replace the whole body only when the user asks
-     for that. GitHub keeps no history of release bodies, so a replacement
-     would lose whatever a release tool wrote there. Write with
+6. When the user asks to publish, wrap the notes between the hidden markers
+   `<!-- herald:start -->` and `<!-- herald:end -->` so a later run can find
+   them, then check the release for that tag:
+   - **It exists** — when the body already holds that block from an earlier
+     run, replace only what lies between the markers; otherwise put the block
+     above the current body, separated by a horizontal rule. Replace the
+     whole body only when the user asks for that. GitHub keeps no history of
+     release bodies, so a replacement would lose whatever a release tool
+     wrote there. Write with
      `gh release edit "$tag" --notes-file "$file"`.
    - **The tag exists but has no release** — create a draft with
      `gh release create "$tag" --draft --verify-tag --notes-file "$file"`
@@ -170,10 +171,9 @@ who use the project rather than the people who built it.
   of the notes.
 - Report the range and how many pull requests it covered.
 - Show the drafted notes.
-- After publishing, report the release URL and whether the notes were
-  placed above the existing body, updated the block from an earlier run, or
-  replaced the body, or that a draft release was
-  created.
+- After publishing, report the release URL and which write happened: the
+  notes added above the existing body, the block from an earlier run
+  updated, the whole body replaced, or a draft release created.
 - If blocked, drop the orc voice and state the blocker plainly.
 
 ## Response Examples
