@@ -48,7 +48,8 @@ unknown branch, and review before landing.
 - Read `context/policies/approval-policy.md` before any route that could
   mutate git, PRs, issues, or releases.
 - Never treat the `warchief` request itself as approval to commit, push,
-  open/update/merge a PR, resolve a thread, or mutate an issue.
+  open/update/merge a PR, resolve a thread, mutate an issue, or write a
+  release.
 - Do not create a stored state file. Use `runes` for live status.
 - Do not chain multiple mutating skills from one approval. A clean `roast`
   may make `land` the next recommendation, but `land` still needs its own

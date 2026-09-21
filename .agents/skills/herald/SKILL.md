@@ -33,7 +33,7 @@ who use the project rather than the people who built it.
 3. Draft notes grouped by what changed for users, each item citing its pull
    request, or its commit when there is none.
 4. Show the draft in chat. Stop there unless the user asks to publish it.
-5. On the user's current-turn go-ahead, write the notes into the GitHub
+5. Once the approval policy is satisfied, write the notes into the GitHub
    release for that tag.
 
 ## What This Is Not
@@ -152,9 +152,9 @@ who use the project rather than the people who built it.
 
 - Never edit, stage, or commit files, including `CHANGELOG.md`.
 - Never create a tag, bump a version, or publish a draft release.
-- Never write to a release without the user's current-turn go-ahead, and
-  never replace an existing release body unless the user asks for a
-  replacement specifically.
+- Never write to a release without the user's current-turn go-ahead, or a
+  verified Autonomous Mode entry naming it, and never replace an existing
+  release body unless the user asks for a replacement specifically.
 - Never describe a change no merged pull request or commit in the range
   shows. When a pull request's body doesn't say what changed for users,
   describe it from its diff, or mark the gap in the draft rather than
