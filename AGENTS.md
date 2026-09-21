@@ -211,9 +211,13 @@ falling back to the copy bundled with the plugin.
   `grep -rn commit-policy *.md` finds the docs that list them by filename.
   `README.md`'s Layout entry names them in prose instead, so a filename
   search misses it — check that one by eye.
-- A new config setting goes in two places in the same change:
-  `context/policies/config-policy.md`, which documents it, and
-  `.orchraft.example.jsonc`, which is supposed to show every field.
+- A new config setting goes in three places in the same change:
+  `context/policies/config-policy.md`, which documents it;
+  `.orchraft.example.jsonc`, which is supposed to show every field; and a
+  consumer that actually reads it —
+  `grep -rn <key> .agents/skills/ hooks/ context/policies/` should name one.
+  A setting nothing reads silently does nothing while the docs promise
+  otherwise; that shipped twice on the branch that added the config file.
 - Keep examples realistic and portable.
 - When a policy and a project-local template disagree, the target project wins.
 - Keep `CLAUDE.md` as a pointer to this file instead of duplicating these

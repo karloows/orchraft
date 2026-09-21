@@ -179,7 +179,8 @@ Follow `context/policies/commit-policy.md` (Conventional Commits:
 reviewer guessing why) and `context/policies/branch-policy.md`
 (`<type>/<short-kebab-description>`, max three words after the slash) for
 your own commits and branches in this repo — the same rules the workflows
-here would generate for you. Never commit or push directly to `main`.
+here would generate for you. Never commit or push directly to the base
+branch.
 
 ## Pull requests
 

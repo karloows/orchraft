@@ -1,6 +1,6 @@
 ---
 name: ship
-description: Have the AI branch, commit, push, and create or update a pull request in the current repository. Use when the user says ship, asks to prepare a branch or commit, or wants help following the repo branch and PR workflow without pushing to main.
+description: Have the AI branch, commit, push, and create or update a pull request in the current repository. Use when the user says ship, asks to prepare a branch or commit, or wants help following the repo branch and PR workflow without pushing to the base branch.
 ---
 
 # Ship Workflow
