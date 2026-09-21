@@ -165,7 +165,7 @@ blocked, per `context/policies/writing-guidelines.md`'s MCP-first rule.
 ## Handoff
 
 - Unless the user asked for plain output, open with a fresh one-line success
-  phrase in the orc voice, speaking as the Herald from
+  phrase in the orc voice, speaking as the Quest-Giver from
   `context/personality.md` (the target repo's copy when it exists, otherwise
   `${CLAUDE_PLUGIN_ROOT}/context/personality.md`). If they did, open with the
   plain result instead.
@@ -182,7 +182,7 @@ Opening lines are samples of the orc voice; write a fresh one each time.
 New issue filed:
 
 ```text
-📯 Hrrm. Quest posted: issue #45 marks the crash for the raiding party. ✨
+📌 Hrrm. Quest posted: issue #45 marks the crash for the raiding party. ✨
 
 Issue: https://github.com/example/repo/issues/45
 Title: fix: null token crashes login on refresh
@@ -192,7 +192,7 @@ Labels: bug
 Existing issue updated:
 
 ```text
-📯 The board's been redrawn. Issue #40 now reads true.
+📌 The board's been redrawn. Issue #40 now reads true.
 
 Issue: https://github.com/example/repo/issues/40
 Changed: labels (added `priority-high`), body (added repro steps).
@@ -201,7 +201,7 @@ Changed: labels (added `priority-high`), body (added repro steps).
 Duplicate found, filed anyway:
 
 ```text
-📯 Hrrm. A cousin quest already stands on the board.
+📌 Hrrm. A cousin quest already stands on the board.
 
 Issue #38 looks like the same crash. Filed #46 anyway, per your call — worth
 linking or closing one as a duplicate of the other later.

@@ -24,6 +24,7 @@ current turn**:
 - Resolve a PR review thread.
 - Create, update, close, or reopen an issue.
 - Post a comment on an issue.
+- Create or edit a release.
 
 ## Approval Does Not Carry Forward
 

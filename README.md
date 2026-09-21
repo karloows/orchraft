@@ -11,7 +11,7 @@
 
 <p align="center">
   <a href="https://github.com/karloows/orchraft/actions/workflows/validate-plugin.yaml"><img alt="Plugin validation" src="https://img.shields.io/github/actions/workflow/status/karloows/orchraft/validate-plugin.yaml?style=flat-square&label=checks&color=6B7A4B"></a>
-  <img alt="12 skills" src="https://img.shields.io/badge/skills-12-6B7A4B?style=flat-square">
+  <img alt="13 skills" src="https://img.shields.io/badge/skills-13-6B7A4B?style=flat-square">
   <img alt="Runs on Claude Code, Codex and Grok Build" src="https://img.shields.io/badge/runs%20on-Claude%20Code%20%C2%B7%20Codex%20%C2%B7%20Grok-1B1712?style=flat-square">
   <a href="LICENSE"><img alt="License Apache 2.0" src="https://img.shields.io/badge/license-Apache--2.0-1B1712?style=flat-square"></a>
 </p>
@@ -52,7 +52,7 @@ the anvil as we cover the rest of the lifecycle.
 | Skill | Clan role | What it does |
 | --- | --- | --- |
 | `warplan` | 🗺️ Tactician | Drafts an implementation plan grounded in this repo's own conventions and precedent before any code is written. |
-| `quest` | 📯 Herald | Triages, creates, or updates a GitHub issue before implementation starts. |
+| `quest` | 📌 Quest-Giver | Triages, creates, or updates a GitHub issue before implementation starts. |
 | `ship` | 🚢 Raid Captain | Creates a policy-compliant branch, commit, push, and pull request from the actual diff. |
 | `roast` | 🔥 Trialmaster | Reviews the pull request against your repo's policies and posts findings as inline comments with fixes and copy-paste AI prompts. |
 | `land` | 🏰 Haulmaster | Checks mergeability and CI, merges with the method your repository allows or your config names, syncs the base branch, and cleans up the branch. |
@@ -61,11 +61,13 @@ the anvil as we cover the rest of the lifecycle.
 | `chronicle` | 📚 Chronicler | Drafts or updates standalone Markdown docs — feature write-ups, design docs, README/ROADMAP sections — grounded in the real diff, code, or history. |
 | `runes` | 📖 Rune-Reader | Summarizes the live state of a branch, PR, checks, and standing review findings. Read-only. |
 | `reckoning` | 🗂️ Reckoner | Lists every review finding consciously declined rather than fixed, across the whole repo's pull requests. Read-only. |
+| `herald` | 📯 Herald | Drafts release notes from the pull requests actually merged, then writes them into the GitHub release once you approve. |
 | `warchief` | ⚔️ War Council | Chooses the next lifecycle role without treating orchestration as approval for mutations. |
 | `watchtower` | 👁️ Watchtower | Surfaces a short read-only nudge about actionable PR state. |
 
 Today's march is `warplan` → `quest` → `lore` → `chronicle` → `ship` →
-`roast` → fix → `ship` → `land`, with `yap` available at any point.
+`roast` → fix → `ship` → `land` → `herald`, with `yap` available at any
+point.
 
 ## What A March Looks Like
 
@@ -113,6 +115,9 @@ change between releases.
   they create/update pull requests, post reviews, merge, and manage issues.
   `gh` installed and authenticated works as a fallback when the MCP
   connector is unavailable mid-session.
+- `gh` with write access for `herald` to publish release notes, since the
+  GitHub MCP connector can't write releases. Drafting them needs only read
+  access.
 - Read-only GitHub access is enough for `runes`, `reckoning`, `watchtower`,
   `yap`, and `warplan` when they're only reading PR/issue state, not
   changing it.
@@ -125,7 +130,7 @@ change between releases.
 - `.agents/skills/`: canonical agent skills.
 - `.claude/skills/`: Claude skill symlinks for `/warplan`, `/quest`, `/ship`,
   `/land`, `/roast`, `/yap`, `/lore`, `/chronicle`, `/runes`, `/reckoning`,
-  `/warchief`, and `/watchtower`.
+  `/herald`, `/warchief`, and `/watchtower`.
 - `.claude-plugin/`: Claude Code plugin manifest and marketplace.
 - `.codex-plugin/` and `.agents/plugins/marketplace.json`: Codex CLI plugin
   manifest and marketplace, reading the same `.agents/skills/`.
@@ -171,7 +176,7 @@ cache).
 The skills load as `/orchraft:warplan`, `/orchraft:quest`, `/orchraft:ship`,
 `/orchraft:land`, `/orchraft:roast`, `/orchraft:yap`, `/orchraft:lore`,
 `/orchraft:chronicle`, `/orchraft:runes`, `/orchraft:reckoning`,
-`/orchraft:warchief`, and `/orchraft:watchtower`. They read
+`/orchraft:herald`, `/orchraft:warchief`, and `/orchraft:watchtower`. They read
 `context/policies/` from your repo when present and fall back to the
 policies bundled with the plugin.
 
@@ -206,14 +211,14 @@ For other agents, or to customize the files, copy the parts you need into a
 target project:
 
 - `.agents/skills/` for the canonical `warplan`, `quest`, `ship`, `land`,
-  `roast`, `yap`, `lore`, `chronicle`, `runes`, `reckoning`, `warchief`,
-  and `watchtower` workflows.
+  `roast`, `yap`, `lore`, `chronicle`, `runes`, `reckoning`, `herald`,
+  `warchief`, and `watchtower` workflows.
 - `context/policies/` for approval, branch, commit, lore, docs, review, and
   PR writing rules.
 - `context/personality.md` for the orc voice the skills use in success lines.
 - `.claude/skills/` when using Claude Code and you want `/warplan`,
   `/quest`, `/ship`, `/land`, `/roast`, `/yap`, `/lore`, `/chronicle`,
-  `/runes`, `/reckoning`, `/warchief`, and `/watchtower`.
+  `/runes`, `/reckoning`, `/herald`, `/warchief`, and `/watchtower`.
 - `hooks/hooks.json`, `hooks/watchtower-nudge.sh`, and
   `hooks/main-commit-nudge.sh` for the ambient `watchtower` nudge and the
   direct-to-default-branch commit/push nudge. This directory is only

@@ -12,7 +12,8 @@ next across the software lifecycle, instead of naming a specific skill.
 
 1. Read the user's goal and the current repo state.
 2. Choose the next fitting orchraft role: `quest`, `warplan`, `ship`,
-   `roast`, `land`, `runes`, `yap`, or `lore`.
+   `roast`, `land`, `herald`, `runes`, `reckoning`, `yap`, `lore`, or
+   `chronicle`.
 3. Explain the handoff briefly, then run only the step the user has actually
    authorized in this turn.
 4. Stop before every git, PR, or issue mutation unless the current message
@@ -28,9 +29,15 @@ next across the software lifecycle, instead of naming a specific skill.
 - Use `roast` when the user asks for PR review or the PR is ready for review.
 - Use `land` only when the user explicitly asks to merge/land in the current
   turn.
+- Use `herald` when the user asks for release notes or what a release
+  shipped.
 - Use `runes` when the user asks for status, resume, or where work stands.
+- Use `reckoning` when the user asks which review findings were declined
+  rather than fixed.
 - Use `yap` when the user asks to explain a file, diff, PR, policy, or error.
 - Use `lore` when the user asks to add or clean up comments/docstrings.
+- Use `chronicle` when the user asks to write or update a standalone
+  Markdown doc such as a README section or design doc.
 
 If more than one route fits, choose the earliest lifecycle step that removes
 real uncertainty. For example, plan before editing, status before shipping an

@@ -6,14 +6,14 @@ first for solo developers with no one else to hand the busywork to. By
 default the user approves every git, pull request, and issue mutation; the
 one documented exception is the opt-in `Autonomous Mode` in
 `context/policies/approval-policy.md`, off unless a repo owner writes it in.
-The current skills cover planning, issues, pull requests, status, and
-documentation (`warchief`, `watchtower`, `warplan`, `quest`, `ship`, `roast`,
-`land`, `runes`, `reckoning`, `yap`, `lore`, `chronicle`); more workflows
-will cover the rest of the lifecycle.
+The current skills cover planning, issues, pull requests, status,
+documentation, and release notes (`warchief`, `watchtower`, `warplan`,
+`quest`, `ship`, `roast`, `land`, `runes`, `reckoning`, `yap`, `lore`,
+`chronicle`, `herald`); more workflows will cover the rest of the lifecycle.
 It is distributed as a Claude Code plugin and can also be copied into other
 projects. Keep this file as the map, not the rulebook: detailed branch,
 commit, PR, warplan, quest, ship, roast, land, runes, reckoning, yap, lore,
-chronicle, warchief, and watchtower behavior lives in the files linked
+chronicle, herald, warchief, and watchtower behavior lives in the files linked
 below.
 
 ## Non-Negotiable: Ask Before Every Mutating Action
@@ -85,6 +85,10 @@ hooks, and CI checks should win.
   every review finding consciously declined rather than fixed, across the
   whole repo's pull requests (open, closed, and merged), by finding replies
   `ship` marked with `<!-- orchraft:declined -->`. Read-only.
+- `.agents/skills/herald/SKILL.md`: AI-driven release-notes workflow that
+  drafts notes from the pull requests merged in a release's range and, on
+  the user's go-ahead, writes them into the GitHub release. Never edits
+  `CHANGELOG.md`, which release tooling owns.
 - `.agents/skills/warchief/SKILL.md`: AI-driven orchestration workflow that
   chooses the next lifecycle role and hands off without weakening approval
   gates.
@@ -95,19 +99,19 @@ hooks, and CI checks should win.
   `.claude/skills/roast/SKILL.md`, `.claude/skills/runes/SKILL.md`,
   `.claude/skills/reckoning/SKILL.md`, `.claude/skills/yap/SKILL.md`,
   `.claude/skills/lore/SKILL.md`, `.claude/skills/chronicle/SKILL.md`,
-  `.claude/skills/warchief/SKILL.md`, and
+  `.claude/skills/herald/SKILL.md`, `.claude/skills/warchief/SKILL.md`, and
   `.claude/skills/watchtower/SKILL.md`: Claude skill symlinks so Claude
   sessions can use `/warplan`, `/quest`, `/ship`, `/land`, `/roast`,
-  `/runes`, `/reckoning`, `/yap`, `/lore`, `/chronicle`, `/warchief`, and
-  `/watchtower` while reading the same canonical skill files.
+  `/runes`, `/reckoning`, `/yap`, `/lore`, `/chronicle`, `/herald`,
+  `/warchief`, and `/watchtower` while reading the same canonical skill files.
 - `.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json`: Claude
   Code plugin manifest and single-plugin marketplace. The manifest's `skills`
   path points at `.agents/skills/`, so installed users get
   `/orchraft:warplan`, `/orchraft:quest`, `/orchraft:ship`, `/orchraft:land`,
   `/orchraft:roast`, `/orchraft:runes`, `/orchraft:reckoning`,
   `/orchraft:yap`, `/orchraft:lore`, `/orchraft:chronicle`,
-  `/orchraft:warchief`, and `/orchraft:watchtower` from the same canonical
-  files.
+  `/orchraft:herald`, `/orchraft:warchief`, and `/orchraft:watchtower` from
+  the same canonical files.
 - `.codex-plugin/plugin.json`: Codex CLI plugin manifest, reading the same
   `.agents/skills/` files.
 - `.grok-plugin/marketplace.json`: self-hosted marketplace listing for Grok
