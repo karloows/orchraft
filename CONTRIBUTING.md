@@ -27,6 +27,7 @@ Each skill is a self-contained workflow the user invokes explicitly (except
 | `chronicle` | docs | Drafts or updates standalone Markdown docs (README sections, design docs, ROADMAP entries). Doesn't commit or push. |
 | `runes` | status | Summarizes a branch's live state: PR, checks, unresolved `roast` findings. Read-only. |
 | `reckoning` | status | Lists every review finding consciously declined rather than fixed, across the repo's pull requests. Read-only. |
+| `herald` | release | Drafts release notes from the pull requests merged since the last tag, plus direct commits cited by short SHA, and writes them into the GitHub release on approval. Never edits `CHANGELOG.md`. |
 | `warchief` | orchestration | Chooses the next lifecycle step and hands off, without performing mutations itself. |
 | `watchtower` | status nudge | Surfaces a short read-only nudge about actionable PR state. |
 
@@ -127,8 +128,8 @@ bake in assumptions specific to this repo's own setup.
   `context/policies/`. If a rule is skill-specific but still reusable,
   check the policy table above before adding a new file — it likely
   belongs in an existing one.
-- **Every mutating action** (commit, push, branch, PR, issue) stays gated
-  behind `context/policies/approval-policy.md`. Don't write a skill step
+- **Every mutating action** (commit, push, branch, PR, issue, release) stays
+  gated behind `context/policies/approval-policy.md`. Don't write a skill step
   that could be read as running one to completion unattended; the policy
   overrides any step that implies otherwise.
 - Don't duplicate policy or skill content into `AGENTS.md` — it's a
