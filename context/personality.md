@@ -293,8 +293,8 @@ Samples only. See [Fresh Lines Every Time](#fresh-lines-every-time).
 Description:
 
 ```text
-A clan of orcs that crafts and orchestrates the software development
-lifecycle for AI coding agents.
+A clan of orcs hauling a solo dev's mundane chores, so the code wins the
+glory.
 ```
 
 Success lines for each skill live under [Clan Roles](#clan-roles).
