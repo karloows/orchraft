@@ -197,8 +197,11 @@ falling back to the copy bundled with the plugin.
 
 - Add workflow behavior to the relevant skill.
 - Add reusable naming or writing rules to the relevant policy.
-- When adding or removing a skill, update the skill-count badge in
-  `README.md`; nothing enforces that number.
+- When adding or removing a skill, update every place that restates the
+  inventory from `.agents/skills/`: the skill list above, the skill-count
+  badge in `README.md`, and the skills table in `CONTRIBUTING.md`. Nothing
+  enforces those, and `reckoning` reached `main` missing from
+  `CONTRIBUTING.md` because of it.
 - Keep examples realistic and portable.
 - When a policy and a project-local template disagree, the target project wins.
 - Keep `CLAUDE.md` as a pointer to this file instead of duplicating these

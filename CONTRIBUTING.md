@@ -26,6 +26,7 @@ Each skill is a self-contained workflow the user invokes explicitly (except
 | `lore` | comments | Adds or fixes code comments/docstrings across a diff, file, or PR. Doesn't commit or push. |
 | `chronicle` | docs | Drafts or updates standalone Markdown docs (README sections, design docs, ROADMAP entries). Doesn't commit or push. |
 | `runes` | status | Summarizes a branch's live state: PR, checks, unresolved `roast` findings. Read-only. |
+| `reckoning` | status | Lists every review finding consciously declined rather than fixed, across the repo's pull requests. Read-only. |
 | `warchief` | orchestration | Chooses the next lifecycle step and hands off, without performing mutations itself. |
 | `watchtower` | status nudge | Surfaces a short read-only nudge about actionable PR state. |
 
