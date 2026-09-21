@@ -109,13 +109,23 @@ Use this skill when the user asks the AI to ship work.
 9. Push the topic branch.
 10. Create or update the branch pull request through the GitHub MCP connector
    when it is available in the session. Use `gh` only after the MCP path has
-   been tried and is unavailable or blocked.
+   been tried and is unavailable or blocked. When updating an existing PR,
+   re-read the whole body against the branch as it now stands, not just the
+   section the new commit belongs in: commit counts, the list of touched
+   files, and the commit each validation claim ran against all go stale when
+   a push only appends a line. Correct or re-run anything that no longer
+   holds.
 11. If the PR has open review threads from a prior `roast` pass and this
     diff fixes the finding one flags, resolve that specific thread via
     `pull_request_review_write` (method `resolve_thread`) once the user gives
     the current-turn go-ahead per `context/policies/approval-policy.md`.
     Match each resolution to the finding it actually fixes; do not resolve
     threads wholesale or resolve one whose finding this diff doesn't address.
+    A finding that a statement is wrong is fixed only when every copy of it
+    is: before committing the fix, search the repository for other places
+    stating the same fact or rule, and fix those in the same commit. The
+    flagged line is where a reviewer happened to look, not the only place
+    the wording lives.
     A finding posted as an "outside diff range" or general PR comment (common
     from CodeRabbit and similar bots, since GitHub only allows threads on
     lines inside a diff hunk) has no review thread to resolve at all — say so
