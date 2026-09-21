@@ -8,7 +8,8 @@
 
 ## Checklist
 
-- [ ] Canonical file edited under `skills/`
+- [ ] Canonical file edited under `skills/`, or this PR only touches
+      `context/policies/`
 - [ ] `AGENTS.md` / `README.md` updated if a skill or policy was added, renamed, or removed
 - [ ] No project-specific build/test/deploy assumptions baked into skill or policy text
 - [ ] Mutating git/GitHub actions in any new/changed skill step stay gated behind `context/policies/approval-policy.md`
