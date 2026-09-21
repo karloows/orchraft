@@ -32,6 +32,13 @@ if [ -n "$cwd" ] && ! cd "$cwd" 2>/dev/null; then
   exit 0
 fi
 
+# Establish relevance before inspecting the command at all: this hook has
+# nothing to say about a Bash call outside a git repository, so it exits
+# here instead of reading tool_input.command for one. Every Bash call still
+# reaches this script -- matcher "Bash" has no narrower selector Claude Code
+# offers -- but a non-git cwd never gets its command text examined.
+git rev-parse --is-inside-work-tree >/dev/null 2>&1 || exit 0
+
 command_str=$(printf '%s' "$input" | jq -r '.tool_input.command // empty')
 [ -n "$command_str" ] || exit 0
 
@@ -39,7 +46,6 @@ command_str=$(printf '%s' "$input" | jq -r '.tool_input.command // empty')
 # something else (e.g. a script path containing "git-commit-helper").
 printf '%s' "$command_str" | grep -qE '(^|[;&|]|[[:space:]])git[[:space:]]+(commit|push)([[:space:]]|$)' || exit 0
 
-git rev-parse --is-inside-work-tree >/dev/null 2>&1 || exit 0
 branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null) || exit 0
 
 # origin/HEAD names the repository's default branch when the remote ref
