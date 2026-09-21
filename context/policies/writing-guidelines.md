@@ -11,7 +11,7 @@ Optional Ticket Key section — that's an issue reference, not a credential.
 - Before making code or documentation changes, check the current branch and working tree state.
 - Follow any project-local agent instructions for workflow meanings, branch
   rules, commit rules, PR templates, and required checks.
-- Never commit or push directly to `main` unless the user explicitly asks for that exception.
+- Never commit or push directly to the base branch, or to the repository's default branch when a configured `baseBranch` names another, unless the user explicitly asks for that exception.
 - Before generating branch names, commit messages, or PR text, inspect the full
   intended change set with `git status`, `git diff`, staged diff, and untracked
   files that belong to the work.

@@ -55,7 +55,7 @@ the anvil as we cover the rest of the lifecycle.
 | `quest` | 📯 Herald | Triages, creates, or updates a GitHub issue before implementation starts. |
 | `ship` | 🚢 Raid Captain | Creates a policy-compliant branch, commit, push, and pull request from the actual diff. |
 | `roast` | 🔥 Trialmaster | Reviews the pull request against your repo's policies and posts findings as inline comments with fixes and copy-paste AI prompts. |
-| `land` | 🏰 Haulmaster | Checks mergeability and CI, merges with the repo's default method, syncs `main`, and cleans up the branch. |
+| `land` | 🏰 Haulmaster | Checks mergeability and CI, merges with the method your repository allows or your config names, syncs the base branch, and cleans up the branch. |
 | `yap` | 🗣️ Scout | Explains a PR, file, error, policy, or dependency, citing real sources instead of guessing. Read-only. |
 | `lore` | 📜 Loremaster | Adds or fixes code comments and docstrings across a diff, file, or PR to match your repo's lore policy. |
 | `chronicle` | 📚 Chronicler | Drafts or updates standalone Markdown docs — feature write-ups, design docs, README/ROADMAP sections — grounded in the real diff, code, or history. |
@@ -134,11 +134,17 @@ change between releases.
 - `hooks/`: a `SessionStart` hook that runs `watchtower`'s status checks
   automatically (a plain script, not a model call) so the nudge shows up
   without asking for it, and a `PreToolUse` hook that nudges — never
-  blocks — when a `git commit`/`push` is about to run directly against
-  `main`/`master`. The only ambient behaviors here — every other skill is
-  invoked on purpose.
-- `context/policies/`: reusable approval, branch, commit, lore, docs,
-  review, and PR writing policies.
+  blocks — when a `git commit`/`push` is about to run directly against the
+  repository's default branch. The only ambient behaviors here — every
+  other skill is invoked on purpose.
+- `context/policies/`: reusable approval, branch, commit, config, lore,
+  docs, review, and PR writing policies.
+- `.orchraft.example.jsonc`: a starting point holding every setting at its
+  default, with the accepted values in comments. Copy it to
+  `.orchraft.jsonc` (or `.orchraft.json`) and edit what you want to change;
+  `context/policies/config-policy.md` documents each setting and how it
+  ranks against your repository's own settings. Optional — the skills work
+  with no config file at all.
 - `context/personality.md`: the orc's character and voice, and where it
   applies.
 - `evals/`: `claude plugin eval` cases that check skill behavior (e.g. `ship`
@@ -210,7 +216,7 @@ target project:
   `/runes`, `/reckoning`, `/warchief`, and `/watchtower`.
 - `hooks/hooks.json`, `hooks/watchtower-nudge.sh`, and
   `hooks/main-commit-nudge.sh` for the ambient `watchtower` nudge and the
-  direct-to-`main`/`master` commit/push nudge. This directory is only
+  direct-to-default-branch commit/push nudge. This directory is only
   auto-discovered when loaded as a Claude Code plugin; outside that, copy
   all three files to `hooks/` at your project root and copy the `hooks`
   object from `hooks/hooks.json` into your own `.claude/settings.json`.

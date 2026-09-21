@@ -22,6 +22,45 @@ fi
 
 git rev-parse --is-inside-work-tree >/dev/null 2>&1 || exit 0
 
+# Opt out via the repo's own config (context/policies/config-policy.md).
+# Comments are stripped first: the format allows them, jq does not. A
+# missing file, a missing key, or an unparseable one all leave the nudge on,
+# so a broken config never silently disables the thing it configures.
+#
+# The strip tracks whether it is inside a double-quoted string, because a
+# blind `s://.*::` also truncates at the // in a URL -- one "https://..."
+# anywhere in the file would break the parse and silently strand the toggle.
+strip_jsonc() {
+  awk '{
+    out = ""; inq = 0; i = 1; n = length($0)
+    while (i <= n) {
+      c = substr($0, i, 1)
+      if (inq) {
+        if (c == "\\") { out = out substr($0, i, 2); i += 2; continue }
+        if (c == "\"") { inq = 0 }
+        out = out c; i++
+      } else {
+        if (c == "\"") { inq = 1; out = out c; i++; continue }
+        if (c == "/" && substr($0, i + 1, 1) == "/") { break }
+        out = out c; i++
+      }
+    }
+    print out
+  }' "$1" 2>/dev/null
+}
+
+for cfg in .orchraft.jsonc .orchraft.json; do
+  [ -f "$cfg" ] || continue
+  # `== false` rather than `// empty` or a tostring compare: the alternative
+  # operator treats a literal false as absent so it could never see
+  # "disabled", and tostring would also accept the string "false", which is
+  # the wrong type and per config-policy.md falls back to the default.
+  disabled=$(strip_jsonc "$cfg" \
+    | jq -r '(.hooks.watchtower.enabled == false) | tostring' 2>/dev/null)
+  [ "$disabled" = "true" ] && exit 0
+  break
+done
+
 branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null) || exit 0
 status_output=$(git status --porcelain 2>/dev/null) || exit 0
 dirty=""

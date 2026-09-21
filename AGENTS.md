@@ -133,9 +133,12 @@ hooks, and CI checks should win.
   when `gh` is missing or unauthenticated.
 - `hooks/main-commit-nudge.sh`: nudges (never blocks — always
   `permissionDecision: allow`) when a `Bash` command is about to run `git
-  commit` or `git push` while the current branch is `main`/`master`, the
-  one bypass `ship`'s own Guardrails single out. Deliberately scoped to
-  `main`/`master` only, not every commit: a broader version would fire on
+  commit` or `git push` while the current branch is the repository's
+  default branch, the one bypass `ship`'s own Guardrails single out. The
+  branch comes from `origin/HEAD`, falling back to `main`/`master` when no
+  remote ref exists; it does not read `baseBranch`, which would need a
+  second copy of `watchtower-nudge.sh`'s JSONC parsing. Deliberately scoped
+  to that one branch, not every commit: a broader version would fire on
   `ship`'s own legitimate commits far more often than it would ever catch a
   real bypass, which is exactly the noise `watchtower-nudge.sh` is designed
   to avoid becoming.
@@ -180,6 +183,10 @@ falling back to the copy bundled with the plugin.
   branch examples.
 - `context/policies/commit-policy.md`: commit title format and when to add a
   free-form prose body.
+- `context/policies/config-policy.md`: the optional `.orchraft.jsonc` (or
+  `.orchraft.json`) a target repo can add for fixed choices such as merge
+  method, and how it ranks against platform constraints and the prose
+  policies.
 - `context/policies/lore-policy.md`: language-agnostic rules for when to
   write a code comment or docstring (lore), and the shape it should take.
 - `context/policies/docs-policy.md`: rules for when to draft or update a
@@ -203,6 +210,21 @@ falling back to the copy bundled with the plugin.
   `README.md` holds a number rather than names, so check it separately.
   Nothing enforces either — `reckoning` reached `main` missing from
   `CONTRIBUTING.md`.
+- The same applies to policies: `context/policies/` is the inventory, and
+  `grep -rn commit-policy *.md` finds the docs that list them by filename.
+  `README.md`'s Layout entry names them in prose instead, so a filename
+  search misses it — check that one by eye.
+- A new config setting, or a change to what an existing one means, goes in
+  three places in the same change:
+  `context/policies/config-policy.md`, which documents it;
+  `.orchraft.example.jsonc`, which is supposed to show every field; and a
+  consumer that actually reads it —
+  `grep -rn <key> .agents/skills/ hooks/ context/policies/` should name a
+  file that reads it as a setting. `config-policy.md` doesn't count, since
+  it defines every key, and neither does prose that only uses the word, as
+  many files do with "validate".
+  A setting nothing reads silently does nothing while the docs promise
+  otherwise; that shipped twice on the branch that added the config file.
 - Keep examples realistic and portable.
 - When a policy and a project-local template disagree, the target project wins.
 - Keep `CLAUDE.md` as a pointer to this file instead of duplicating these

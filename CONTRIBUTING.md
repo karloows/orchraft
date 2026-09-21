@@ -21,7 +21,7 @@ Each skill is a self-contained workflow the user invokes explicitly (except
 | `quest` | issue | Triages, creates, or updates a GitHub issue. |
 | `ship` | branch/commit/PR | Creates a policy-compliant branch, commit, push, and pull request from the actual diff. |
 | `roast` | review | Reviews a PR against this repo's own policies and posts findings as a PR review with inline comments. |
-| `land` | merge | Checks mergeability and CI, merges with the repo's default method, syncs `main`, cleans up the branch. |
+| `land` | merge | Checks mergeability and CI, resolves the merge method, syncs the base branch, cleans up the branch. |
 | `yap` | explain | Explains a PR/diff, file, error/log, policy, or dependency, citing real sources. Read-only. |
 | `lore` | comments | Adds or fixes code comments/docstrings across a diff, file, or PR. Doesn't commit or push. |
 | `chronicle` | docs | Drafts or updates standalone Markdown docs (README sections, design docs, ROADMAP entries). Doesn't commit or push. |
@@ -50,6 +50,7 @@ reimplementing:
 | `approval-policy.md` | Which git/PR/issue actions need the user's current-turn go-ahead, and the opt-in `Autonomous Mode` exception. |
 | `branch-policy.md` | Branch name format (`<type>/<short-kebab-description>`), allowed conventional-commit types, examples. |
 | `commit-policy.md` | Commit title format (Conventional Commits), when to add a body, footer rules. |
+| `config-policy.md` | The optional `.orchraft.jsonc` (or `.orchraft.json`) a target repo can add for fixed choices such as merge method, and how it ranks against platform constraints. |
 | `lore-policy.md` | Language-agnostic rules for when a code comment/docstring is warranted and what shape it takes. |
 | `docs-policy.md` | When to draft/update a standalone Markdown doc, sourcing every claim, tone and shape. |
 | `review-policy.md` | Reviewer priority order, severity levels, findings format for PR review. |
@@ -69,7 +70,8 @@ add orc flavor to those.
 
 - `hooks/hooks.json` declares a `SessionStart` hook (matched on
   `startup|resume|clear|compact`, deliberately never `fork`) that runs
-  `hooks/watchtower-nudge.sh`.
+  `hooks/watchtower-nudge.sh`, and a `PreToolUse` hook (matched on `Bash`)
+  that runs `hooks/main-commit-nudge.sh`.
 - `hooks/watchtower-nudge.sh` is a deterministic `bash`/`git`/`gh`
   reimplementation of `watchtower`'s surfacing rules — not a nested `claude
   -p` call, since the checks (PR exists? checks failing? unresolved review
@@ -77,8 +79,14 @@ add orc flavor to those.
   calls. It emits at most one `additionalContext` line, or none when
   there's nothing actionable, and degrades to a local-only nudge (or
   silence) when `gh` is missing or unauthenticated.
-- This hook is orchraft's *only* ambient behavior. Every other skill
-  requires explicit invocation — don't add a second one without strong
+- `hooks/main-commit-nudge.sh` nudges — never blocks — when a `git commit`
+  or `git push` is about to run directly on the repository's default
+  branch, resolved from `origin/HEAD` with `main`/`master` as the fallback.
+  It is scoped to that one branch deliberately: a broader check would fire
+  on `ship`'s own legitimate commits far more often than it would catch a
+  real bypass.
+- These two hooks are orchraft's only ambient behaviors. Every other skill
+  requires explicit invocation — don't add a third without strong
   justification, since it works against the "nothing touches git/GitHub
   until you say go" promise in the README.
 
@@ -178,7 +186,8 @@ Follow `context/policies/commit-policy.md` (Conventional Commits:
 reviewer guessing why) and `context/policies/branch-policy.md`
 (`<type>/<short-kebab-description>`, max three words after the slash) for
 your own commits and branches in this repo — the same rules the workflows
-here would generate for you. Never commit or push directly to `main`.
+here would generate for you. Never commit or push directly to the base
+branch.
 
 ## Pull requests
 
@@ -197,6 +206,19 @@ here would generate for you. Never commit or push directly to `main`.
   `grep -rn watchtower *.md` finds the rosters.
 - If you're adding a new policy, list it in `AGENTS.md`'s Policies section
   too.
+- If you're adding a setting to `context/policies/config-policy.md`, or
+  changing what an existing one means, check that something actually reads
+  it:
+  `grep -rn <key> .agents/skills/ hooks/ context/policies/` should name the
+  skill, script, or policy that honors it, and the setting belongs in
+  `.orchraft.example.jsonc` in the same PR. Search `context/policies/` too —
+  `autonomous` is read by `approval-policy.md` and a search of only the
+  skills and hooks finds nothing for it — but don't count the match in
+  `config-policy.md`, which defines every key and so always matches, or a
+  hit that only uses the key as an ordinary word, as prose does with
+  "validate". A documented setting nothing reads is worse than an
+  undocumented one: it silently does nothing while the docs promise
+  otherwise. This has slipped through twice.
 
 ## Code of conduct and security
 
