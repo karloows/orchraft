@@ -134,9 +134,9 @@ change between releases.
 - `hooks/`: a `SessionStart` hook that runs `watchtower`'s status checks
   automatically (a plain script, not a model call) so the nudge shows up
   without asking for it, and a `PreToolUse` hook that nudges — never
-  blocks — when a `git commit`/`push` is about to run directly against
-  `main`/`master`. The only ambient behaviors here — every other skill is
-  invoked on purpose.
+  blocks — when a `git commit`/`push` is about to run directly against the
+  repository's default branch. The only ambient behaviors here — every
+  other skill is invoked on purpose.
 - `context/policies/`: reusable approval, branch, commit, config, lore,
   docs, review, and PR writing policies.
 - `.orchraft.example.jsonc`: a starting point holding every setting at its
@@ -216,7 +216,7 @@ target project:
   `/runes`, `/reckoning`, `/warchief`, and `/watchtower`.
 - `hooks/hooks.json`, `hooks/watchtower-nudge.sh`, and
   `hooks/main-commit-nudge.sh` for the ambient `watchtower` nudge and the
-  direct-to-`main`/`master` commit/push nudge. This directory is only
+  direct-to-default-branch commit/push nudge. This directory is only
   auto-discovered when loaded as a Claude Code plugin; outside that, copy
   all three files to `hooks/` at your project root and copy the `hooks`
   object from `hooks/hooks.json` into your own `.claude/settings.json`.

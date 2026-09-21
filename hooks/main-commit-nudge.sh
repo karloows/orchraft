@@ -16,7 +16,7 @@
 # baseBranch differ gets the nudge for the default branch only.
 # Always permissionDecision "allow" -- a reminder injected into context, not
 # a permission prompt shown to the user, since blocking would override a
-# user's explicit intent to commit to main directly.
+# user's explicit intent to commit to that branch directly.
 set -uo pipefail
 
 emit() {
@@ -48,11 +48,8 @@ branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null) || exit 0
 default_branch=$(git symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null)
 default_branch="${default_branch#origin/}"
 
-if [ -n "$default_branch" ] && [ "$branch" = "$default_branch" ]; then
-  emit "Chief, that git command targets \`$branch\` directly -- \`ship\` is the usual path for a branch/commit/PR. Proceeding only if you meant this."
-fi
-
-if [ -z "$default_branch" ] && [[ "$branch" =~ ^(main|master)$ ]]; then
+if { [ -n "$default_branch" ] && [ "$branch" = "$default_branch" ]; } ||
+   { [ -z "$default_branch" ] && [[ "$branch" =~ ^(main|master)$ ]]; }; then
   emit "Chief, that git command targets \`$branch\` directly -- \`ship\` is the usual path for a branch/commit/PR. Proceeding only if you meant this."
 fi
 

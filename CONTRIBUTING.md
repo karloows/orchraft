@@ -70,7 +70,8 @@ add orc flavor to those.
 
 - `hooks/hooks.json` declares a `SessionStart` hook (matched on
   `startup|resume|clear|compact`, deliberately never `fork`) that runs
-  `hooks/watchtower-nudge.sh`.
+  `hooks/watchtower-nudge.sh`, and a `PreToolUse` hook (matched on `Bash`)
+  that runs `hooks/main-commit-nudge.sh`.
 - `hooks/watchtower-nudge.sh` is a deterministic `bash`/`git`/`gh`
   reimplementation of `watchtower`'s surfacing rules — not a nested `claude
   -p` call, since the checks (PR exists? checks failing? unresolved review
@@ -78,8 +79,14 @@ add orc flavor to those.
   calls. It emits at most one `additionalContext` line, or none when
   there's nothing actionable, and degrades to a local-only nudge (or
   silence) when `gh` is missing or unauthenticated.
-- This hook is orchraft's *only* ambient behavior. Every other skill
-  requires explicit invocation — don't add a second one without strong
+- `hooks/main-commit-nudge.sh` nudges — never blocks — when a `git commit`
+  or `git push` is about to run directly on the repository's default
+  branch, resolved from `origin/HEAD` with `main`/`master` as the fallback.
+  It is scoped to that one branch deliberately: a broader check would fire
+  on `ship`'s own legitimate commits far more often than it would catch a
+  real bypass.
+- These two hooks are orchraft's only ambient behaviors. Every other skill
+  requires explicit invocation — don't add a third without strong
   justification, since it works against the "nothing touches git/GitHub
   until you say go" promise in the README.
 

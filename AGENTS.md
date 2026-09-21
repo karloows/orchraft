@@ -133,9 +133,12 @@ hooks, and CI checks should win.
   when `gh` is missing or unauthenticated.
 - `hooks/main-commit-nudge.sh`: nudges (never blocks — always
   `permissionDecision: allow`) when a `Bash` command is about to run `git
-  commit` or `git push` while the current branch is `main`/`master`, the
-  one bypass `ship`'s own Guardrails single out. Deliberately scoped to
-  `main`/`master` only, not every commit: a broader version would fire on
+  commit` or `git push` while the current branch is the repository's
+  default branch, the one bypass `ship`'s own Guardrails single out. The
+  branch comes from `origin/HEAD`, falling back to `main`/`master` when no
+  remote ref exists; it does not read `baseBranch`, which would need a
+  second copy of `watchtower-nudge.sh`'s JSONC parsing. Deliberately scoped
+  to that one branch, not every commit: a broader version would fire on
   `ship`'s own legitimate commits far more often than it would ever catch a
   real bypass, which is exactly the noise `watchtower-nudge.sh` is designed
   to avoid becoming.
