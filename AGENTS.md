@@ -30,7 +30,7 @@ skill step that could be read as running to completion unattended.
 
 ## How To Use This Repo
 
-- Use the skills in `.agents/skills/` for end-to-end agent workflows.
+- Use the skills in `skills/` for end-to-end agent workflows.
 - Use the policies in `context/policies/` for reusable naming and writing
   standards.
 - Use `context/personality.md` for the orc voice on user-facing surfaces
@@ -55,67 +55,62 @@ hooks, and CI checks should win.
 
 ## Skills
 
-- `.agents/skills/warplan/SKILL.md`: AI-driven planning workflow that drafts
+- `skills/warplan/SKILL.md`: AI-driven planning workflow that drafts
   an implementation plan grounded in this repo's own conventions and
   precedent, before any code is written.
-- `.agents/skills/quest/SKILL.md`: AI-driven issue triage, creation, and
+- `skills/quest/SKILL.md`: AI-driven issue triage, creation, and
   update workflow — the lifecycle stage before `ship`.
-- `.agents/skills/ship/SKILL.md`: AI-driven branch, commit, push, and pull
+- `skills/ship/SKILL.md`: AI-driven branch, commit, push, and pull
   request creation/update workflow.
-- `.agents/skills/land/SKILL.md`: AI-driven pull request landing workflow,
+- `skills/land/SKILL.md`: AI-driven pull request landing workflow,
   including merge checks, local cleanup, and handoff.
-- `.agents/skills/roast/SKILL.md`: AI-driven pull request review workflow
+- `skills/roast/SKILL.md`: AI-driven pull request review workflow
   that checks a PR against this repo's own policies and posts findings as a
   PR review with inline comments and a summary, CodeRabbit-style.
-- `.agents/skills/yap/SKILL.md`: AI-driven explainer workflow that explains a
+- `skills/yap/SKILL.md`: AI-driven explainer workflow that explains a
   PR/diff, file, error/log, policy, or dependency grounded in real sources
   (code, git history, docs) with citations, read-only.
-- `.agents/skills/lore/SKILL.md`: AI-driven workflow that adds or fixes code
+- `skills/lore/SKILL.md`: AI-driven workflow that adds or fixes code
   comments and docstrings across a diff, file, or PR to match
   `context/policies/lore-policy.md`, without committing or pushing.
-- `.agents/skills/chronicle/SKILL.md`: AI-driven workflow that drafts or
+- `skills/chronicle/SKILL.md`: AI-driven workflow that drafts or
   updates standalone Markdown docs — README sections, ROADMAP entries,
   design docs, feature write-ups — grounded in the real diff, code, commit
   history, or PR/issue text, per `context/policies/docs-policy.md`, without
   committing or pushing.
-- `.agents/skills/runes/SKILL.md`: AI-driven status workflow that
+- `skills/runes/SKILL.md`: AI-driven status workflow that
   summarizes a branch's live state — its PR, checks, and unresolved `roast`
   findings — so the user doesn't have to re-explain where things stand.
   Read-only.
-- `.agents/skills/reckoning/SKILL.md`: AI-driven status workflow that lists
+- `skills/reckoning/SKILL.md`: AI-driven status workflow that lists
   every review finding consciously declined rather than fixed, across the
   whole repo's pull requests (open, closed, and merged), by finding replies
   `ship` marked with `<!-- orchraft:declined -->`. Read-only.
-- `.agents/skills/herald/SKILL.md`: AI-driven release-notes workflow that
+- `skills/herald/SKILL.md`: AI-driven release-notes workflow that
   drafts notes from the pull requests merged in a release's range, plus any
   commit that reached the base branch without one, cited by short SHA, and,
   on the user's go-ahead, writes them into the GitHub release. Never edits
   `CHANGELOG.md`, which release tooling owns.
-- `.agents/skills/warchief/SKILL.md`: AI-driven orchestration workflow that
+- `skills/warchief/SKILL.md`: AI-driven orchestration workflow that
   chooses the next lifecycle role and hands off without weakening approval
   gates.
-- `.agents/skills/watchtower/SKILL.md`: AI-driven read-only status nudge that
+- `skills/watchtower/SKILL.md`: AI-driven read-only status nudge that
   surfaces actionable PR state without mutating git or GitHub.
-- `.claude/skills/warplan/SKILL.md`, `.claude/skills/quest/SKILL.md`,
-  `.claude/skills/ship/SKILL.md`, `.claude/skills/land/SKILL.md`,
-  `.claude/skills/roast/SKILL.md`, `.claude/skills/runes/SKILL.md`,
-  `.claude/skills/reckoning/SKILL.md`, `.claude/skills/yap/SKILL.md`,
-  `.claude/skills/lore/SKILL.md`, `.claude/skills/chronicle/SKILL.md`,
-  `.claude/skills/herald/SKILL.md`, `.claude/skills/warchief/SKILL.md`, and
-  `.claude/skills/watchtower/SKILL.md`: Claude skill symlinks so Claude
-  sessions can use `/warplan`, `/quest`, `/ship`, `/land`, `/roast`,
-  `/runes`, `/reckoning`, `/yap`, `/lore`, `/chronicle`, `/herald`,
-  `/warchief`, and `/watchtower` while reading the same canonical skill files.
 - `.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json`: Claude
-  Code plugin manifest and single-plugin marketplace. The manifest's `skills`
-  path points at `.agents/skills/`, so installed users get
+  Code plugin manifest and single-plugin marketplace. The manifest declares
+  no `skills` field — `skills/` at the repo root is the default component
+  directory Claude Code scans without one, so installed users get
   `/orchraft:warplan`, `/orchraft:quest`, `/orchraft:ship`, `/orchraft:land`,
   `/orchraft:roast`, `/orchraft:runes`, `/orchraft:reckoning`,
   `/orchraft:yap`, `/orchraft:lore`, `/orchraft:chronicle`,
   `/orchraft:herald`, `/orchraft:warchief`, and `/orchraft:watchtower` from
   the same canonical files.
-- `.codex-plugin/plugin.json`: Codex CLI plugin manifest, reading the same
-  `.agents/skills/` files.
+- `.codex-plugin/plugin.json`: Codex CLI plugin manifest. Declares no
+  `skills` field either — under the real Agent Plugins 1.0.0 schema it
+  targets (agent-plugins.org/schemas/1.0.0/plugin.schema.json), `skills`
+  isn't a valid manifest property at all; component discovery is pure
+  `skills/` directory convention, the same one Claude Code and Grok Build
+  scan.
 - `.grok-plugin/marketplace.json`: self-hosted marketplace listing for Grok
   Build, the same bypass-the-central-catalog mechanism Claude Code's own
   `.claude-plugin/marketplace.json` uses — separate from xAI's central
@@ -210,7 +205,7 @@ falling back to the copy bundled with the plugin.
 
 - Add workflow behavior to the relevant skill.
 - Add reusable naming or writing rules to the relevant policy.
-- When adding or removing a skill, `.agents/skills/` is the inventory and
+- When adding or removing a skill, `skills/` is the inventory and
   every doc that restates it has to follow. `grep -rn watchtower *.md` finds
   the rosters, since each one names every skill; the skill-count badge in
   `README.md` holds a number rather than names, so check it separately.
@@ -225,7 +220,7 @@ falling back to the copy bundled with the plugin.
   `context/policies/config-policy.md`, which documents it;
   `.orchraft.example.jsonc`, which is supposed to show every field; and a
   consumer that actually reads it —
-  `grep -rn <key> .agents/skills/ hooks/ context/policies/` should name a
+  `grep -rn <key> skills/ hooks/ context/policies/` should name a
   file that reads it as a setting. `config-policy.md` doesn't count, since
   it defines every key, and neither does prose that only uses the word, as
   many files do with "validate".
@@ -235,8 +230,9 @@ falling back to the copy bundled with the plugin.
 - When a policy and a project-local template disagree, the target project wins.
 - Keep `CLAUDE.md` as a pointer to this file instead of duplicating these
   instructions.
-- Keep Claude skills as symlinks to `.agents/skills`; edit the canonical skill
-  files, not the links.
+- Skills live only in `skills/` — Claude Code, Codex, and Grok Build all
+  read it directly, so there is no per-ecosystem symlink layer to keep in
+  sync.
 - Don't edit the plugin manifest's `version` by hand; release-please bumps it
   alongside `package.json`.
 
@@ -244,5 +240,6 @@ falling back to the copy bundled with the plugin.
 
 - Do not add project-specific build, test, deploy, or package commands.
 - Do not duplicate full skill or policy contents.
-- Do not duplicate tool-specific mirrors; use symlinks when a target tool
-  requires another directory layout.
+- Do not duplicate tool-specific mirrors, and do not reach for a symlink to
+  paper over a directory-layout mismatch — `skills/` at the repo root is the
+  one shared convention every supported tool already scans by default.

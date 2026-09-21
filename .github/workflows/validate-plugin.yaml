@@ -18,7 +18,7 @@ jobs:
       - name: Validate marketplace
         run: claude plugin validate . --strict
       - name: Validate skills
-        run: claude plugin validate .agents/skills --strict
+        run: claude plugin validate skills --strict
       # Not --strict: the root CLAUDE.md warning is expected, since that file
       # is a pointer for contributors, not plugin context.
       - name: Validate plugin manifest

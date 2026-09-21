@@ -78,7 +78,7 @@ body:
       label: Installed as
       options:
         - Claude Code plugin
-        - Copied into a project (.agents/skills + context/policies)
+        - Copied into a project (skills + context/policies)
     validations:
       required: true
 

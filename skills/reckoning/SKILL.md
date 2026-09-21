@@ -27,7 +27,7 @@ the whole repo's.
 
 1. Search the repo's pull requests for review-comment replies carrying the
    `<!-- orchraft:declined -->` marker `ship` posts (see
-   `.agents/skills/ship/SKILL.md` Default Path step 12).
+   `skills/ship/SKILL.md` Default Path step 12).
 2. For each one, report the PR, the file/line, the original finding, and the
    stated decline reason, and whether that PR is still open or already
    merged/closed.

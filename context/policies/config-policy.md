@@ -152,7 +152,7 @@ key as the convenience layer it is.
 Which merge method `land` uses. One of:
 
 - `"repo"` (default) — resolve it from the repository rather than this file.
-  See `.agents/skills/land/SKILL.md` for that resolution.
+  See `skills/land/SKILL.md` for that resolution.
 - `"merge"` — a merge commit, preserving each commit on the base branch.
 - `"squash"` — one commit on the base branch, its subject taken from the
   pull request title.

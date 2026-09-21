@@ -65,8 +65,12 @@ What the end user needs in place before this skill can work at all:
 
 - Run when the user explicitly asks to roast, review, review the PR, or check
   the branch the way an automated reviewer would.
-- Run immediately after `ship` when the user asks `ship` to include a review,
-  or says so as a standing preference (e.g. "always roast after you ship").
+- Run immediately after `ship` when the user's current-turn message explicitly
+  asks for a review alongside it (e.g. "ship it and roast it"). A preference
+  stated in an earlier turn does not carry forward — posting a PR review is
+  gated by `context/policies/approval-policy.md` the same as any other
+  mutation, needing the current-turn go-ahead every time, not a remembered
+  standing instruction.
 - Do not run automatically on every `ship` unless the user has said so; `ship`
   and `roast` are separate skills with separate trigger rules.
 
@@ -265,7 +269,7 @@ section (line 114). `land`'s Contents already lists it.
 <summary>🤖 Prompt for AI agents</summary>
 
 ```text
-In .agents/skills/yap/SKILL.md, the Contents list (lines 12-21) ends at
+In skills/yap/SKILL.md, the Contents list (lines 12-21) ends at
 "- [Handoff](#handoff)" but the file also has a "## Response Examples"
 section. Add "- [Response Examples](#response-examples)" after the Handoff
 entry. Confirm every "## " heading in the file has a matching Contents entry.

@@ -1,1 +1,0 @@
-../../../.agents/skills/warchief/SKILL.md

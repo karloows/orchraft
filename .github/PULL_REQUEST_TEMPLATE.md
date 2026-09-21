@@ -4,11 +4,12 @@
 
 ## Which skill(s) or policy(ies) does this touch?
 
-<!-- e.g. .agents/skills/ship/SKILL.md, context/policies/commit-policy.md -->
+<!-- e.g. skills/ship/SKILL.md, context/policies/commit-policy.md -->
 
 ## Checklist
 
-- [ ] Canonical file edited under `.agents/skills/` (not the `.claude/skills/` symlink)
+- [ ] Canonical file edited under `skills/`, or this PR only touches
+      `context/policies/`
 - [ ] `AGENTS.md` / `README.md` updated if a skill or policy was added, renamed, or removed
 - [ ] No project-specific build/test/deploy assumptions baked into skill or policy text
 - [ ] Mutating git/GitHub actions in any new/changed skill step stay gated behind `context/policies/approval-policy.md`

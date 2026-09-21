@@ -1,1 +1,0 @@
-../../../.agents/skills/yap/SKILL.md

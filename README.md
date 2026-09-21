@@ -129,15 +129,13 @@ moves the ground under an installed copy.
 
 ## Layout
 
-- `.agents/skills/`: canonical agent skills.
-- `.claude/skills/`: Claude skill symlinks for `/warplan`, `/quest`, `/ship`,
-  `/land`, `/roast`, `/yap`, `/lore`, `/chronicle`, `/runes`, `/reckoning`,
-  `/herald`, `/warchief`, and `/watchtower`.
+- `skills/`: canonical agent skills, read directly by Claude Code, Codex, and
+  Grok Build once orchraft is installed — no per-ecosystem symlink layer.
 - `.claude-plugin/`: Claude Code plugin manifest and marketplace.
 - `.codex-plugin/` and `.agents/plugins/marketplace.json`: Codex CLI plugin
-  manifest and marketplace, reading the same `.agents/skills/`.
+  manifest and marketplace, reading the same `skills/`.
 - `.grok-plugin/`: Grok Build plugin marketplace, reading the same
-  `.agents/skills/`.
+  `skills/`.
 - `hooks/`: a `SessionStart` hook that runs `watchtower`'s status checks
   automatically (a plain script, not a model call) so the nudge shows up
   without asking for it, and a `PreToolUse` hook that nudges — never
@@ -161,8 +159,7 @@ moves the ground under an installed copy.
   illustration that banner embeds — kept as the source of the artwork, not
   referenced directly by any page.
 
-Edit the canonical skill files in `.agents/skills/`; the Claude skill files are
-symlinks.
+Edit the canonical skill files in `skills/` directly.
 
 ## Install As A Claude Code Plugin
 
@@ -193,7 +190,7 @@ codex plugin add orchraft@orchraft
 ```
 
 The skills load the same way as in Claude Code, from the same
-`.agents/skills/` files, and read `context/policies/` from your repo the
+`skills/` files, and read `context/policies/` from your repo the
 same way.
 
 ## Install As A Grok Build Plugin
@@ -204,7 +201,7 @@ grok plugin install orchraft --trust
 ```
 
 The skills load the same way as in Claude Code and Codex, from the same
-`.agents/skills/` files, and read `context/policies/` from your repo the
+`skills/` files, and read `context/policies/` from your repo the
 same way.
 
 ## Copy Into A Project
@@ -212,15 +209,12 @@ same way.
 For other agents, or to customize the files, copy the parts you need into a
 target project:
 
-- `.agents/skills/` for the canonical `warplan`, `quest`, `ship`, `land`,
+- `skills/` for the canonical `warplan`, `quest`, `ship`, `land`,
   `roast`, `yap`, `lore`, `chronicle`, `runes`, `reckoning`, `herald`,
   `warchief`, and `watchtower` workflows.
 - `context/policies/` for approval, branch, commit, lore, docs, review, and
   PR writing rules.
 - `context/personality.md` for the orc voice the skills use in success lines.
-- `.claude/skills/` when using Claude Code and you want `/warplan`,
-  `/quest`, `/ship`, `/land`, `/roast`, `/yap`, `/lore`, `/chronicle`,
-  `/runes`, `/reckoning`, `/herald`, `/warchief`, and `/watchtower`.
 - `hooks/hooks.json`, `hooks/watchtower-nudge.sh`, and
   `hooks/main-commit-nudge.sh` for the ambient `watchtower` nudge and the
   direct-to-default-branch commit/push nudge. This directory is only

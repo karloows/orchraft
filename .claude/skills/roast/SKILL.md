@@ -1,1 +1,0 @@
-../../../.agents/skills/roast/SKILL.md

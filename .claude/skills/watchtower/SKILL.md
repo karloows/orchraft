@@ -1,1 +1,0 @@
-../../../.agents/skills/watchtower/SKILL.md

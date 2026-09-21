@@ -1,1 +1,0 @@
-../../../.agents/skills/warplan/SKILL.md
