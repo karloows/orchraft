@@ -35,10 +35,10 @@
       // Set false to silence it without uninstalling anything.
       "enabled": true
     }
-  }
+  },
 
   // Pre-authorize routine mutations so skills stop asking each turn.
-  // Absent by default: every mutation needs your go-ahead in that turn.
+  // Empty by default: every mutation needs your go-ahead in that turn.
   //
   // Read context/policies/approval-policy.md before enabling this. It is
   // honored only when it matches your repository's DEFAULT BRANCH, because
@@ -48,7 +48,7 @@
   // regardless. It is a setting a cooperating agent honors, not an enforced
   // boundary — use your agent platform's permission rules for that.
   //
-  // "autonomous": {
-  //   "ship": ["branch", "commit", "push", "pr"]
-  // }
+  // To pre-approve, name each skill and its actions:
+  //   "autonomous": { "ship": ["branch", "commit", "push", "pr"] }
+  "autonomous": {}
 }

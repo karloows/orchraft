@@ -51,9 +51,11 @@ skills read as the repository's answer.
 a comment naming its accepted values, so copying it changes no behavior
 until something is edited. A setting whose default is to be unset appears
 commented out rather than written with a placeholder value, since an
-example that sets it would not be the default. A new setting, or a change
-to what an existing one means, goes into both files in the same change, or
-the example stops being a reliable list.
+example that sets it would not be the default. `autonomous` is the
+exception: its default is an empty object, which pre-authorizes nothing, so
+the example writes `{}` and shows a filled-in value in a comment. A new
+setting, or a change to what an existing one means, goes into both files
+in the same change, or the example stops being a reliable list.
 
 ```json
 {
@@ -105,8 +107,8 @@ that from them.
 ### `autonomous`
 
 Pre-authorizes named routine mutations, the same opt-in described in
-`approval-policy.md`. Absent by default, which means every mutation needs
-the user's current-turn go-ahead.
+`approval-policy.md`. Absent or empty (`{}`) by default, which means every
+mutation needs the user's current-turn go-ahead.
 
 ```jsonc
 "autonomous": {
