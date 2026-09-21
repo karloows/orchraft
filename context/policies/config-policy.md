@@ -182,10 +182,13 @@ something to work around.
 
 ### `baseBranch`
 
-The branch topic branches are cut from and land back into. Unset by default,
-which means resolving it from the repository's own default branch. Set it
-for a repository that integrates into something other than its default
-branch.
+The branch topic branches are cut from. Unset by default, which means
+resolving it from the repository's own default branch. Set it for a
+repository that integrates into something other than its default branch.
+
+It does not decide where a pull request lands: `land` follows the base
+branch the pull request actually targets, and reports a mismatch rather
+than overriding it when this setting names a different one.
 
 ### `hooks.watchtower.enabled`
 

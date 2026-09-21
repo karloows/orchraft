@@ -24,8 +24,8 @@ Use this skill when the user asks the AI to ship work.
 
 1. Inspect the current branch, status, and actual diff.
 2. Validate the touched area.
-3. Use the current non-`main` branch, or create a policy-compliant branch from
-   `main` when currently on `main`.
+3. Use the current topic branch, or create a policy-compliant branch from the
+   base branch when currently on it.
 4. Stage only intended changes, commit with a policy-compliant message, then
    push.
 5. Create or update the pull request and report the branch, commit, PR, and
@@ -46,7 +46,8 @@ Use this skill when the user asks the AI to ship work.
 
 - Not a land workflow for merging pull requests or deleting topic branches.
 - Not approval to commit unrelated local changes.
-- Not permission to push directly to `main` unless the user explicitly asks.
+- Not permission to push directly to the base branch unless the user
+  explicitly asks.
 - Not permission to commit, push, or open/update a pull request after ordinary
   edits unless the user explicitly asks to ship in the current turn.
 - Not a replacement for validation; run the smallest relevant checks before
@@ -69,7 +70,7 @@ Use this skill when the user asks the AI to ship work.
 - Check `git status --short --branch` before changing branch or commit state.
 - Confirm there are intended changes to ship.
 - Identify untracked files and include only the ones that belong to this work.
-- If already on a non-`main` branch, assume the user wants to ship additional
+- If already on a topic branch, assume the user wants to ship additional
   work on that branch unless they explicitly ask for a different branch.
 - Inspect the full intended change set before naming anything: current branch,
   `git status`, unstaged diff, staged diff, and relevant untracked files.
@@ -85,8 +86,11 @@ Use this skill when the user asks the AI to ship work.
    gave, so there is nothing left to infer. Everything else in
    `verification-policy.md` still applies to it — a failure is a stop, and
    the command that ran is reported as written.
-3. If on `main`, create a policy-compliant branch from `main`; if already on a
-   non-`main` branch, keep using it. Before creating or renaming any branch,
+3. Resolve the base branch first: `baseBranch` from the config file when set,
+   otherwise the repository's default branch. Do not assume `main` — a
+   repository on `master` or `develop` does not use it. If on the base
+   branch, create a policy-compliant branch from it; if already on a topic
+   branch, keep using it. Before creating or renaming any branch,
    count the words after `/` (excluding an Optional Ticket Key segment, if
    used) against `context/policies/branch-policy.md`'s limit and check the
    allowed characters — verify the generated name against the policy text
@@ -163,10 +167,11 @@ Use this skill when the user asks the AI to ship work.
 
 ## Guardrails
 
-- Never commit or push directly to `main` unless the user explicitly asks.
+- Never commit or push directly to the base branch unless the user
+  explicitly asks.
 - Do not stop after push until the PR step is complete or clearly blocked.
 - If the branch name would violate policy, stop and fix the branch name instead of improvising.
-- Do not create a second topic branch from an existing non-`main` branch unless
+- Do not create a second topic branch from an existing topic branch unless
   the user explicitly asks to branch off or retarget the work.
 - If branch creation fails with a git refs collision such as an existing
   `docs` ref blocking `docs/...`, diagnose the local and remote refs with the
@@ -185,8 +190,8 @@ Use this skill when the user asks the AI to ship work.
 - Stop before commit, push, or PR mutation if the user has not explicitly asked
   to ship in the current turn.
 - Stop if there are no changes to ship.
-- Stop if the only available branch would be `main` and the user did not
-  explicitly allow committing to `main`.
+- Stop if the only available branch would be the base branch and the user did
+  not explicitly allow committing to it.
 - Stop if intended and unrelated changes cannot be separated safely.
 - Stop if validation for the touched area fails, unless the user explicitly
   asks to ship despite the failure.
