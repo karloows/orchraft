@@ -1,6 +1,6 @@
 ---
 name: herald
-description: Have the AI draft release notes for a tag or the unreleased work since the last one, grounded in the pull requests actually merged, then write them into the GitHub release once the user approves. Use when the user says herald, asks for release notes, or wants a release described.
+description: Have the AI draft release notes for a tag or the unreleased work since the last one, grounded in the pull requests and commits that actually landed, then write them into the GitHub release once the user approves. Use when the user says herald, asks for release notes, or wants a release described.
 ---
 
 # Herald Workflow
