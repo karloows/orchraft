@@ -46,7 +46,7 @@ unknown branch, and review before landing.
 ## Guardrails
 
 - Read `context/policies/approval-policy.md` before any route that could
-  mutate git, PRs, or issues.
+  mutate git, PRs, issues, or releases.
 - Never treat the `warchief` request itself as approval to commit, push,
   open/update/merge a PR, resolve a thread, or mutate an issue.
 - Do not create a stored state file. Use `runes` for live status.

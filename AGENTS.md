@@ -87,8 +87,9 @@ hooks, and CI checks should win.
   whole repo's pull requests (open, closed, and merged), by finding replies
   `ship` marked with `<!-- orchraft:declined -->`. Read-only.
 - `.agents/skills/herald/SKILL.md`: AI-driven release-notes workflow that
-  drafts notes from the pull requests merged in a release's range and, on
-  the user's go-ahead, writes them into the GitHub release. Never edits
+  drafts notes from the pull requests merged in a release's range, plus any
+  commit that reached the base branch without one, cited by short SHA, and,
+  on the user's go-ahead, writes them into the GitHub release. Never edits
   `CHANGELOG.md`, which release tooling owns.
 - `.agents/skills/warchief/SKILL.md`: AI-driven orchestration workflow that
   chooses the next lifecycle role and hands off without weakening approval

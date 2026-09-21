@@ -58,7 +58,8 @@ who use the project rather than the people who built it.
   target repo's copy when it exists, otherwise
   `${CLAUDE_PLUGIN_ROOT}/context/policies/approval-policy.md`): a request for
   notes is a request for the draft, not for the write. Publish only when the
-  current turn asks for it.
+  current turn asks for it, unless that policy's Autonomous Mode, verified as
+  it requires, names creating or editing a release for this repository.
 
 ## Requirements
 
@@ -80,8 +81,10 @@ who use the project rather than the people who built it.
   `.orchraft.json` — when one exists, per `context/policies/config-policy.md`,
   for `baseBranch`. Without it, the base branch is the repository's default
   branch; do not assume `main`.
-- Fetch tags fresh (`git fetch --tags`) before resolving a range, so a tag
-  created since the last fetch isn't missed.
+- Fetch tags and the base branch fresh (`git fetch --tags origin
+  <base-branch>`) before resolving a range, so a tag created since the last
+  fetch isn't missed and the base branch's head is the remote's, not a local
+  ref that may be behind it.
 
 ## Default Path
 
@@ -90,13 +93,16 @@ who use the project rather than the people who built it.
      the nearest earlier one by version order among tags following the same
      pattern (`v1.2.0` before `v1.3.0`), not whichever was created last.
    - **Unreleased work** (the default when no tag is named) — from the
-     latest tag to the head of the base branch.
+     latest tag to the just-fetched `origin/<base-branch>`, not the local
+     branch.
    - **No earlier tag** — from the repository's first commit, and say so in
      the handoff.
 2. List the commits in the range (`git log --first-parent <from>..<to>` on
-   the base branch) and map each to its pull request: the `(#123)` suffix a
-   squash merge leaves, the `Merge pull request #123` subject a merge commit
-   leaves, or the platform's commit-to-pull-request lookup for a rebase
+   the base branch; with no earlier tag, `git log --first-parent <to>`,
+   since `<from>..<to>` would leave out the first commit itself), and map
+   each to its pull request: the `(#123)` suffix a squash merge leaves, the
+   `Merge pull request #123` subject a merge commit leaves, or the
+   platform's commit-to-pull-request lookup for a rebase
    merge, which leaves neither. A commit pushed straight to the base branch
    has no pull request but is still part of the release; use its own message,
    and cite its short SHA where a pull request number would go.

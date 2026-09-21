@@ -61,7 +61,7 @@ the anvil as we cover the rest of the lifecycle.
 | `chronicle` | 📚 Chronicler | Drafts or updates standalone Markdown docs — feature write-ups, design docs, README/ROADMAP sections — grounded in the real diff, code, or history. |
 | `runes` | 📖 Rune-Reader | Summarizes the live state of a branch, PR, checks, and standing review findings. Read-only. |
 | `reckoning` | 🗂️ Reckoner | Lists every review finding consciously declined rather than fixed, across the whole repo's pull requests. Read-only. |
-| `herald` | 📯 Herald | Drafts release notes from the pull requests actually merged, then writes them into the GitHub release once you approve. |
+| `herald` | 📯 Herald | Drafts release notes from the pull requests actually merged, plus any commit pushed straight to the base branch, then writes them into the GitHub release once you approve. |
 | `warchief` | ⚔️ War Council | Chooses the next lifecycle role without treating orchestration as approval for mutations. |
 | `watchtower` | 👁️ Watchtower | Surfaces a short read-only nudge about actionable PR state. |
 
