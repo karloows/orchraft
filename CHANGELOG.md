@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.0.3](https://github.com/karloows/orchraft/compare/v1.0.2...v1.0.3) (2026-09-21)
+
+
+### Bug Fixes
+
+* move skill content to skills/, drop per-ecosystem symlinks ([a83ceec](https://github.com/karloows/orchraft/commit/a83ceec7a233cf6706724cc47596ed98a7d9ed79))
+* **roast:** drop the standing-preference trigger for posting a review ([534d9a8](https://github.com/karloows/orchraft/commit/534d9a884f699e16178e2cffcbbbc32a89fa1878))
+* **skills:** move skill content to skills/, drop per-ecosystem symlinks ([5699d09](https://github.com/karloows/orchraft/commit/5699d099904d3383aefd7c788c1b1a7d1d2696a0))
+* **templates:** let the checklist accept a policy-only change ([aefb9ac](https://github.com/karloows/orchraft/commit/aefb9ace8b6e247696b1a62ea019f4d0b769f560))
+
 ## [1.0.2](https://github.com/karloows/orchraft/compare/v1.0.1...v1.0.2) (2026-09-21)
 
 
