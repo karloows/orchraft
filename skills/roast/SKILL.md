@@ -265,7 +265,7 @@ section (line 114). `land`'s Contents already lists it.
 <summary>🤖 Prompt for AI agents</summary>
 
 ```text
-In .agents/skills/yap/SKILL.md, the Contents list (lines 12-21) ends at
+In skills/yap/SKILL.md, the Contents list (lines 12-21) ends at
 "- [Handoff](#handoff)" but the file also has a "## Response Examples"
 section. Add "- [Response Examples](#response-examples)" after the Handoff
 entry. Confirm every "## " heading in the file has a matching Contents entry.

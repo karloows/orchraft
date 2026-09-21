@@ -1,1 +1,0 @@
-../../../.agents/skills/land/SKILL.md

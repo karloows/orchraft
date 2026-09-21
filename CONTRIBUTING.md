@@ -10,7 +10,7 @@ summarizes, and it wins if the two ever disagree.
 
 ## What's in this repo
 
-### Skills (`.agents/skills/<name>/SKILL.md`)
+### Skills (`skills/<name>/SKILL.md`)
 
 Each skill is a self-contained workflow the user invokes explicitly (except
 `watchtower`, see Hooks below). These are the skills that ship today:
@@ -35,11 +35,9 @@ Each skill's file is a single Markdown document with YAML frontmatter
 (`name`, `description`) that Claude Code uses to decide when to trigger it,
 followed by the workflow instructions themselves.
 
-`.claude/skills/<name>/SKILL.md` are symlinks to the files above, so a
-Claude Code session sees `/orchraft:<name>` (or `/<name>` when installed
-directly into a project). **Always edit the canonical file under
-`.agents/skills/`** — never break a symlink by replacing it with a real
-file.
+Claude Code, Codex, and Grok Build all read `skills/` directly once orchraft
+is installed — no per-ecosystem symlink layer. **Always edit the canonical
+file under `skills/`.**
 
 ### Policies (`context/policies/*.md`)
 
@@ -104,10 +102,12 @@ templates for new ones.
 ### Plugin manifest (`.claude-plugin/`)
 
 `plugin.json` and `marketplace.json` are the Claude Code plugin manifest
-and single-plugin marketplace. `plugin.json`'s `skills` field points at
-`.agents/skills/`, so installed users get `/orchraft:warplan` etc. from the
-same canonical files described above. Don't hand-edit `plugin.json`'s
-`version` — `release-please` bumps it alongside `package.json`.
+and single-plugin marketplace. `plugin.json` declares no `skills` field —
+`skills/` at the repo root is the default component directory Claude Code,
+Codex, and Grok Build all scan without one, so installed users get
+`/orchraft:warplan` etc. from the same canonical files described above.
+Don't hand-edit `plugin.json`'s `version` — `release-please` bumps it
+alongside `package.json`.
 
 ## Design intent
 
@@ -123,7 +123,7 @@ bake in assumptions specific to this repo's own setup.
 ## Making a change
 
 - **New or changed skill behavior** goes in the relevant
-  `.agents/skills/<name>/SKILL.md`.
+  `skills/<name>/SKILL.md`.
 - **New or changed reusable naming/writing rules** go in
   `context/policies/`. If a rule is skill-specific but still reusable,
   check the policy table above before adding a new file — it likely
@@ -136,9 +136,12 @@ bake in assumptions specific to this repo's own setup.
   pointer file. Update the source policy or skill instead, and keep
   `AGENTS.md`'s summary in sync if the change affects what it lists.
 - Don't add project-specific build/test/deploy/package commands anywhere in
-  this repo's own instructions, and don't duplicate tool-specific mirrors —
-  use a symlink (like `.claude/skills/`) when a target tool needs a
-  different directory layout.
+  this repo's own instructions, and don't duplicate tool-specific mirrors.
+  `skills/` at the repo root is the one place skill content lives — Claude
+  Code, Codex, and Grok Build all default-scan that exact path, so no
+  target-specific symlink or manifest override should be needed. If a future
+  tool genuinely can't read `skills/` directly, prefer fixing that at the
+  manifest level over reintroducing a per-tool symlink layer.
 
 ## Testing a skill change
 
@@ -178,7 +181,7 @@ To see a skill's behavior change reflected in a live Claude Code session
 before opening a PR, install the plugin from your local checkout (Claude
 Code supports adding a local path as a marketplace source) and invoke the
 skill by name, or just point a session at this repo and ask it to run the
-skill — either way it reads the same `.agents/skills/` files you edited.
+skill — either way it reads the same `skills/` files you edited.
 
 ## Commit and branch conventions
 
@@ -210,7 +213,7 @@ branch.
 - If you're adding a setting to `context/policies/config-policy.md`, or
   changing what an existing one means, check that something actually reads
   it:
-  `grep -rn <key> .agents/skills/ hooks/ context/policies/` should name the
+  `grep -rn <key> skills/ hooks/ context/policies/` should name the
   skill, script, or policy that honors it, and the setting belongs in
   `.orchraft.example.jsonc` in the same PR. Search `context/policies/` too —
   `autonomous` is read by `approval-policy.md` and a search of only the

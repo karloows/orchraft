@@ -16,8 +16,6 @@
     "code-review",
     "git"
   ],
-  "skills": "./.agents/skills/",
-  "hooks": "./hooks/hooks.json",
   "interface": {
     "displayName": "Orchraft"
   }

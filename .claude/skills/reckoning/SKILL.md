@@ -1,1 +1,0 @@
-../../../.agents/skills/reckoning/SKILL.md

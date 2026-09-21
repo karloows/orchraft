@@ -70,8 +70,9 @@ Grounded claim, with a source a reader can verify:
 
 ```markdown
 orchraft installs as a Codex CLI plugin the same way it installs in Claude
-Code (PR #33), with no skill content changes needed since `.agents/skills/`
-was already Codex's own native discovery path.
+Code (PR #33), with no skill content changes needed since `skills/` is the
+default component-discovery directory both ecosystems already scan without
+a manifest declaration.
 ```
 
 Explicit gap instead of an invented rationale:

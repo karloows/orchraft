@@ -1,1 +1,0 @@
-../../../.agents/skills/quest/SKILL.md
