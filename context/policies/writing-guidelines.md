@@ -110,6 +110,21 @@ required format first. Fill every applicable required field with meaningful
 content. Use the default sections below only when the project has no stricter
 PR format.
 
+Never hard-wrap a paragraph. Write each one as a single unbroken line and let
+GitHub wrap it to the reader's viewport. This is the opposite of
+`commit-policy.md`'s 72-character rule, and the difference is not a style
+preference: GitHub renders pull request bodies, issue bodies, comments, and
+release notes with line breaks enabled, so every newline inside a paragraph
+becomes a literal `<br>`. A body wrapped for a terminal therefore renders with
+a ragged right edge that looks like stray padding, and it never reflows on a
+narrow screen. The same applies to anything else posted to GitHub — issue
+bodies, review comments, and release notes — not just pull request
+descriptions.
+
+Line breaks that are genuinely intended still work normally: blank lines
+between paragraphs, list items, headings, and fenced code blocks are
+unaffected, since the rule covers wrapping inside a paragraph only.
+
 Use these default sections in this order:
 
 ### Summary
