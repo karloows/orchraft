@@ -214,7 +214,8 @@ falling back to the copy bundled with the plugin.
   `grep -rn commit-policy *.md` finds the docs that list them by filename.
   `README.md`'s Layout entry names them in prose instead, so a filename
   search misses it — check that one by eye.
-- A new config setting goes in three places in the same change:
+- A new config setting, or a change to what an existing one means, goes in
+  three places in the same change:
   `context/policies/config-policy.md`, which documents it;
   `.orchraft.example.jsonc`, which is supposed to show every field; and a
   consumer that actually reads it —

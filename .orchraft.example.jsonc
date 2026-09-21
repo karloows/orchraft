@@ -9,7 +9,8 @@
   // Unset means discovering it from the repo (package.json, Makefile, CI).
   // "validate": "npm test",
 
-  // The branch topic branches are cut from and land back into.
+  // The branch topic branches are cut from. It does not decide where a
+  // pull request lands: `land` follows the PR's own base branch.
   // Unset means the repository's own default branch.
   // "baseBranch": "main",
 
