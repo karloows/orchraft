@@ -51,8 +51,9 @@ skills read as the repository's answer.
 a comment naming its accepted values, so copying it changes no behavior
 until something is edited. A setting whose default is to be unset appears
 commented out rather than written with a placeholder value, since an
-example that sets it would not be the default. A new setting is added to
-both files in the same change, or the example stops being a reliable list.
+example that sets it would not be the default. A new setting, or a change
+to what an existing one means, goes into both files in the same change, or
+the example stops being a reliable list.
 
 ```json
 {

@@ -206,8 +206,9 @@ branch.
   `grep -rn watchtower *.md` finds the rosters.
 - If you're adding a new policy, list it in `AGENTS.md`'s Policies section
   too.
-- If you're adding a setting to `context/policies/config-policy.md`, check
-  that something actually reads it:
+- If you're adding a setting to `context/policies/config-policy.md`, or
+  changing what an existing one means, check that something actually reads
+  it:
   `grep -rn <key> .agents/skills/ hooks/ context/policies/` should name the
   skill, script, or policy that honors it, and the setting belongs in
   `.orchraft.example.jsonc` in the same PR. Search `context/policies/` too —
