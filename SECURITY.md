@@ -2,13 +2,13 @@
 
 ## Supported Versions
 
-orchraft is pre-1.0 (`0.x`). Security fixes land on the latest published
-release; older `0.x` releases are not separately patched.
+Security fixes land on the latest published release. Older releases are not
+separately patched, so upgrading is the supported path to a fix.
 
 | Version | Supported |
 | ------- | --------- |
-| 0.x (latest) | ✅ |
-| < latest 0.x | ❌ |
+| Latest release | ✅ |
+| Anything older | ❌ |
 
 ## Reporting a Vulnerability
 
