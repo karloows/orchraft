@@ -16,8 +16,8 @@ next across the software lifecycle, instead of naming a specific skill.
    `chronicle`.
 3. Explain the handoff briefly, then run only the step the user has actually
    authorized in this turn.
-4. Stop before every git, PR, or issue mutation unless the current message
-   explicitly approves that exact mutating workflow.
+4. Stop before every git, PR, issue, or release mutation unless the current
+   message explicitly approves that exact mutating workflow.
 
 ## Routing
 

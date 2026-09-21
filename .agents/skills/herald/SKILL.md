@@ -105,18 +105,22 @@ who use the project rather than the people who built it.
    vulnerability or changes supported versions.
 5. Draft the notes per [Notes Format](#notes-format) and show them in chat.
 6. When the user asks to publish, check the release for that tag:
-   - **It exists** — put the notes above its current body, separated by a
-     horizontal rule, unless the user asks to replace the body. GitHub keeps
-     no history of release bodies, so a replacement would lose whatever a
-     release tool wrote there. Write with
+   - **It exists** — wrap the notes between the hidden markers
+     `<!-- herald:start -->` and `<!-- herald:end -->`. When the body already
+     holds that block from an earlier run, replace only what lies between
+     the markers; otherwise put the block above the current body, separated
+     by a horizontal rule. Replace the whole body only when the user asks
+     for that. GitHub keeps no history of release bodies, so a replacement
+     would lose whatever a release tool wrote there. Write with
      `gh release edit "$tag" --notes-file "$file"`.
    - **The tag exists but has no release** — create a draft with
-     `gh release create "$tag" --draft --notes-file "$file"` and leave
-     publishing it to the user.
+     `gh release create "$tag" --draft --verify-tag --notes-file "$file"`
+     and leave publishing it to the user. `--verify-tag` makes `gh` abort
+     rather than create a missing tag.
    - **Unreleased work** — there is nothing to write to yet. Say so, and
      offer to publish once the release exists.
-7. Read the release back and confirm its body contains the notes before
-   reporting success.
+7. Read the release back and confirm its body holds exactly one marked
+   block containing the notes before reporting success.
 
 ## Notes Format
 
@@ -167,7 +171,8 @@ who use the project rather than the people who built it.
 - Report the range and how many pull requests it covered.
 - Show the drafted notes.
 - After publishing, report the release URL and whether the notes were
-  placed above the existing body or replaced it, or that a draft release was
+  placed above the existing body, updated the block from an earlier run, or
+  replaced the body, or that a draft release was
   created.
 - If blocked, drop the orc voice and state the blocker plainly.
 

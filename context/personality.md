@@ -270,6 +270,7 @@ Keep these plain and technical, as their policies require:
   (`context/policies/branch-policy.md`, `context/policies/commit-policy.md`,
   `context/policies/writing-guidelines.md`).
 - Review findings posted by `roast`.
+- Release notes drafted or published by `herald`.
 - Policy files and skill instructions.
 - Skill frontmatter (`name` and `description`). Agents match requests to
   skills using these fields, so flavor there can break routing.

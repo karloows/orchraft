@@ -3,8 +3,8 @@
 orchraft automates the mundane, repetitive git/PR/issue chores of shipping
 software — branch naming, commit hygiene, review, landing, status — built
 first for solo developers with no one else to hand the busywork to. By
-default the user approves every git, pull request, and issue mutation; the
-one documented exception is the opt-in `Autonomous Mode` in
+default the user approves every git, pull request, issue, and release
+mutation; the one documented exception is the opt-in `Autonomous Mode` in
 `context/policies/approval-policy.md`, off unless a repo owner writes it in.
 The current skills cover planning, issues, pull requests, status,
 documentation, and release notes (`warchief`, `watchtower`, `warplan`,
@@ -18,15 +18,15 @@ below.
 
 ## Non-Negotiable: Ask Before Every Mutating Action
 
-No commit, push, branch create/update, PR create/update/merge, or PR
-comment/review happens without the user's explicit go-ahead in the current
-turn, and approval never carries forward, unless a repo owner has written a
-scoped `Autonomous Mode` opt-in into their own `approval-policy.md` naming
-that exact action — and even then, merging, force-pushing, deleting, and
-issue close/reopen stay gated regardless. The full rule lives in
-`context/policies/approval-policy.md` so it ships with the plugin; read it
-before any of those actions. It overrides any skill step that could be read
-as running to completion unattended.
+No commit, push, branch create/update, PR create/update/merge, PR
+comment/review, issue change, or release create/edit happens without the
+user's explicit go-ahead in the current turn, and approval never carries
+forward, unless a repo owner has written a scoped `Autonomous Mode` opt-in
+into their own `approval-policy.md` naming that exact action — and even then,
+merging, force-pushing, deleting, and issue close/reopen stay gated
+regardless. The full rule lives in `context/policies/approval-policy.md` so it
+ships with the plugin; read it before any of those actions. It overrides any
+skill step that could be read as running to completion unattended.
 
 ## How To Use This Repo
 
@@ -35,7 +35,8 @@ as running to completion unattended.
   standards.
 - Use `context/personality.md` for the orc voice on user-facing surfaces
   (README intro, plugin descriptions, skill handoff lines). Everything that
-  file excludes, including policies, commits, and PR text, stays plain.
+  file excludes, including policies, commits, PR text, and release notes,
+  stays plain.
 - Prefer project-local rules, templates, hooks, and CI checks over these
   defaults when this workflow pack is installed into another repository.
 - Keep guidance generic unless a file is intentionally project-specific.

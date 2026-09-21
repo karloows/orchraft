@@ -128,8 +128,8 @@ bake in assumptions specific to this repo's own setup.
   `context/policies/`. If a rule is skill-specific but still reusable,
   check the policy table above before adding a new file — it likely
   belongs in an existing one.
-- **Every mutating action** (commit, push, branch, PR, issue) stays gated
-  behind `context/policies/approval-policy.md`. Don't write a skill step
+- **Every mutating action** (commit, push, branch, PR, issue, release) stays
+  gated behind `context/policies/approval-policy.md`. Don't write a skill step
   that could be read as running one to completion unattended; the policy
   overrides any step that implies otherwise.
 - Don't duplicate policy or skill content into `AGENTS.md` — it's a
