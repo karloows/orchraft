@@ -197,11 +197,12 @@ falling back to the copy bundled with the plugin.
 
 - Add workflow behavior to the relevant skill.
 - Add reusable naming or writing rules to the relevant policy.
-- When adding or removing a skill, update every place that restates the
-  inventory from `.agents/skills/`: the skill list above, the skill-count
-  badge in `README.md`, and the skills table in `CONTRIBUTING.md`. Nothing
-  enforces those, and `reckoning` reached `main` missing from
-  `CONTRIBUTING.md` because of it.
+- When adding or removing a skill, `.agents/skills/` is the inventory and
+  every doc that restates it has to follow. `grep -rn watchtower *.md` finds
+  the rosters, since each one names every skill; the skill-count badge in
+  `README.md` holds a number rather than names, so check it separately.
+  Nothing enforces either — `reckoning` reached `main` missing from
+  `CONTRIBUTING.md`.
 - Keep examples realistic and portable.
 - When a policy and a project-local template disagree, the target project wins.
 - Keep `CLAUDE.md` as a pointer to this file instead of duplicating these

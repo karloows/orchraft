@@ -191,10 +191,10 @@ here would generate for you. Never commit or push directly to `main`.
 - Follow `context/policies/writing-guidelines.md` for PR title/body tone:
   concise, technical, active voice, no marketing language or emojis, no
   secrets or tokens in the PR text.
-- If you're adding a new skill, update the skill table in `README.md` and
-  the skill list in `AGENTS.md` in the same PR — both currently describe
-  the exact same eleven skills above, and they'll drift if only one is
-  updated.
+- If you're adding a new skill, update the skill table in `README.md`, the
+  skill list in `AGENTS.md`, and the table above in the same PR. They all
+  describe the same skills and drift the moment one is updated alone;
+  `grep -rn watchtower *.md` finds the rosters.
 - If you're adding a new policy, list it in `AGENTS.md`'s Policies section
   too.
 
