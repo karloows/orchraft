@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.0.1](https://github.com/karloows/orchraft/compare/v1.0.0...v1.0.1) (2026-09-21)
+
+
+### Bug Fixes
+
+* **hooks:** check the printed result, not just the exit status ([3b923ca](https://github.com/karloows/orchraft/commit/3b923ca2a3a6519b24bd63cfef04506c462c1107))
+* **hooks:** gate before reading the command ([16e4d65](https://github.com/karloows/orchraft/commit/16e4d653a79746c4a483f27071f186af702a5c2b))
+* **hooks:** gate on being inside a git repo before reading the command ([cf2fb33](https://github.com/karloows/orchraft/commit/cf2fb3305cb29572afadb1cddb7156416401a719))
+
 ## 1.0.0 (2026-09-21)
 
 
