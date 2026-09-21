@@ -213,7 +213,8 @@ branch.
   skill, script, or policy that honors it, and the setting belongs in
   `.orchraft.example.jsonc` in the same PR. Search `context/policies/` too —
   `autonomous` is read by `approval-policy.md` and a search of only the
-  skills and hooks finds nothing for it. A documented setting nothing reads
+  skills and hooks finds nothing for it — but don't count the match in
+  `config-policy.md`, which defines every key and so always matches. A documented setting nothing reads
   is worse than an undocumented one: it silently does nothing while the docs
   promise otherwise. This has slipped through twice.
 

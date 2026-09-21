@@ -219,7 +219,9 @@ falling back to the copy bundled with the plugin.
   `context/policies/config-policy.md`, which documents it;
   `.orchraft.example.jsonc`, which is supposed to show every field; and a
   consumer that actually reads it —
-  `grep -rn <key> .agents/skills/ hooks/ context/policies/` should name one.
+  `grep -rn <key> .agents/skills/ hooks/ context/policies/` should name one
+  other than `config-policy.md`, which always matches because it defines
+  the key.
   A setting nothing reads silently does nothing while the docs promise
   otherwise; that shipped twice on the branch that added the config file.
 - Keep examples realistic and portable.
