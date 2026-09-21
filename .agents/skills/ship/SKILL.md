@@ -171,8 +171,9 @@ Use this skill when the user asks the AI to ship work.
   `<type>(<scope>): <summary>`.
 - Commit body: follow `context/policies/commit-policy.md` exactly: optional,
   free-form prose with no headings, describing only the staged diff.
-- Pull request title: follow `context/policies/writing-guidelines.md`. Omit
-  commit scope unless the user explicitly asks for it.
+- Pull request title: `<type>: <short technical summary>` per
+  `context/policies/writing-guidelines.md` — keep the `<type>:` prefix, just
+  omit the `(scope)` parentheses unless the user explicitly asks for one.
 - Pull request body: follow `context/policies/writing-guidelines.md`. Describe
   the whole branch, not just the final commit. If the repository provides a PR
   template or PR body checks, follow that format first. Do not invent checklist
