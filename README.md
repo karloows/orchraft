@@ -1,6 +1,20 @@
-# Orchraft
+<p align="center">
+  <img src="assets/orc.png" alt="The orchraft orc" width="210">
+</p>
 
-**Orchestration, crafted by orcs.**
+<h1 align="center">Orchraft</h1>
+
+<p align="center">
+  <strong>You write the code. We haul the chores.</strong><br>
+  <em>Nothing touches git until you say go, chief.</em>
+</p>
+
+<p align="center">
+  <a href="https://github.com/karloows/orchraft/actions/workflows/validate-plugin.yaml"><img alt="Plugin validation" src="https://img.shields.io/github/actions/workflow/status/karloows/orchraft/validate-plugin.yaml?style=flat-square&label=checks&color=6B7A4B"></a>
+  <img alt="12 skills" src="https://img.shields.io/badge/skills-12-6B7A4B?style=flat-square">
+  <img alt="Runs on Claude Code, Codex and Grok Build" src="https://img.shields.io/badge/runs%20on-Claude%20Code%20%C2%B7%20Codex%20%C2%B7%20Grok-1B1712?style=flat-square">
+  <a href="LICENSE"><img alt="License Apache 2.0" src="https://img.shields.io/badge/license-Apache--2.0-1B1712?style=flat-square"></a>
+</p>
 
 We are a clan of orcs who haul the mundane, repetitive chores of shipping
 software off your plate — branch names, commit messages, PR write-ups,
@@ -12,6 +26,10 @@ table: your repo's rules, real sources behind every claim, and nothing
 touches git or GitHub until you say go.
 
 The name joins *orchestration* and *craft*. The orc does the crafting.
+
+<p align="center">
+  <img src="assets/orc-intro.svg" alt="An orc sizes up a branch named test-final-2 and offers to name it, commit it, and open the PR — nothing touches main until you say go" width="820">
+</p>
 
 ## Clan Laws
 
@@ -48,6 +66,37 @@ the anvil as we cover the rest of the lifecycle.
 
 Today's march is `warplan` → `quest` → `lore` → `chronicle` → `ship` →
 `roast` → fix → `ship` → `land`, with `yap` available at any point.
+
+## What A March Looks Like
+
+Asking for a fix gets you the fix and nothing more. Asking to ship is what
+sends it: `ship it` in the current turn authorizes that whole run — branch,
+commit, push, and pull request.
+
+```text
+chief ▸ the login crashes on a null token — fix it
+
+orc   ▸ We read before we swing: the guard was missing in
+        src/auth/session.ts. Patched it.
+        Validation: `npm test -- auth` → passed.
+
+        Nothing committed. Say the word when you want it shipped.
+
+chief ▸ ship it
+
+orc   ▸ 🚢 Grah! War party launched. PR #123 holds the beach for review, chief. ✨
+
+        Branch: `fix/login-null-token`
+        Commit: `fix(auth): guard null login token`
+        PR: https://github.com/example/repo/pull/123
+        Validation: `npm test -- auth`
+```
+
+The gate sits between the work and git, not inside `ship`: a request to fix,
+address, or resolve something is approval to edit, never to commit. It does
+not carry forward either — the next push to that branch needs the word again.
+`roast` posts no review, `land` merges nothing, and `quest` closes no issue
+until you say so.
 
 ## Status
 
@@ -94,6 +143,10 @@ change between releases.
   applies.
 - `evals/`: `claude plugin eval` cases that check skill behavior (e.g. `ship`
   refusing to commit without a request) rather than file syntax.
+- `assets/`: art used by this README. `orc.png` is the mascot in the header,
+  `orc-intro.svg` is the animated banner, and `orc-armor.png` is the original
+  illustration that banner embeds — kept as the source of the artwork, not
+  referenced directly by any page.
 
 Edit the canonical skill files in `.agents/skills/`; the Claude skill files are
 symlinks.
