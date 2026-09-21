@@ -62,7 +62,7 @@ A repo owner may pre-authorize routine mutations for their own repo so
 skills stop asking per turn. This is an explicit, durable decision the owner
 writes down, not something a skill infers or a single chat reply grants.
 
-- The override lives in exactly one of two places in that repo: its own
+- The override lives in either or both of two places in that repo: its own
   `context/policies/approval-policy.md` (the copy skills read before falling
   back to the bundled default), under a heading named exactly
   `## Autonomous Mode`; or the `autonomous` key of its config file, per
