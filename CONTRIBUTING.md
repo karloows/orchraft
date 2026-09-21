@@ -198,6 +198,15 @@ here would generate for you. Never commit or push directly to `main`.
   `grep -rn watchtower *.md` finds the rosters.
 - If you're adding a new policy, list it in `AGENTS.md`'s Policies section
   too.
+- If you're adding a setting to `context/policies/config-policy.md`, check
+  that something actually reads it:
+  `grep -rn <key> .agents/skills/ hooks/ context/policies/` should name the
+  skill, script, or policy that honors it, and the setting belongs in
+  `.orchraft.example.jsonc` in the same PR. Search `context/policies/` too —
+  `autonomous` is read by `approval-policy.md` and a search of only the
+  skills and hooks finds nothing for it. A documented setting nothing reads
+  is worse than an undocumented one: it silently does nothing while the docs
+  promise otherwise. This has slipped through twice.
 
 ## Code of conduct and security
 
