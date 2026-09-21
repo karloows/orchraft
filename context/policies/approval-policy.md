@@ -81,7 +81,9 @@ writes down, not something a skill infers or a single chat reply grants.
   treating the override as active, confirm its content matches the repo's
   default branch: fetch it fresh (e.g. `git fetch
   origin <default-branch>` before `git show origin/<default-branch>:context/policies/approval-policy.md`,
-  or the same against `origin/<default-branch>:.orchraft.json`)
+  or the same against the config file, resolving which filename is active —
+  `.orchraft.jsonc` when both exist — and reading that same name from the
+  default branch rather than assuming one)
   or make an authenticated GitHub API call for that file at the default
   branch — not the currently checked-out copy, and not a possibly-stale
   local tracking ref from earlier in the session. If that fetch or API call

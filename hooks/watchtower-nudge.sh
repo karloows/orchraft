@@ -26,11 +26,34 @@ git rev-parse --is-inside-work-tree >/dev/null 2>&1 || exit 0
 # Comments are stripped first: the format allows them, jq does not. A
 # missing file, a missing key, or an unparseable one all leave the nudge on,
 # so a broken config never silently disables the thing it configures.
+#
+# The strip tracks whether it is inside a double-quoted string, because a
+# blind `s://.*::` also truncates at the // in a URL -- one "https://..."
+# anywhere in the file would break the parse and silently strand the toggle.
+strip_jsonc() {
+  awk '{
+    out = ""; inq = 0; i = 1; n = length($0)
+    while (i <= n) {
+      c = substr($0, i, 1)
+      if (inq) {
+        if (c == "\\") { out = out substr($0, i, 2); i += 2; continue }
+        if (c == "\"") { inq = 0 }
+        out = out c; i++
+      } else {
+        if (c == "\"") { inq = 1; out = out c; i++; continue }
+        if (c == "/" && substr($0, i + 1, 1) == "/") { break }
+        out = out c; i++
+      }
+    }
+    print out
+  }' "$1" 2>/dev/null
+}
+
 for cfg in .orchraft.jsonc .orchraft.json; do
   [ -f "$cfg" ] || continue
   # tostring, not `// empty`: jq's alternative operator treats a literal
   # false as absent, so `.enabled // empty` can never see "disabled".
-  enabled=$(sed 's://.*::' "$cfg" 2>/dev/null \
+  enabled=$(strip_jsonc "$cfg" \
     | jq -r '.hooks.watchtower.enabled | tostring' 2>/dev/null)
   [ "$enabled" = "false" ] && exit 0
   break

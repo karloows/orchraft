@@ -23,16 +23,17 @@ Use this skill when the user asks the AI to land work end to end.
 1. Decide whether the current user message is approval to land.
 2. Confirm branch, PR, checks, permissions, and local worktree state.
 3. Resolve the merge method, then merge.
-4. Sync local `main`, verify the branch actually landed before deleting it,
-   and restore any local-changes stash created for this workflow.
+4. Sync the local base branch, verify the topic branch actually landed
+   before deleting it, and restore any local-changes stash created for this
+   workflow.
 5. Report the result with the actual merge method and branch state.
 
 ## What This Is Not
 
 - Not a code review, test-fixing, or implementation workflow.
 - Not a ship workflow for creating branches, commits, pushes, or pull requests.
-- Not approval to merge from `main`, detached `HEAD`, or a branch without a
-  matching pull request.
+- Not approval to merge from the base branch, detached `HEAD`, or a branch
+  without a matching pull request.
 - Not permission to bypass failing or pending checks unless the user explicitly
   forces landing in the current turn and the connected account can override
   repository protections.
@@ -62,11 +63,14 @@ Use this skill when the user asks the AI to land work end to end.
   comments. A missing file is the normal case and means the documented
   defaults apply. The config file is always read from the repository being
   worked in, never from the plugin's own directory.
-- Confirm the current branch is a named non-`main` branch.
+- Confirm the current branch is a named branch other than the base branch.
 - Confirm the branch has an upstream remote and the local `HEAD` is pushed.
 - Confirm the current branch has an open, non-draft pull request.
 - Confirm the pull request head commit matches local `HEAD`.
-- Confirm the pull request targets the expected base branch.
+- Confirm the pull request targets the expected base branch. That branch —
+  the pull request's own `base.ref`, or `baseBranch` from the config file
+  when set — is the base branch every later step means; do not substitute a
+  literal `main`, which a repository on `master` or `develop` does not use.
 - Confirm the pull request has no unresolved merge conflicts.
 - Confirm the connected account can merge the pull request.
 - Confirm required check status by reading it fresh from the connected tool
@@ -103,7 +107,10 @@ Use this skill when the user asks the AI to land work end to end.
 - Compare local `HEAD` with the PR head before merging.
 - Confirm required jobs, checks, and mergeability status are finished and
   passing before merging.
-- After the merge completes, switch to `main` locally, sync local `main`, and
+- Where this workflow validates anything locally, prefer a `validate` command
+  from the config file over discovering one, per
+  `context/policies/verification-policy.md`.
+- After the merge completes, switch to the base branch locally, sync it, and
   confirm there are still no tracked or staged local changes before deleting
   the verified local topic branch. Skip the deletion entirely when
   `merge.deleteLocalBranch` is `false` in the target repo's config file,
@@ -111,7 +118,7 @@ Use this skill when the user asks the AI to land work end to end.
 - Verify the branch actually landed before deleting it, using the check that
   matches the merge method:
   - **Merge commit** — the branch's tip is an ancestor of the base branch, so
-    `git branch --merged main` lists it and `git branch -d` succeeds. Use
+    `git branch --merged <base>` lists it and `git branch -d` succeeds. Use
     `-d` and let it refuse if something is wrong.
   - **Squash or rebase** — the commits on the base branch are new objects, so
     the topic branch's tip is *not* an ancestor of it. `git branch --merged`
@@ -131,7 +138,7 @@ Use this skill when the user asks the AI to land work end to end.
 
 ## Stop Conditions
 
-- Stop if the current branch is `main`.
+- Stop if the current branch is the base branch.
 - Stop if HEAD is detached.
 - Stop if there is no branch pull request to merge.
 - Stop if local changes cannot be stashed cleanly (e.g. an existing conflicting

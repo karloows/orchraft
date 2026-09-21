@@ -61,6 +61,11 @@ Use this skill when the user asks the AI to ship work.
   `context/policies/writing-guidelines.md`. Use the target repo's copy of each
   when it exists; otherwise use the bundled copy at
   `${CLAUDE_PLUGIN_ROOT}/context/policies/<file>`.
+- Read the target repo's config file — `.orchraft.jsonc`, else
+  `.orchraft.json` — when one exists, per `context/policies/config-policy.md`
+  (the target repo's copy when it exists, otherwise
+  `${CLAUDE_PLUGIN_ROOT}/context/policies/config-policy.md`). A missing file
+  is the normal case and means the documented defaults apply.
 - Check `git status --short --branch` before changing branch or commit state.
 - Confirm there are intended changes to ship.
 - Identify untracked files and include only the ones that belong to this work.
@@ -75,6 +80,11 @@ Use this skill when the user asks the AI to ship work.
 
 1. Inspect branch state and working tree.
 2. Validate the touched area per `context/policies/verification-policy.md`.
+   When the config file sets `validate`, run that command rather than
+   discovering one from the repository; it is the answer the repo already
+   gave, so there is nothing left to infer. Everything else in
+   `verification-policy.md` still applies to it — a failure is a stop, and
+   the command that ran is reported as written.
 3. If on `main`, create a policy-compliant branch from `main`; if already on a
    non-`main` branch, keep using it. Before creating or renaming any branch,
    count the words after `/` (excluding an Optional Ticket Key segment, if

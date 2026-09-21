@@ -35,19 +35,24 @@ and will mark every comment as an error, while `.jsonc` is the extension
 they recognize for this format. A user who wants comments should be able to
 have them without their editor turning the file red; a user who wants plain
 JSON keeps `.json` and writes no comments. A consumer that cannot handle
-comments — `jq` in a shell hook, for instance — strips them first
-(`sed 's://.*::'`) rather than rejecting the file.
+comments — `jq` in a shell hook, for instance — strips them first rather
+than rejecting the file, tracking whether it is inside a quoted string as
+it goes. A blind `s://.*::` also truncates the `//` in a URL, so one
+`"https://..."` anywhere in the file would break the parse and silently
+strand every setting in it; `hooks/watchtower-nudge.sh` has a worked
+example.
 
 Commit the config file rather than ignoring it, so everyone working in the
 repository — and the agent, on any machine — resolves a setting the same
 way. A per-machine preference belongs in a local ignore, not in a file the
 skills read as the repository's answer.
 
-`.orchraft.example.jsonc` ships with every field set to its default and a
-comment naming each field's accepted values, so copying it changes no
-behavior until something is edited. Every field documented below appears
-there; a new setting is added to both files in the same change, or the
-example stops being a reliable list.
+`.orchraft.example.jsonc` carries every setting documented below, each with
+a comment naming its accepted values, so copying it changes no behavior
+until something is edited. A setting whose default is to be unset appears
+commented out rather than written with a placeholder value, since an
+example that sets it would not be the default. A new setting is added to
+both files in the same change, or the example stops being a reliable list.
 
 ```json
 {
@@ -109,11 +114,19 @@ be honored at all:
 
 - **Verify it against the default branch, never the working tree.** A config
   file on a checked-out branch is as forgeable as a policy file on one — a
-  pull request from anyone can add an `.orchraft.json` that pre-authorizes
-  pushes. Read this key from the repository's default branch (`git show
-  origin/<default-branch>:.orchraft.json`, fetched fresh, or the equivalent
-  authenticated API call). If that read fails, or disagrees with the
-  checked-out copy, ask every time. A failed check is never permission.
+  pull request from anyone can add a config that pre-authorizes pushes.
+  Resolve which filename is active first (`.orchraft.jsonc` when both
+  exist), then read that same filename from the repository's default branch
+  (`git show origin/<default-branch>:<that file>`, fetched fresh, or the
+  equivalent authenticated API call) and compare. Reading a different
+  filename than the one in play compares two unrelated files. If the read
+  fails, or disagrees with the checked-out copy, ask every time. A failed
+  check is never permission.
+- **A config the default branch does not carry is not an override.** A
+  pull request that introduces `.orchraft.jsonc` where the default branch
+  has only `.orchraft.json`, or introduces a config where none existed, has
+  added the file rather than inherited it — treat the missing counterpart
+  as a disagreement and ask.
 - **Named actions only.** A blanket `true`, `"all"`, or `["*"]` is not
   valid and is treated as absent. List the actions.
 

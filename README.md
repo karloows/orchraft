@@ -139,10 +139,12 @@ change between releases.
   invoked on purpose.
 - `context/policies/`: reusable approval, branch, commit, config, lore,
   docs, review, and PR writing policies.
-- `.orchraft.example.jsonc`: every setting a repo can override, set to its
-  default. Copy it to `.orchraft.jsonc` to change one — currently the merge
-  method `land` uses and whether it deletes the local branch. Optional; the
-  skills work with no config file at all.
+- `.orchraft.example.jsonc`: a starting point holding every setting at its
+  default, with the accepted values in comments. Copy it to
+  `.orchraft.jsonc` (or `.orchraft.json`) and edit what you want to change;
+  `context/policies/config-policy.md` documents each setting and how it
+  ranks against your repository's own settings. Optional — the skills work
+  with no config file at all.
 - `context/personality.md`: the orc's character and voice, and where it
   applies.
 - `evals/`: `claude plugin eval` cases that check skill behavior (e.g. `ship`
