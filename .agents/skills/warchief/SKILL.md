@@ -14,10 +14,12 @@ next across the software lifecycle, instead of naming a specific skill.
 2. Choose the next fitting orchraft role: `quest`, `warplan`, `ship`,
    `roast`, `land`, `herald`, `runes`, `reckoning`, `yap`, `lore`, or
    `chronicle`.
-3. Explain the handoff briefly, then run only the step the user has actually
-   authorized in this turn.
+3. Explain the handoff briefly, then run only the step the approval policy
+   says is authorized.
 4. Stop before every git, PR, issue, or release mutation unless the current
-   message explicitly approves that exact mutating workflow.
+   message explicitly approves that exact mutating workflow, or the approval
+   policy's Autonomous Mode, verified as it requires, names that exact
+   action.
 
 ## Routing
 
@@ -62,8 +64,9 @@ unknown branch, and review before landing.
   (the target repo's copy when it exists, otherwise
   `${CLAUDE_PLUGIN_ROOT}/context/personality.md`).
 - Name the selected next role and why.
-- If that role is mutating and the user did not approve it in the current
-  turn, ask for the exact go-ahead instead of running it.
+- If that role is mutating and neither the current turn nor a verified
+  Autonomous Mode entry authorizes it, ask for the exact go-ahead instead of
+  running it.
 - If a non-mutating role fits and no approval is needed, run it directly.
 
 ## Examples
