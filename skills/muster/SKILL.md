@@ -1,6 +1,6 @@
 ---
 name: muster
-description: Have the AI report actionable open-PR state across every repo the connected GitHub account owns — failing/pending checks, merge conflicts, unresolved roast findings — grounded in live data, not one repo at a time. Use when the user says muster, asks for a portfolio status, wants to know what's actionable across all their repos, or asks "what needs my attention today".
+description: Have the AI report actionable open-PR state across every repo the connected GitHub account owns — failing/pending checks, merge conflicts, unresolved review threads — grounded in live data, not one repo at a time. Use when the user says muster, asks for a portfolio status, wants to know what's actionable across all their repos, or asks "what needs my attention today".
 ---
 
 # Muster Workflow
@@ -121,9 +121,14 @@ account, not just the current repo — every other status skill here
     `get_review_comments` (or the same paginated GraphQL
     `reviewThreads(first: 100, after: $cursor)` loop the hook script and
     `reckoning` both already use), counting threads where
-    `is_resolved`/`isResolved` is false. Only report a PR's unresolved count
-    as confirmed when this check actually completed — a failed or
-    incomplete thread query means "unverified," never "assume zero."
+    `is_resolved`/`isResolved` is false. This counts every unresolved
+    thread on the PR, not only ones a `roast` review posted — the same
+    convention `hooks/watchtower-nudge.sh` already uses (it has no
+    per-thread provenance filter either). Report it as "unresolved review
+    threads," not "roast findings," so an ordinary human review comment
+    isn't mislabeled as one. Only report a PR's unresolved count as
+    confirmed when this check actually completed — a failed or incomplete
+    thread query means "unverified," never "assume zero."
 - A repo or PR whose check fails partway through (a listing page errors, a
   thread query can't complete) is reported as unverified for that one
   repo/PR, not silently dropped or assumed clean — the muster continues to
@@ -137,7 +142,7 @@ account, not just the current repo — every other status skill here
 4. For each open PR, gather checks/status, mergeable state, and unresolved
    review-thread count per Prerequisites.
 5. Classify each PR: failing checks, pending checks, merge conflict,
-   unresolved `roast`-style findings, no detected issues, or unverified
+   unresolved review threads, no detected issues, or unverified
    (a check that couldn't complete). "No detected issues" reports only what
    this skill actually checked — it is not a land-readiness guarantee.
    Unlike `land`'s own preconditions, this pass never checks draft state or
@@ -157,7 +162,7 @@ Keep it to what's actionable — a clean repo gets counted, not narrated.
   (owned, non-fork, non-archived) vs. how many had at least one open PR.
 - **Actionable** — one line per PR that needs attention: repo, PR
   number/URL, and why (failing check, pending check, merge conflict,
-  N unresolved findings) — grouped by repo.
+  N unresolved review threads) — grouped by repo.
 - **Unverified** — any repo or PR whose check couldn't complete, reported
   separately from a confirmed-clean result.
 - **Clean** — a count only ("N repos, M open PRs, all clean") — no per-PR
@@ -211,7 +216,7 @@ Actionable state found (illustrative — actual output names real repos/PRs):
 Account: <login> (N repos counted, M with at least one open PR)
 Actionable:
 - <owner>/<repo-a> — PR #12: failing check `test`
-- <owner>/<repo-b> — PR #7: 2 unresolved roast findings
+- <owner>/<repo-b> — PR #7: 2 unresolved review threads
 Unverified: <owner>/<repo-c> — PR #3: review-thread check didn't complete
 Clean: 6 repos, 9 open PRs, all clean
 ```
