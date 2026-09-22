@@ -93,7 +93,7 @@ hooks, and CI checks should win.
   git/GitHub history rather than an invented benchmark score. Read-only.
 - `skills/muster/SKILL.md`: AI-driven status workflow that reports
   actionable open-PR state (failing/pending checks, merge conflicts,
-  unresolved `roast` findings) across every repo the connected account
+  unresolved review threads) across every repo the connected account
   personally owns, not just the current one. Read-only.
 - `skills/herald/SKILL.md`: AI-driven release-notes workflow that
   drafts notes from the pull requests merged in a release's range, plus any

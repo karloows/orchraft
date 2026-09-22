@@ -1,6 +1,6 @@
 ---
 name: muster
-description: Have the AI report actionable open-PR state across every repo the connected GitHub account owns — failing/pending checks, merge conflicts, unresolved review threads — grounded in live data, not one repo at a time. Use when the user says muster, asks for a portfolio status, wants to know what's actionable across all their repos, or asks "what needs my attention today".
+description: Have the AI report actionable open-PR state across every repo the connected GitHub account owns — failing/pending checks, merge conflicts, unresolved review threads — grounded in live data, not one repo at a time. Use when the user says muster, asks for a portfolio status, wants to know what's actionable across all their repos, or asks "what needs my attention today across my repos".
 ---
 
 # Muster Workflow
@@ -69,6 +69,24 @@ account, not just the current repo — every other status skill here
   every other skill.
 - Without `gh` authenticated, stop and say the muster can't run rather than
   reporting a partial or single-repo result as the whole portfolio.
+- This flow assumes `gh` is authenticated as a user-account token (a
+  personal access token or OAuth token), since `gh api user` and
+  `gh api user/repos` are user-to-server endpoints. A GitHub App
+  installation token can't call either at all — it authenticates as the
+  installation, not a user, and both calls would fail outright rather than
+  silently narrow. That failure is caught by the existing "stop if `gh`
+  isn't authenticated" path; this skill doesn't implement a separate
+  installation-token path (`GET /installation/repositories` under
+  app-installation auth), so an installation token is out of scope here,
+  not a case that produces a misleadingly narrow result.
+- A *fine-grained* personal access token, by contrast, does work with
+  `/user` and `/user/repos`, but can be scoped to a chosen subset of repos
+  rather than every repo the account owns — the response returns only what
+  the token can see, with no field flagging that it's partial. This skill
+  has no way to independently confirm a PAT's real scope, so it can't
+  detect this case; note it as a caveat in the report (see Summary Format)
+  rather than silently presenting a scoped token's count as the whole
+  portfolio.
 
 ## Prerequisites
 
@@ -125,6 +143,16 @@ account, not just the current repo — every other status skill here
     report the PR's checks as unverified rather than falling back to
     `get_status` or a partial page as if either gave equivalent
     information.
+  - `get_check_runs` only sees GitHub Checks API entries (GitHub Actions
+    and Checks-API-integrated apps). A CI system that posts through the
+    older Statuses API instead — a commit status, not a check run — never
+    shows up there at all, so also call `pull_request_read` method
+    `get_status` on the head commit as an *additional* source, not a
+    replacement: a combined status of `failure`/`error` is a failing check,
+    `pending` is a pending check, and an empty status list contributes
+    nothing (neither actionable nor unverified) rather than being treated
+    as a gap. This is additive to the `get_check_runs` classification
+    above, which stays the primary, more granular source.
   - Mergeable state (`mergeable_state` / `mergeStateStatus`) — compare
     case-insensitively, since the REST field returns lowercase (`dirty`) and
     the GraphQL field returns uppercase (`DIRTY`), and this skill reads
@@ -135,7 +163,16 @@ account, not just the current repo — every other status skill here
     addition to the PR's own `draft` field already captured above) excludes
     the PR from "no detected issues" the same way the `draft` field does;
     `unstable`/`UNSTABLE` stays on the checks/status path above rather than
-    being treated as its own merge-conflict category.
+    being treated as its own merge-conflict category; `blocked`/`BLOCKED`
+    (branch protection requires a status check or review this PR hasn't
+    met) is actionable on its own — GitHub's response doesn't say which
+    requirement is unmet, so report it as blocked when a reason can be
+    inferred from the checks/thread data already gathered, or unverified
+    when it can't, but never let it fall through unclassified. `clean` is
+    the one value that contributes nothing to either bucket. Any other
+    value neither this list nor `clean` names — including one GitHub adds
+    later — is reported as unverified, the same fail-closed catch-all the
+    check-run classification above already uses.
   - Unresolved review-thread count via `pull_request_read` method
     `get_review_comments`, paginating through every page of threads (or the
     same paginated GraphQL `reviewThreads(first: 100, after: $cursor)` loop
@@ -148,7 +185,14 @@ account, not just the current repo — every other status skill here
     "unresolved review threads," not "roast findings," so an ordinary human
     review comment isn't mislabeled as one. Only report a PR's unresolved
     count as confirmed when this check actually completed — a failed or
-    incomplete thread query means "unverified," never "assume zero."
+    incomplete thread query means "unverified," never "assume zero." If the
+    connected GitHub MCP server has a restricted or "lockdown" mode enabled
+    that filters its own responses, this skill has no way to detect that
+    from inside a query result — a filtered query can return successfully
+    while still under-reporting threads. This is a caveat on the same
+    "confirmed complete" claim, not a separate check to add; there's
+    nothing this skill's own instructions can do to detect or work around a
+    connector-level restriction it isn't told about.
 - A repo or PR whose check fails partway through (a listing page errors, a
   thread query can't complete) is reported as unverified for that one
   repo/PR, not silently dropped or assumed clean — the muster continues to
@@ -162,16 +206,19 @@ account, not just the current repo — every other status skill here
 4. For each open PR, gather checks/status, mergeable state, and unresolved
    review-thread count per Prerequisites.
 5. Classify each PR: failing checks, pending checks, merge conflict,
-   unresolved review threads, no detected issues, or unverified
-   (a check that couldn't complete). "No detected issues" reports only what
-   this skill actually checked — it is not a land-readiness guarantee.
-   This pass does check and explicitly report a PR's draft state (see
+   unresolved review threads, draft, no detected issues, or unverified (a
+   check that couldn't complete). **Draft is its own classification, not a
+   note folded into another one**: a draft PR reports as draft even when
+   every other check comes back clean, and belongs in the Actionable list
+   (see Summary Format) rather than silently landing in the clean-repo
+   count, where a "report a draft PR's draft state" instruction with
+   nowhere in the output to actually put it would otherwise go unfollowed.
+   "No detected issues" reports only what this skill actually checked — it
+   is not a land-readiness guarantee. This pass does check draft state (see
    Prerequisites); what it does *not* check, unlike `land`'s own
    preconditions, is required-review approval status — a PR still missing a
    required approval can otherwise show no detected issues under the checks
-   this skill runs. Report a draft PR's draft state alongside its
-   classification, and don't present "no detected issues" as a full
-   land-readiness guarantee either way.
+   this skill runs.
 6. Report only repos/PRs with something actionable or unverified, per
    [Summary Format](#summary-format) — omit clean repos from the listed
    detail, but still count them in the totals.
@@ -184,11 +231,17 @@ Keep it to what's actionable — a clean repo gets counted, not narrated.
   (owned, non-fork, non-archived) vs. how many had at least one open PR.
 - **Actionable** — one line per PR that needs attention: repo, PR
   number/URL, and why (failing check, pending check, merge conflict,
-  N unresolved review threads) — grouped by repo.
+  blocked by branch protection, N unresolved review threads, draft) —
+  grouped by repo. A draft PR lists here even when every other check is
+  clean.
 - **Unverified** — any repo or PR whose check couldn't complete, reported
   separately from a confirmed-clean result.
 - **Clean** — a count only ("N repos, M open PRs, all clean") — no per-PR
   detail for PRs with nothing actionable.
+- **Coverage caveat** — a standing note that the repo count reflects what
+  the authenticated token can see; a scoped fine-grained token or GitHub
+  App installation token can silently narrow that below every repo the
+  account actually owns, and this skill has no way to detect that case.
 
 ## Guardrails
 
@@ -239,8 +292,10 @@ Account: <login> (N repos counted, M with at least one open PR)
 Actionable:
 - <owner>/<repo-a> — PR #12: failing check `test`
 - <owner>/<repo-b> — PR #7: 2 unresolved review threads
+- <owner>/<repo-d> — PR #4: draft
 Unverified: <owner>/<repo-c> — PR #3: review-thread check didn't complete
 Clean: 6 repos, 9 open PRs, all clean
+Coverage: reflects what the authenticated token can see
 ```
 
 Whole portfolio clean:

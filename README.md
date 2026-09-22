@@ -62,7 +62,7 @@ the anvil as we cover the rest of the lifecycle.
 | `runes` | 📖 Rune-Reader | Summarizes the live state of a branch, PR, checks, and standing review findings. Read-only. |
 | `reckoning` | 🗂️ Reckoner | Lists every review finding consciously declined rather than fixed, across the whole repo's pull requests. Read-only. |
 | `plunder` | 💰 Quartermaster | Reports real repo-wide shipping signal — PRs opened, findings roast caught and their fixed/declined fate, time-to-land. Read-only. |
-| `muster` | 🧭 Warden | Reports actionable open-PR state — failing/pending checks, merge conflicts, unresolved roast findings — across every repo you own. Read-only. |
+| `muster` | 🧭 Warden | Reports actionable open-PR state — failing/pending checks, merge conflicts, unresolved review threads — across every repo you own. Read-only. |
 | `herald` | 📯 Herald | Drafts release notes from the pull requests actually merged, plus any commit pushed straight to the base branch, then writes them into the GitHub release once you approve. |
 | `warchief` | ⚔️ War Council | Chooses the next lifecycle role without treating orchestration as approval for mutations. |
 | `watchtower` | 👁️ Watchtower | Surfaces a short read-only nudge about actionable PR state. |
