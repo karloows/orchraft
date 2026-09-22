@@ -80,10 +80,14 @@ history.
   count is the PR population — every PR in the repo, not only ones a marker
   identifies as `ship`-opened, since no such marker exists; say this
   assumption plainly in the report rather than silently narrowing the count.
-- For each PR, fetch its reviews (`pull_request_read` method `get_reviews`)
-  and find every one whose body ends in `roast`'s delta-tracking marker
-  (`<!-- roast:review head=<sha> -->`, from `skills/roast/SKILL.md`'s
-  Comment Format). Parse that review's scoreboard table — the
+- For each PR, fetch its reviews (`pull_request_read` method `get_reviews`),
+  paginating through every page at the requested `perPage` size until a page
+  returns fewer reviews than that size — a PR with more reviews than one
+  page holds still needs every `roast` pass counted, not just the first
+  page's. Across every page, find each review whose body ends in `roast`'s
+  delta-tracking marker (`<!-- roast:review head=<sha> -->`, from
+  `skills/roast/SKILL.md`'s Comment Format) and parse that review's
+  scoreboard table — the
   `| 🚨 Critical | ⚠️ Important | 💡 Minor | 🤔 Judgment calls |` row `roast`
   always posts — for that pass's finding counts. Sum across every `roast`
   pass on the PR; a PR reviewed twice contributes both passes' counts, not
@@ -163,9 +167,11 @@ and don't round a real count into a marketing-sounding figure.
 
 - Stop and say so if neither the GitHub MCP connector nor `gh` is
   available — don't report a partial or guessed count as complete.
-- Stop and say so if any individual paginated request fails partway
-  through — report which part failed and that the result is incomplete,
-  never a partial count presented as the full total.
+- Stop and say so if any individual required fetch fails partway
+  through — a paginated PR/review-thread listing, a per-PR `get_reviews`
+  page, or a GraphQL attribution query alike. Name which operation failed
+  and report the result as incomplete, never a partial count presented as
+  the full total.
 - Stop after presenting the summary; do not proceed into `ship`, `roast`,
   `land`, or any mutation without the user separately asking for it.
 
