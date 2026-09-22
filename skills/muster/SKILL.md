@@ -72,28 +72,51 @@ account, not just the current repo — every other status skill here
 
 ## Prerequisites
 
-- Confirm the connected identity via `get_me` (or `gh api user` if MCP is
-  unavailable) before enumerating anything — this repo's own login is the
-  `affiliation=owner` filter's basis.
-- Enumerate every repo: `gh api --paginate user/repos -f affiliation=owner
-  --jq '.[] | select(.fork==false and .archived==false) | {name,
-  owner: .owner.login, full_name}'`, following through every page the same
-  way `reckoning`'s own `gh api --paginate` fallback does — a single page
-  under-covers an account whose repo count exceeds one page. This lookup is
-  unverified in this repo until exercised live against a real account;
-  confirm the shape of a real response before trusting it at scale, the
-  same caution `plunder`'s new thread-attribution lookup got.
+- Confirm the connected identity via `get_me` when MCP is available. Repo
+  enumeration always goes through `gh` regardless (no MCP tool exposes it
+  directly — see below), so also run `gh api user --jq .login` and compare
+  it against `get_me`'s login before enumerating. If they differ, the
+  account whose repos get enumerated isn't the one the report would label
+  as "Account" — stop and surface the mismatch rather than silently
+  reporting one identity's login against another identity's repos. When
+  MCP is unavailable, `gh api user --jq .login` is the only identity check
+  and needs no cross-check against itself.
+- Enumerate every repo: `gh api --paginate --method GET user/repos -f
+  affiliation=owner --jq '.[] | select(.fork==false and .archived==false) |
+  {name, owner: .owner.login, full_name}'`. The explicit `--method GET`
+  matters here, not just style: `gh api` switches its default method from
+  GET to POST the moment any `-f`/`-F` field is present, and `POST
+  /user/repos` creates a new repository rather than listing them — the
+  opposite of this skill's read-only guarantee. Page through every page the
+  same way `reckoning`'s own `gh api --paginate` fallback does — a single
+  page under-covers an account whose repo count exceeds one page. This
+  lookup is unverified in this repo until exercised live against a real
+  account; confirm the shape of a real response before trusting it at
+  scale, the same caution `plunder`'s new thread-attribution lookup got.
 - For each enumerated repo, list its open pull requests (`list_pull_requests`
   with `state: open`, or `gh api --paginate
-  "repos/$owner/$repo/pulls?state=open"` when MCP is unavailable). A repo
-  with zero open PRs needs no further check — move on without reporting it.
+  "repos/$owner/$repo/pulls?state=open"` when MCP is unavailable), including
+  each PR's `draft` field — it comes back in the same listing call, no
+  separate fetch needed. A repo with zero open PRs needs no further
+  check — move on without reporting it.
 - For each open PR, gather the same live facts
   `hooks/watchtower-nudge.sh` already checks for one PR:
-  - Check/status rollup (`pull_request_read` method `get_check_runs`, or
-    `get_status`) — any failing, errored, cancelled, or timed-out run;
-    any still pending, in-progress, or queued run.
-  - Mergeable state (`mergeable_state` / `mergeStateStatus`) — flag a
-    `dirty`/conflicted state.
+  - Check/status rollup via `pull_request_read` method `get_check_runs` —
+    any failing, errored, cancelled, or timed-out run; any still pending,
+    in-progress, or queued run. `get_status` (the older combined-status
+    API) doesn't distinguish cancelled/timed-out from a plain failure and
+    can't see individual check-run states, so it isn't a real substitute:
+    when `get_check_runs` itself isn't available, report the PR's checks
+    as unverified rather than falling back to `get_status` as if it gave
+    equivalent information.
+  - Mergeable state (`mergeable_state` / `mergeStateStatus`) — `dirty`
+    flags a real conflict; `unknown` means GitHub hasn't finished
+    computing mergeability yet and is reported as unverified, not assumed
+    clean; `draft` (some mergeable_state responses report this directly,
+    in addition to the PR's own `draft` field already captured above)
+    excludes the PR from "no detected issues" the same way the `draft`
+    field does; `unstable` stays on the checks/status path above rather
+    than being treated as its own merge-conflict category.
   - Unresolved review-thread count via `pull_request_read` method
     `get_review_comments` (or the same paginated GraphQL
     `reviewThreads(first: 100, after: $cursor)` loop the hook script and
@@ -114,8 +137,14 @@ account, not just the current repo — every other status skill here
 4. For each open PR, gather checks/status, mergeable state, and unresolved
    review-thread count per Prerequisites.
 5. Classify each PR: failing checks, pending checks, merge conflict,
-   unresolved `roast`-style findings, clean-and-land-ready, or unverified
-   (a check that couldn't complete).
+   unresolved `roast`-style findings, no detected issues, or unverified
+   (a check that couldn't complete). "No detected issues" reports only what
+   this skill actually checked — it is not a land-readiness guarantee.
+   Unlike `land`'s own preconditions, this pass never checks draft state or
+   required-review approval status; a draft PR or one still missing a
+   required approval can otherwise show no detected issues under the
+   checks this skill runs. Report a draft PR's draft state explicitly
+   alongside its classification instead of letting it read as ready.
 6. Report only repos/PRs with something actionable or unverified, per
    [Summary Format](#summary-format) — omit clean repos from the listed
    detail, but still count them in the totals.
