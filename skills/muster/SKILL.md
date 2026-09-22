@@ -148,11 +148,17 @@ account, not just the current repo — every other status skill here
     older Statuses API instead — a commit status, not a check run — never
     shows up there at all, so also call `pull_request_read` method
     `get_status` on the head commit as an *additional* source, not a
-    replacement: a combined status of `failure`/`error` is a failing check,
-    `pending` is a pending check, and an empty status list contributes
-    nothing (neither actionable nor unverified) rather than being treated
-    as a gap. This is additive to the `get_check_runs` classification
-    above, which stays the primary, more granular source.
+    replacement. Check the status count first, not just `state` alone:
+    verified live (`gh api repos/.../commits/<sha>/status`) that GitHub's
+    combined-status endpoint returns `state: "pending"` even when
+    `total_count` is `0` — a repo with no legacy Statuses-API integration
+    at all (the common case; this repo included) would otherwise get every
+    PR flagged as having a pending check forever. Only read `state` once
+    `total_count` is greater than zero: `failure`/`error` is a failing
+    check, `pending` is a pending check. A `total_count` of `0` contributes
+    nothing to either bucket — there's no legacy status to report on. This
+    is additive to the `get_check_runs` classification above, which stays
+    the primary, more granular source.
   - Mergeable state (`mergeable_state` / `mergeStateStatus`) — compare
     case-insensitively, since the REST field returns lowercase (`dirty`) and
     the GraphQL field returns uppercase (`DIRTY`), and this skill reads
