@@ -109,17 +109,21 @@ account, not just the current repo — every other status skill here
     failing check; `action_required` and `stale` are actionable the same
     way — GitHub uses both for a run that needs attention before the PR can
     proceed, not a passive wait state. A `status` of `queued`,
-    `in_progress`, `requested`, or `waiting` is still pending. Any other
-    `status`/`conclusion` combination this list doesn't name — including a
-    value GitHub adds later — is reported as unverified, never silently
-    folded into "no detected issues"; an unrecognized state is exactly the
-    kind of gap this skill's own fail-closed rule exists to catch. `get_status`
-    (the older combined-status API) doesn't distinguish any of the above from
-    a plain failure and can't see individual check-run states, so it isn't a
-    real substitute: when `get_check_runs` itself isn't available, or its own
-    pagination fails partway through, report the PR's checks as unverified
-    rather than falling back to `get_status` or a partial page as if either
-    gave equivalent information.
+    `in_progress`, `requested`, or `waiting` is still pending. A `status` of
+    `completed` with `conclusion` `success`, `neutral`, or `skipped` is a
+    passing run — contributes nothing to "actionable" or "unverified,"
+    unlike every other combination above. Only a `status`/`conclusion`
+    combination none of these three groups (failing, pending, passing)
+    names — including a value GitHub adds later — is reported as unverified,
+    never silently folded into "no detected issues"; an unrecognized state
+    is exactly the kind of gap this skill's own fail-closed rule exists to
+    catch. `get_status` (the older combined-status API) doesn't distinguish
+    any of the above from a plain failure and can't see individual
+    check-run states, so it isn't a real substitute: when `get_check_runs`
+    itself isn't available, or its own pagination fails partway through,
+    report the PR's checks as unverified rather than falling back to
+    `get_status` or a partial page as if either gave equivalent
+    information.
   - Mergeable state (`mergeable_state` / `mergeStateStatus`) — compare
     case-insensitively, since the REST field returns lowercase (`dirty`) and
     the GraphQL field returns uppercase (`DIRTY`), and this skill reads
