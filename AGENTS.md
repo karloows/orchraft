@@ -111,6 +111,16 @@ hooks, and CI checks should win.
   isn't a valid manifest property at all; component discovery is pure
   `skills/` directory convention, the same one Claude Code and Grok Build
   scan.
+- `plugin.json` (repo root): the current-preferred Agent Plugins 1.0.0
+  manifest location, alongside `.codex-plugin/plugin.json` rather than
+  replacing it — real, credible plugins (Sanity, Resend, Google's Gemini
+  CLI extensions) ship this exact root file with the same `$schema`, and
+  none of the ones checked removed their legacy-path copy either. Read by
+  any Agent-Plugins-compliant host, not just Codex; Google's Gemini CLI
+  extensions use the same root-file convention via their own
+  `extensions.com.google...` namespace. Keep its `version` in sync via
+  `release-please-config.json`'s `extra-files`, same as the other two
+  manifests.
 - `.grok-plugin/marketplace.json`: self-hosted marketplace listing for Grok
   Build, the same bypass-the-central-catalog mechanism Claude Code's own
   `.claude-plugin/marketplace.json` uses — separate from xAI's central
