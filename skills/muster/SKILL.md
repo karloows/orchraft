@@ -104,14 +104,22 @@ account, not just the current repo — every other status skill here
 - For each open PR, gather the same live facts
   `hooks/watchtower-nudge.sh` already checks for one PR:
   - Check/status rollup via `pull_request_read` method `get_check_runs`,
-    paginating through every page — any failing, errored, cancelled, or
-    timed-out run; any still pending, in-progress, or queued run. `get_status`
-    (the older combined-status API) doesn't distinguish cancelled/timed-out
-    from a plain failure and can't see individual check-run states, so it
-    isn't a real substitute: when `get_check_runs` itself isn't available,
-    or its own pagination fails partway through, report the PR's checks as
-    unverified rather than falling back to `get_status` or a partial page as
-    if either gave equivalent information.
+    paginating through every page. A run's `conclusion` (only set once
+    `status` is `completed`) of `failure`, `cancelled`, or `timed_out` is a
+    failing check; `action_required` and `stale` are actionable the same
+    way — GitHub uses both for a run that needs attention before the PR can
+    proceed, not a passive wait state. A `status` of `queued`,
+    `in_progress`, `requested`, or `waiting` is still pending. Any other
+    `status`/`conclusion` combination this list doesn't name — including a
+    value GitHub adds later — is reported as unverified, never silently
+    folded into "no detected issues"; an unrecognized state is exactly the
+    kind of gap this skill's own fail-closed rule exists to catch. `get_status`
+    (the older combined-status API) doesn't distinguish any of the above from
+    a plain failure and can't see individual check-run states, so it isn't a
+    real substitute: when `get_check_runs` itself isn't available, or its own
+    pagination fails partway through, report the PR's checks as unverified
+    rather than falling back to `get_status` or a partial page as if either
+    gave equivalent information.
   - Mergeable state (`mergeable_state` / `mergeStateStatus`) — compare
     case-insensitively, since the REST field returns lowercase (`dirty`) and
     the GraphQL field returns uppercase (`DIRTY`), and this skill reads
