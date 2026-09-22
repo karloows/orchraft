@@ -28,6 +28,7 @@ Each skill is a self-contained workflow the user invokes explicitly (except
 | `runes` | status | Summarizes a branch's live state: PR, checks, unresolved `roast` findings. Read-only. |
 | `reckoning` | status | Lists every review finding consciously declined rather than fixed, across the repo's pull requests. Read-only. |
 | `plunder` | status | Reports repo-wide shipping signal — PRs opened, `roast` findings caught and their fixed/declined fate, time-to-land. Read-only. |
+| `muster` | status | Reports actionable open-PR state across every repo the account owns — failing/pending checks, merge conflicts, unresolved `roast` findings. Read-only. |
 | `herald` | release | Drafts release notes from the pull requests merged since the last tag, plus direct commits cited by short SHA, and writes them into the GitHub release on approval. Never edits `CHANGELOG.md`. |
 | `warchief` | orchestration | Chooses the next lifecycle step and hands off, without performing mutations itself. |
 | `watchtower` | status nudge | Surfaces a short read-only nudge about actionable PR state. |
