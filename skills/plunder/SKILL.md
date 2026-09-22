@@ -117,7 +117,13 @@ history.
   reply → **open, unaddressed**. A finding with no diff-line anchor (posted
   in `roast`'s own "Unanchored findings" summary section, not as a thread)
   has no thread to classify at all — count it in the scoreboard total but
-  report it separately as unclassifiable by fate, rather than guessing.
+  report it separately as **unclassifiable (unanchored)**, rather than
+  guessing. A thread that does have a diff-line anchor but whose owning
+  review couldn't be confirmed as `roast`'s (the attribution lookup itself
+  failed or returned ambiguous results) is a different case — report it
+  separately as **unclassifiable (attribution-unverified)**, never folded
+  into the unanchored bucket, since the two have different causes and a
+  future fix targets them differently.
 - For time-to-land, use only PRs with a non-null `merged_at`. Compute each
   one's `merged_at - created_at` and the median across all of them.
 
@@ -127,7 +133,8 @@ history.
 2. Enumerate every PR and record its state, `created_at`, and `merged_at`.
 3. For each PR, sum its `roast`-posted scoreboard counts across every pass.
 4. For each PR, classify every `roast`-attributed thread's fate per
-   Prerequisites, and tally unclassifiable (unanchored) findings separately.
+   Prerequisites, tallying unclassifiable (unanchored) and unclassifiable
+   (attribution-unverified) findings as separate totals.
 5. Compute time-to-land per merged PR and the median across them.
 6. Report the totals per [Summary Format](#summary-format), or that the
    repo has no PR/review history yet.
@@ -142,8 +149,9 @@ and don't round a real count into a marketing-sounding figure.
 - **Findings caught** — total `roast` scoreboard count by severity
   (Critical/Important/Minor/Judgment calls), across every pass on every PR.
 - **Findings by fate** — counts for fixed, declined-and-standing,
-  declined-and-settled, open-and-unaddressed, and unclassifiable
-  (unanchored).
+  declined-and-settled, open-and-unaddressed, unclassifiable (unanchored),
+  and unclassifiable (attribution-unverified), reported as separate totals
+  rather than merged into one bucket, since the two have different causes.
 - **Time-to-land** — the median across merged PRs, plus the count it's
   computed from. Omit if no PR in the repo has merged yet.
 - **Assumption noted** — that the PR count treats every PR in the repo as
@@ -159,9 +167,12 @@ and don't round a real count into a marketing-sounding figure.
   elapsed time.
 - Never attribute a review thread to `roast` without verifying which review
   it actually belongs to; when that attribution can't be confirmed, report
-  the thread as unclassifiable rather than guessing its fate.
-- Never claim a "fixed" or "declined" count includes unanchored findings —
-  those have no thread and are reported separately.
+  the thread as unclassifiable (attribution-unverified) rather than
+  guessing its fate.
+- Never claim a "fixed" or "declined" count includes unanchored or
+  attribution-unverified findings — neither has a classified thread, and
+  both are reported as their own separate totals, never merged with each
+  other or with a classified fate.
 
 ## Stop Conditions
 
@@ -198,7 +209,8 @@ Repo: <owner>/<repo> (N PRs counted: X open, Y merged, Z closed without
 merging)
 Findings caught: A critical, B important, C minor, D judgment calls
 By fate: E fixed, F declined (standing), G declined (settled),
-H open/unaddressed, I unclassifiable
+H open/unaddressed, I unclassifiable (unanchored), K unclassifiable
+(attribution-unverified)
 Time-to-land: median J hours across Y merged PRs
 Note: counts every PR in the repo as the population — no marker
 distinguishes a ship-opened PR from a manually opened one.
