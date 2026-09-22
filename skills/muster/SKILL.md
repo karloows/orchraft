@@ -95,40 +95,47 @@ account, not just the current repo — every other status skill here
   scale, the same caution `plunder`'s new thread-attribution lookup got.
 - For each enumerated repo, list its open pull requests (`list_pull_requests`
   with `state: open`, or `gh api --paginate
-  "repos/$owner/$repo/pulls?state=open"` when MCP is unavailable), including
-  each PR's `draft` field — it comes back in the same listing call, no
-  separate fetch needed. A repo with zero open PRs needs no further
+  "repos/$owner/$repo/pulls?state=open"` when MCP is unavailable), paginating
+  through every page of MCP results too, not only the `gh` fallback — a repo
+  with more open PRs than one page holds still needs every one counted.
+  Include each PR's `draft` field — it comes back in the same listing call,
+  no separate fetch needed. A repo with zero open PRs needs no further
   check — move on without reporting it.
 - For each open PR, gather the same live facts
   `hooks/watchtower-nudge.sh` already checks for one PR:
-  - Check/status rollup via `pull_request_read` method `get_check_runs` —
-    any failing, errored, cancelled, or timed-out run; any still pending,
-    in-progress, or queued run. `get_status` (the older combined-status
-    API) doesn't distinguish cancelled/timed-out from a plain failure and
-    can't see individual check-run states, so it isn't a real substitute:
-    when `get_check_runs` itself isn't available, report the PR's checks
-    as unverified rather than falling back to `get_status` as if it gave
-    equivalent information.
-  - Mergeable state (`mergeable_state` / `mergeStateStatus`) — `dirty`
-    flags a real conflict; `unknown` means GitHub hasn't finished
-    computing mergeability yet and is reported as unverified, not assumed
-    clean; `draft` (some mergeable_state responses report this directly,
-    in addition to the PR's own `draft` field already captured above)
-    excludes the PR from "no detected issues" the same way the `draft`
-    field does; `unstable` stays on the checks/status path above rather
-    than being treated as its own merge-conflict category.
+  - Check/status rollup via `pull_request_read` method `get_check_runs`,
+    paginating through every page — any failing, errored, cancelled, or
+    timed-out run; any still pending, in-progress, or queued run. `get_status`
+    (the older combined-status API) doesn't distinguish cancelled/timed-out
+    from a plain failure and can't see individual check-run states, so it
+    isn't a real substitute: when `get_check_runs` itself isn't available,
+    or its own pagination fails partway through, report the PR's checks as
+    unverified rather than falling back to `get_status` or a partial page as
+    if either gave equivalent information.
+  - Mergeable state (`mergeable_state` / `mergeStateStatus`) — compare
+    case-insensitively, since the REST field returns lowercase (`dirty`) and
+    the GraphQL field returns uppercase (`DIRTY`), and this skill reads
+    either depending on which tool answered. `dirty`/`DIRTY` flags a real
+    conflict; `unknown`/`UNKNOWN` means GitHub hasn't finished computing
+    mergeability yet and is reported as unverified, not assumed clean;
+    `draft`/`DRAFT` (some mergeable-state responses report this directly, in
+    addition to the PR's own `draft` field already captured above) excludes
+    the PR from "no detected issues" the same way the `draft` field does;
+    `unstable`/`UNSTABLE` stays on the checks/status path above rather than
+    being treated as its own merge-conflict category.
   - Unresolved review-thread count via `pull_request_read` method
-    `get_review_comments` (or the same paginated GraphQL
-    `reviewThreads(first: 100, after: $cursor)` loop the hook script and
-    `reckoning` both already use), counting threads where
-    `is_resolved`/`isResolved` is false. This counts every unresolved
-    thread on the PR, not only ones a `roast` review posted — the same
-    convention `hooks/watchtower-nudge.sh` already uses (it has no
-    per-thread provenance filter either). Report it as "unresolved review
-    threads," not "roast findings," so an ordinary human review comment
-    isn't mislabeled as one. Only report a PR's unresolved count as
-    confirmed when this check actually completed — a failed or incomplete
-    thread query means "unverified," never "assume zero."
+    `get_review_comments`, paginating through every page of threads (or the
+    same paginated GraphQL `reviewThreads(first: 100, after: $cursor)` loop
+    the hook script and `reckoning` both already use — nested per-thread
+    comment pagination isn't needed, only `is_resolved`/`isResolved` on each
+    thread's first page), counting threads where that field is false. This
+    counts every unresolved thread on the PR, not only ones a `roast` review
+    posted — the same convention `hooks/watchtower-nudge.sh` already uses
+    (it has no per-thread provenance filter either). Report it as
+    "unresolved review threads," not "roast findings," so an ordinary human
+    review comment isn't mislabeled as one. Only report a PR's unresolved
+    count as confirmed when this check actually completed — a failed or
+    incomplete thread query means "unverified," never "assume zero."
 - A repo or PR whose check fails partway through (a listing page errors, a
   thread query can't complete) is reported as unverified for that one
   repo/PR, not silently dropped or assumed clean — the muster continues to
@@ -145,11 +152,13 @@ account, not just the current repo — every other status skill here
    unresolved review threads, no detected issues, or unverified
    (a check that couldn't complete). "No detected issues" reports only what
    this skill actually checked — it is not a land-readiness guarantee.
-   Unlike `land`'s own preconditions, this pass never checks draft state or
-   required-review approval status; a draft PR or one still missing a
-   required approval can otherwise show no detected issues under the
-   checks this skill runs. Report a draft PR's draft state explicitly
-   alongside its classification instead of letting it read as ready.
+   This pass does check and explicitly report a PR's draft state (see
+   Prerequisites); what it does *not* check, unlike `land`'s own
+   preconditions, is required-review approval status — a PR still missing a
+   required approval can otherwise show no detected issues under the checks
+   this skill runs. Report a draft PR's draft state alongside its
+   classification, and don't present "no detected issues" as a full
+   land-readiness guarantee either way.
 6. Report only repos/PRs with something actionable or unverified, per
    [Summary Format](#summary-format) — omit clean repos from the listed
    detail, but still count them in the totals.
