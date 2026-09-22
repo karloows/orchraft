@@ -174,11 +174,12 @@ account, not just the current repo — every other status skill here
     met) is actionable on its own — GitHub's response doesn't say which
     requirement is unmet, so report it as blocked when a reason can be
     inferred from the checks/thread data already gathered, or unverified
-    when it can't, but never let it fall through unclassified. `clean` is
-    the one value that contributes nothing to either bucket. Any other
-    value neither this list nor `clean` names — including one GitHub adds
-    later — is reported as unverified, the same fail-closed catch-all the
-    check-run classification above already uses.
+    when it can't, but never let it fall through unclassified. `clean` and
+    `has_hooks`/`HAS_HOOKS` (a legacy pre-receive-hooks status, informational
+    only) both contribute nothing to either bucket. Any other value none of
+    this list names — including one GitHub adds later — is reported as
+    unverified, the same fail-closed catch-all the check-run classification
+    above already uses.
   - Unresolved review-thread count via `pull_request_read` method
     `get_review_comments`, paginating through every page of threads (or the
     same paginated GraphQL `reviewThreads(first: 100, after: $cursor)` loop
@@ -245,9 +246,12 @@ Keep it to what's actionable — a clean repo gets counted, not narrated.
 - **Clean** — a count only ("N repos, M open PRs, all clean") — no per-PR
   detail for PRs with nothing actionable.
 - **Coverage caveat** — a standing note that the repo count reflects what
-  the authenticated token can see; a scoped fine-grained token or GitHub
-  App installation token can silently narrow that below every repo the
-  account actually owns, and this skill has no way to detect that case.
+  the authenticated token can see; a scoped fine-grained personal access
+  token can silently narrow that below every repo the account actually
+  owns, and this skill has no way to detect that case. A GitHub App
+  installation token isn't a silent-narrowing case — it can't authenticate
+  this flow at all (see Requirements) — so it doesn't belong in this
+  caveat.
 
 ## Guardrails
 
