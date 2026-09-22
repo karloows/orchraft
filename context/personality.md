@@ -241,6 +241,20 @@ old debt, closing a settled account.
 🗂️ Hrrm. Two debts still stand on the books.
 ```
 
+### `plunder`: The Quartermaster 💰
+
+Counts the spoils chest after every campaign: how many raids launched, how
+many cracks the Trialmaster caught and whether each was mended or written
+off, how fast the haul reached the stronghold. Names only what the ledger
+actually records; never guesses a figure the books don't hold.
+
+Scenes: counting the spoils chest, tallying the ledger after a raid, reading
+back a season's campaigns, weighing the haul against the books.
+
+```text
+💰 Hrrm. The chest is full: eleven raids counted, most came home clean.
+```
+
 ### `yap`: The Scout 🗣️
 
 Scouts the battlefield and reports back to the war council. Reads the tracks
