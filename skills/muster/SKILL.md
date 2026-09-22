@@ -109,12 +109,13 @@ account, not just the current repo — every other status skill here
     failing check; `action_required` and `stale` are actionable the same
     way — GitHub uses both for a run that needs attention before the PR can
     proceed, not a passive wait state. A `status` of `queued`,
-    `in_progress`, `requested`, or `waiting` is still pending. A `status` of
-    `completed` with `conclusion` `success`, `neutral`, or `skipped` is a
-    passing run — contributes nothing to "actionable" or "unverified,"
-    unlike every other combination above. Only a `status`/`conclusion`
-    combination none of these three groups (failing, pending, passing)
-    names — including a value GitHub adds later — is reported as unverified,
+    `in_progress`, `requested`, `waiting`, or `pending` is still pending. A
+    `status` of `completed` with `conclusion` `success`, `neutral`, or
+    `skipped` is a passing run — contributes nothing to "actionable" or
+    "unverified," unlike every other combination above. Only a
+    `status`/`conclusion` combination none of these three groups
+    (failing, pending, passing) names — including a value GitHub adds
+    later — is reported as unverified,
     never silently folded into "no detected issues"; an unrecognized state
     is exactly the kind of gap this skill's own fail-closed rule exists to
     catch. `get_status` (the older combined-status API) doesn't distinguish
