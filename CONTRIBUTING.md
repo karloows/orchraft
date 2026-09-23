@@ -37,9 +37,9 @@ Each skill's file is a single Markdown document with YAML frontmatter
 (`name`, `description`) that Claude Code uses to decide when to trigger it,
 followed by the workflow instructions themselves.
 
-Claude Code, Codex, and Grok Build all read `skills/` directly once orchraft
-is installed — no per-ecosystem symlink layer. **Always edit the canonical
-file under `skills/`.**
+Claude Code, Codex, Grok Build, and (as a packaged plugin) Cursor all read
+`skills/` directly once orchraft is installed — no per-ecosystem symlink
+layer. **Always edit the canonical file under `skills/`.**
 
 ### Policies (`context/policies/*.md`)
 
@@ -110,6 +110,14 @@ Codex, and Grok Build all scan without one, so installed users get
 `/orchraft:warplan` etc. from the same canonical files described above.
 Don't hand-edit `plugin.json`'s `version` — `release-please` bumps it
 alongside `package.json`.
+
+`.cursor-plugin/plugin.json` and `.cursor-plugin/marketplace.json` are the
+Cursor equivalent, installed via Cursor's Customize → From GitHub
+Repository GUI rather than a CLI command. A packaged Cursor plugin keeps
+`skills/` at the plugin root per Cursor's own docs, so no directory change
+was needed — see `AGENTS.md`'s entry for the "not yet verified live"
+caveat. `.cursor-plugin/plugin.json`'s `version` is wired into
+`release-please-config.json`'s `extra-files` the same way.
 
 ## Design intent
 
