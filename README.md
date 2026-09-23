@@ -210,6 +210,16 @@ The skills load the same way as in Claude Code and Codex, from the same
 `skills/` files, and read `context/policies/` from your repo the
 same way.
 
+## First 60 Seconds
+
+No command needed to see it work. As a Claude Code plugin install,
+`watchtower`'s `SessionStart` hook fires on your very next session start,
+resume, clear, or compact in a repo with something actionable — an open PR
+with failing or pending checks, merge conflicts, or unresolved review
+threads, a clean PR ready for `land`, or a local branch with uncommitted
+changes and no PR yet. It says nothing when there's nothing worth
+interrupting for.
+
 ## Copy Into A Project
 
 For other agents, or to customize the files, copy the parts you need into a
