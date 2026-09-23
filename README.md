@@ -191,8 +191,7 @@ To try a local checkout without installing, run
 ## Install As A Codex Plugin
 
 ```shell
-codex plugin marketplace add karloows/orchraft
-codex plugin add orchraft@orchraft
+codex plugin marketplace add karloows/orchraft && codex plugin add orchraft@orchraft
 ```
 
 The skills load the same way as in Claude Code, from the same
@@ -202,8 +201,7 @@ same way.
 ## Install As A Grok Build Plugin
 
 ```shell
-grok plugin marketplace add karloows/orchraft
-grok plugin install orchraft --trust
+grok plugin marketplace add karloows/orchraft && grok plugin install orchraft --trust
 ```
 
 The skills load the same way as in Claude Code and Codex, from the same
