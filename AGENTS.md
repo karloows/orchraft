@@ -138,6 +138,21 @@ hooks, and CI checks should win.
   `.claude-plugin/marketplace.json` uses — separate from xAI's central
   `xai-org/plugin-marketplace` catalog, which needs its own PR to list
   orchraft there.
+- `.cursor-plugin/plugin.json` and `.cursor-plugin/marketplace.json`: Cursor
+  plugin manifest and self-hosted marketplace listing, installed via
+  Cursor's **Customize → From GitHub Repository** GUI, or via the
+  `cursor-agent` CLI's interactive `/plugin` slash command — unlike
+  Claude Code/Codex/Grok Build, there's no scriptable one-line install
+  command for either. Unlike Codex's pure
+  directory-convention discovery, Cursor's `plugin.json` schema declares an
+  explicit `"skills": "./skills/"` field pointing at the same canonical
+  `skills/` directory this repo already uses — confirmed against two real
+  manifests in `cursor/plugins` (`teaching`, `create-plugin`), both of
+  which declare `skills`/`category` the same way. Still no directory
+  restructuring needed, just the one explicit field. **Not yet verified
+  live**: unlike every other ecosystem entry in this file, this hasn't been
+  installed into a real Cursor app and checked for a full 15-skill catalog
+  — say so if you ever confirm or refute it live.
 
 ## Hooks
 
@@ -252,9 +267,9 @@ falling back to the copy bundled with the plugin.
 - When a policy and a project-local template disagree, the target project wins.
 - Keep `CLAUDE.md` as a pointer to this file instead of duplicating these
   instructions.
-- Skills live only in `skills/` — Claude Code, Codex, and Grok Build all
-  read it directly, so there is no per-ecosystem symlink layer to keep in
-  sync.
+- Skills live only in `skills/` — Claude Code, Codex, Grok Build, and (as a
+  packaged plugin) Cursor all read it directly, so there is no
+  per-ecosystem symlink layer to keep in sync.
 - Don't edit the plugin manifest's `version` by hand; release-please bumps it
   alongside `package.json`.
 

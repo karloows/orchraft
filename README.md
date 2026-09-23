@@ -12,7 +12,7 @@
 <p align="center">
   <a href="https://github.com/karloows/orchraft/actions/workflows/validate-plugin.yaml"><img alt="Plugin validation" src="https://img.shields.io/github/actions/workflow/status/karloows/orchraft/validate-plugin.yaml?style=flat-square&label=checks&color=6B7A4B"></a>
   <img alt="15 skills" src="https://img.shields.io/badge/skills-15-6B7A4B?style=flat-square">
-  <img alt="Runs on Claude Code, Codex and Grok Build" src="https://img.shields.io/badge/runs%20on-Claude%20Code%20%C2%B7%20Codex%20%C2%B7%20Grok-1B1712?style=flat-square">
+  <img alt="Runs on Claude Code, Codex, Grok Build and Cursor" src="https://img.shields.io/badge/runs%20on-Claude%20Code%20%C2%B7%20Codex%20%C2%B7%20Grok%20%C2%B7%20Cursor-1B1712?style=flat-square">
   <a href="LICENSE"><img alt="License Apache 2.0" src="https://img.shields.io/badge/license-Apache--2.0-1B1712?style=flat-square"></a>
 </p>
 
@@ -134,9 +134,13 @@ moves the ground under an installed copy.
 
 ## Layout
 
-- `skills/`: canonical agent skills, read directly by Claude Code, Codex, and
-  Grok Build once orchraft is installed — no per-ecosystem symlink layer.
+- `skills/`: canonical agent skills, read directly by Claude Code, Codex,
+  Grok Build, and (as a packaged plugin) Cursor once orchraft is installed —
+  no per-ecosystem symlink layer.
 - `.claude-plugin/`: Claude Code plugin manifest and marketplace.
+- `.cursor-plugin/`: Cursor plugin manifest and self-hosted marketplace,
+  installed via Cursor's Customize → From GitHub Repository GUI or
+  `cursor-agent`'s `/plugin` slash command.
 - `.codex-plugin/` and `.agents/plugins/marketplace.json`: Codex CLI plugin
   manifest and marketplace, reading the same `skills/`.
 - `.grok-plugin/`: Grok Build plugin marketplace, reading the same
@@ -209,6 +213,23 @@ grok plugin install orchraft --trust
 The skills load the same way as in Claude Code and Codex, from the same
 `skills/` files, and read `context/policies/` from your repo the
 same way.
+
+## Install As A Cursor Plugin
+
+Cursor installs plugins through its Customize panel, or through the
+`cursor-agent` CLI's interactive `/plugin` slash command — neither is a
+single scriptable shell command like `codex plugin add`:
+
+1. In the editor: open **Customize**, choose **From GitHub Repository**,
+   enter `karloows/orchraft` to import it as a marketplace source, then find
+   `orchraft` in the imported marketplace and install it.
+2. In `cursor-agent`: run `/plugin` and follow its prompts to add
+   `karloows/orchraft` as a marketplace and install `orchraft` from it.
+
+The skills load the same way as in Claude Code, Codex, and Grok Build, from
+the same `skills/` files, and read `context/policies/` from your repo the
+same way. This install path hasn't been verified against a real Cursor app
+yet — say so if you confirm or refute it.
 
 ## First 60 Seconds
 

@@ -1,0 +1,21 @@
+{
+  "name": "orchraft",
+  "version": "1.1.0",
+  "description": "A clan of orcs hauling a solo dev's mundane chores, so the code wins the glory.",
+  "author": {
+    "name": "karloows",
+    "url": "https://github.com/karloows"
+  },
+  "homepage": "https://github.com/karloows/orchraft",
+  "repository": "https://github.com/karloows/orchraft",
+  "license": "Apache-2.0",
+  "keywords": [
+    "skills",
+    "agentic-workflow",
+    "pull-requests",
+    "code-review",
+    "git"
+  ],
+  "category": "productivity",
+  "skills": "./skills/"
+}

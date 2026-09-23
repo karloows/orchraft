@@ -1,0 +1,16 @@
+{
+  "name": "orchraft",
+  "owner": {
+    "name": "karloows"
+  },
+  "metadata": {
+    "description": "A clan of orcs hauling a solo dev's mundane chores, so the code wins the glory."
+  },
+  "plugins": [
+    {
+      "name": "orchraft",
+      "description": "A clan of orcs hauling a solo dev's mundane chores, so the code wins the glory.",
+      "source": "./"
+    }
+  ]
+}

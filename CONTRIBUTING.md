@@ -37,9 +37,9 @@ Each skill's file is a single Markdown document with YAML frontmatter
 (`name`, `description`) that Claude Code uses to decide when to trigger it,
 followed by the workflow instructions themselves.
 
-Claude Code, Codex, and Grok Build all read `skills/` directly once orchraft
-is installed — no per-ecosystem symlink layer. **Always edit the canonical
-file under `skills/`.**
+Claude Code, Codex, Grok Build, and (as a packaged plugin) Cursor all read
+`skills/` directly once orchraft is installed — no per-ecosystem symlink
+layer. **Always edit the canonical file under `skills/`.**
 
 ### Policies (`context/policies/*.md`)
 
@@ -111,6 +111,18 @@ Codex, and Grok Build all scan without one, so installed users get
 Don't hand-edit `plugin.json`'s `version` — `release-please` bumps it
 alongside `package.json`.
 
+`.cursor-plugin/plugin.json` and `.cursor-plugin/marketplace.json` are the
+Cursor equivalent, installed via Cursor's Customize → From GitHub
+Repository GUI or `cursor-agent`'s interactive `/plugin` slash command —
+neither is a scriptable one-line install command like `codex plugin add`.
+Unlike Claude Code/Codex/Grok Build's directory convention, Cursor's
+`plugin.json` schema declares an
+explicit `"skills": "./skills/"` field pointing at the same canonical
+directory — no restructuring needed, just that one field — see
+`AGENTS.md`'s entry for the "not yet verified live" caveat.
+`.cursor-plugin/plugin.json`'s `version` is wired into
+`release-please-config.json`'s `extra-files` the same way.
+
 ## Design intent
 
 orchraft is meant to be portable: the workflows should explain how an
@@ -140,8 +152,11 @@ bake in assumptions specific to this repo's own setup.
 - Don't add project-specific build/test/deploy/package commands anywhere in
   this repo's own instructions, and don't duplicate tool-specific mirrors.
   `skills/` at the repo root is the one place skill content lives — Claude
-  Code, Codex, and Grok Build all default-scan that exact path, so no
-  target-specific symlink or manifest override should be needed. If a future
+  Code, Codex, and Grok Build all default-scan that exact path with no
+  manifest field needed; Cursor's `plugin.json` points at the same
+  directory with one explicit `skills` field instead. Either way, no
+  target-specific symlink or directory restructuring should be needed. If a
+  future
   tool genuinely can't read `skills/` directly, prefer fixing that at the
   manifest level over reintroducing a per-tool symlink layer.
 
