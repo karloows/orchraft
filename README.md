@@ -139,7 +139,8 @@ moves the ground under an installed copy.
   no per-ecosystem symlink layer.
 - `.claude-plugin/`: Claude Code plugin manifest and marketplace.
 - `.cursor-plugin/`: Cursor plugin manifest and self-hosted marketplace,
-  installed via Cursor's Customize → From GitHub Repository GUI.
+  installed via Cursor's Customize → From GitHub Repository GUI or
+  `cursor-agent`'s `/plugin` slash command.
 - `.codex-plugin/` and `.agents/plugins/marketplace.json`: Codex CLI plugin
   manifest and marketplace, reading the same `skills/`.
 - `.grok-plugin/`: Grok Build plugin marketplace, reading the same
