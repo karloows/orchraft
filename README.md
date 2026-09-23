@@ -243,6 +243,15 @@ Versioning and `CHANGELOG.md` are managed by
 release PR to publish a new version; release-please writes the changelog
 itself, so never edit `CHANGELOG.md` by hand.
 
+## Star History
+
+<a href="https://star-history.com/#karloows/orchraft&Date">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=karloows/orchraft&type=Date&theme=dark" />
+    <img alt="Star history of karloows/orchraft" src="https://api.star-history.com/svg?repos=karloows/orchraft&type=Date" />
+  </picture>
+</a>
+
 ## License
 
 Apache-2.0
