@@ -5,7 +5,7 @@
 <h1 align="center">Orchraft</h1>
 
 <p align="center">
-  <strong>You write the code. We haul the chores.</strong><br>
+  <strong>Never write a branch name, commit message, or PR description by hand again.</strong><br>
   <em>Nothing touches git until you say go, chief.</em>
 </p>
 
@@ -16,14 +16,12 @@
   <a href="LICENSE"><img alt="License Apache 2.0" src="https://img.shields.io/badge/license-Apache--2.0-1B1712?style=flat-square"></a>
 </p>
 
-We are a clan of orcs who haul the mundane, repetitive chores of shipping
-software off your plate — branch names, commit messages, PR write-ups,
-review nits, remembering what's still open — the stuff every developer does
-by hand every single time and nobody looks forward to, so the chief can
-spend the saved hours on the code that's actually interesting. Built first
-for the solo dev with no one else to hand the busywork to, welcome at any war
-table: your repo's rules, real sources behind every claim, and nothing
-touches git or GitHub until you say go.
+You already write the fix. Then comes the part nobody enjoys: naming the
+branch, writing the commit, drafting the PR description, remembering what's
+still open. That's the chore orchraft hauls — grounded in your repo's real
+diff and history, not invented, and nothing touches git or GitHub until you
+say go. Built first for the solo dev with no one else to hand the busywork
+to.
 
 The name joins *orchestration* and *craft*. The orc does the crafting.
 
@@ -244,6 +242,15 @@ Versioning and `CHANGELOG.md` are managed by
 [release-please](https://github.com/googleapis/release-please). Merge the open
 release PR to publish a new version; release-please writes the changelog
 itself, so never edit `CHANGELOG.md` by hand.
+
+## Star History
+
+<a href="https://star-history.com/#karloows/orchraft&Date">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=karloows/orchraft&type=Date&theme=dark" />
+    <img alt="Star history of karloows/orchraft" src="https://api.star-history.com/svg?repos=karloows/orchraft&type=Date" />
+  </picture>
+</a>
 
 ## License
 
