@@ -16,6 +16,8 @@
   <a href="LICENSE"><img alt="License Apache 2.0" src="https://img.shields.io/badge/license-Apache--2.0-1B1712?style=flat-square"></a>
 </p>
 
+The orc talks back. Here's a real exchange, start to finish:
+
 ```text
 chief ▸ the login crashes on a null token — fix it
 
