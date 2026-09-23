@@ -15,5 +15,7 @@
     "pull-requests",
     "code-review",
     "git"
-  ]
+  ],
+  "category": "productivity",
+  "skills": "./skills/"
 }

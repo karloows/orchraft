@@ -141,13 +141,16 @@ hooks, and CI checks should win.
 - `.cursor-plugin/plugin.json` and `.cursor-plugin/marketplace.json`: Cursor
   plugin manifest and self-hosted marketplace listing, installed via
   Cursor's **Customize → From GitHub Repository** GUI — Cursor has no
-  install CLI, unlike Claude Code/Codex/Grok Build. A packaged Cursor
-  plugin keeps `skills/` at the plugin root per Cursor's own plugin
-  repository docs, the same layout this repo already uses, so no
-  directory change was needed. **Not yet verified live**: unlike every
-  other ecosystem entry in this file, this hasn't been installed into a
-  real Cursor app and checked for a full 15-skill catalog — say so if you
-  ever confirm or refute it live.
+  install CLI, unlike Claude Code/Codex/Grok Build. Unlike Codex's pure
+  directory-convention discovery, Cursor's `plugin.json` schema declares an
+  explicit `"skills": "./skills/"` field pointing at the same canonical
+  `skills/` directory this repo already uses — confirmed against two real
+  manifests in `cursor/plugins` (`teaching`, `create-plugin`), both of
+  which declare `skills`/`category` the same way. Still no directory
+  restructuring needed, just the one explicit field. **Not yet verified
+  live**: unlike every other ecosystem entry in this file, this hasn't been
+  installed into a real Cursor app and checked for a full 15-skill catalog
+  — say so if you ever confirm or refute it live.
 
 ## Hooks
 

@@ -219,8 +219,9 @@ Cursor installs plugins from GitHub through its Customize panel, not a CLI
 command:
 
 1. Open **Customize** in Cursor.
-2. Choose **From GitHub Repository**.
-3. Enter `karloows/orchraft` and install.
+2. Choose **From GitHub Repository** and enter `karloows/orchraft` to import
+   it as a marketplace source.
+3. Find `orchraft` in the imported marketplace and install it.
 
 The skills load the same way as in Claude Code, Codex, and Grok Build, from
 the same `skills/` files, and read `context/policies/` from your repo the

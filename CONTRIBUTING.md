@@ -113,10 +113,12 @@ alongside `package.json`.
 
 `.cursor-plugin/plugin.json` and `.cursor-plugin/marketplace.json` are the
 Cursor equivalent, installed via Cursor's Customize → From GitHub
-Repository GUI rather than a CLI command. A packaged Cursor plugin keeps
-`skills/` at the plugin root per Cursor's own docs, so no directory change
-was needed — see `AGENTS.md`'s entry for the "not yet verified live"
-caveat. `.cursor-plugin/plugin.json`'s `version` is wired into
+Repository GUI rather than a CLI command. Unlike Claude Code/Codex/Grok
+Build's directory convention, Cursor's `plugin.json` schema declares an
+explicit `"skills": "./skills/"` field pointing at the same canonical
+directory — no restructuring needed, just that one field — see
+`AGENTS.md`'s entry for the "not yet verified live" caveat.
+`.cursor-plugin/plugin.json`'s `version` is wired into
 `release-please-config.json`'s `extra-files` the same way.
 
 ## Design intent
@@ -148,8 +150,11 @@ bake in assumptions specific to this repo's own setup.
 - Don't add project-specific build/test/deploy/package commands anywhere in
   this repo's own instructions, and don't duplicate tool-specific mirrors.
   `skills/` at the repo root is the one place skill content lives — Claude
-  Code, Codex, and Grok Build all default-scan that exact path, so no
-  target-specific symlink or manifest override should be needed. If a future
+  Code, Codex, and Grok Build all default-scan that exact path with no
+  manifest field needed; Cursor's `plugin.json` points at the same
+  directory with one explicit `skills` field instead. Either way, no
+  target-specific symlink or directory restructuring should be needed. If a
+  future
   tool genuinely can't read `skills/` directly, prefer fixing that at the
   manifest level over reintroducing a per-tool symlink layer.
 
