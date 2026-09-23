@@ -155,10 +155,14 @@ account, not just the current repo — every other status skill here
     at all (the common case; this repo included) would otherwise get every
     PR flagged as having a pending check forever. Only read `state` once
     `total_count` is greater than zero: `failure`/`error` is a failing
-    check, `pending` is a pending check. A `total_count` of `0` contributes
-    nothing to either bucket — there's no legacy status to report on. This
-    is additive to the `get_check_runs` classification above, which stays
-    the primary, more granular source.
+    check, `pending` is a pending check, `success` is passing and
+    contributes nothing to either bucket. A `total_count` of `0` also
+    contributes nothing — there's no legacy status to report on. Any other
+    `state` value with `total_count` greater than zero — a combination none
+    of the above names — is reported as unverified, the same fail-closed
+    catch-all `get_check_runs` and `mergeable_state` already use. This is
+    additive to the `get_check_runs` classification above, which stays the
+    primary, more granular source.
   - Mergeable state (`mergeable_state` / `mergeStateStatus`) — compare
     case-insensitively, since the REST field returns lowercase (`dirty`) and
     the GraphQL field returns uppercase (`DIRTY`), and this skill reads
