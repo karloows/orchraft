@@ -140,8 +140,10 @@ hooks, and CI checks should win.
   orchraft there.
 - `.cursor-plugin/plugin.json` and `.cursor-plugin/marketplace.json`: Cursor
   plugin manifest and self-hosted marketplace listing, installed via
-  Cursor's **Customize → From GitHub Repository** GUI — Cursor has no
-  install CLI, unlike Claude Code/Codex/Grok Build. Unlike Codex's pure
+  Cursor's **Customize → From GitHub Repository** GUI, or via the
+  `cursor-agent` CLI's interactive `/plugin` slash command — unlike
+  Claude Code/Codex/Grok Build, there's no scriptable one-line install
+  command for either. Unlike Codex's pure
   directory-convention discovery, Cursor's `plugin.json` schema declares an
   explicit `"skills": "./skills/"` field pointing at the same canonical
   `skills/` directory this repo already uses — confirmed against two real

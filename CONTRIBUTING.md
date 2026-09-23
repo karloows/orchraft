@@ -113,8 +113,10 @@ alongside `package.json`.
 
 `.cursor-plugin/plugin.json` and `.cursor-plugin/marketplace.json` are the
 Cursor equivalent, installed via Cursor's Customize → From GitHub
-Repository GUI rather than a CLI command. Unlike Claude Code/Codex/Grok
-Build's directory convention, Cursor's `plugin.json` schema declares an
+Repository GUI or `cursor-agent`'s interactive `/plugin` slash command —
+neither is a scriptable one-line install command like `codex plugin add`.
+Unlike Claude Code/Codex/Grok Build's directory convention, Cursor's
+`plugin.json` schema declares an
 explicit `"skills": "./skills/"` field pointing at the same canonical
 directory — no restructuring needed, just that one field — see
 `AGENTS.md`'s entry for the "not yet verified live" caveat.
