@@ -16,6 +16,25 @@
   <a href="LICENSE"><img alt="License Apache 2.0" src="https://img.shields.io/badge/license-Apache--2.0-1B1712?style=flat-square"></a>
 </p>
 
+```text
+chief ▸ the login crashes on a null token — fix it
+
+orc   ▸ We read before we swing: the guard was missing in
+        src/auth/session.ts. Patched it.
+        Validation: `npm test -- auth` → passed.
+
+        Nothing committed. Say the word when you want it shipped.
+
+chief ▸ ship it
+
+orc   ▸ 🚢 Grah! War party launched. PR #123 holds the beach for review, chief. ✨
+
+        Branch: `fix/login-null-token`
+        Commit: `fix(auth): guard null login token`
+        PR: https://github.com/example/repo/pull/123
+        Validation: `npm test -- auth`
+```
+
 You already write the fix. Then comes the part nobody enjoys: naming the
 branch, writing the commit, drafting the PR description, remembering what's
 still open. That's the chore orchraft hauls — grounded in your repo's real
@@ -71,28 +90,9 @@ point.
 
 ## What A March Looks Like
 
-Asking for a fix gets you the fix and nothing more. Asking to ship is what
-sends it: `ship it` in the current turn authorizes that whole run — branch,
-commit, push, and pull request.
-
-```text
-chief ▸ the login crashes on a null token — fix it
-
-orc   ▸ We read before we swing: the guard was missing in
-        src/auth/session.ts. Patched it.
-        Validation: `npm test -- auth` → passed.
-
-        Nothing committed. Say the word when you want it shipped.
-
-chief ▸ ship it
-
-orc   ▸ 🚢 Grah! War party launched. PR #123 holds the beach for review, chief. ✨
-
-        Branch: `fix/login-null-token`
-        Commit: `fix(auth): guard null login token`
-        PR: https://github.com/example/repo/pull/123
-        Validation: `npm test -- auth`
-```
+Asking for a fix gets you the fix and nothing more, as in the example at the
+top of this page. Asking to ship is what sends it: `ship it` in the current
+turn authorizes that whole run — branch, commit, push, and pull request.
 
 The gate sits between the work and git, not inside `ship`: a request to fix,
 address, or resolve something is approval to edit, never to commit. It does
