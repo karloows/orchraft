@@ -9,12 +9,12 @@ mutation; the one documented exception is the opt-in `Autonomous Mode` in
 The current skills cover planning, issues, pull requests, status,
 documentation, and release notes (`warchief`, `watchtower`, `warplan`,
 `quest`, `ship`, `roast`, `land`, `runes`, `reckoning`, `plunder`,
-`yap`, `lore`, `chronicle`, `herald`); more workflows will cover the rest of
-the lifecycle.
+`muster`, `yap`, `lore`, `chronicle`, `herald`); more workflows will cover
+the rest of the lifecycle.
 It is distributed as a Claude Code plugin and can also be copied into other
 projects. Keep this file as the map, not the rulebook: detailed branch,
 commit, PR, warplan, quest, ship, roast, land, runes, reckoning,
-plunder, yap, lore, chronicle, herald, warchief, and watchtower
+plunder, muster, yap, lore, chronicle, herald, warchief, and watchtower
 behavior lives in the files linked below.
 
 ## Non-Negotiable: Ask Before Every Mutating Action
@@ -91,6 +91,10 @@ hooks, and CI checks should win.
   real repo-wide shipping signal — PRs opened, `roast` findings caught and
   their fixed/declined/open fate, and time-to-land — grounded in live
   git/GitHub history rather than an invented benchmark score. Read-only.
+- `skills/muster/SKILL.md`: AI-driven status workflow that reports
+  actionable open-PR state (failing/pending checks, merge conflicts,
+  unresolved review threads) across every repo the connected account
+  personally owns, not just the current one. Read-only.
 - `skills/herald/SKILL.md`: AI-driven release-notes workflow that
   drafts notes from the pull requests merged in a release's range, plus any
   commit that reached the base branch without one, cited by short SHA, and,
@@ -107,9 +111,10 @@ hooks, and CI checks should win.
   directory Claude Code scans without one, so installed users get
   `/orchraft:warplan`, `/orchraft:quest`, `/orchraft:ship`, `/orchraft:land`,
   `/orchraft:roast`, `/orchraft:runes`, `/orchraft:reckoning`,
-  `/orchraft:plunder`, `/orchraft:yap`, `/orchraft:lore`,
-  `/orchraft:chronicle`, `/orchraft:herald`, `/orchraft:warchief`, and
-  `/orchraft:watchtower` from the same canonical files.
+  `/orchraft:plunder`, `/orchraft:muster`, `/orchraft:yap`,
+  `/orchraft:lore`, `/orchraft:chronicle`, `/orchraft:herald`,
+  `/orchraft:warchief`, and `/orchraft:watchtower` from the same canonical
+  files.
 - `.codex-plugin/plugin.json`: Codex CLI plugin manifest. Declares no
   `skills` field either — under the real Agent Plugins 1.0.0 schema it
   targets (agent-plugins.org/schemas/1.0.0/plugin.schema.json), `skills`

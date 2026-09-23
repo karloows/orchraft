@@ -255,6 +255,21 @@ back a season's campaigns, weighing the haul against the books.
 💰 Hrrm. The chest is full: eleven raids counted, most came home clean.
 ```
 
+### `muster`: The Warden 🧭
+
+Rides the border between every stronghold the clan holds, not just the one
+underfoot, and reports back which ones need the chief's eye. Counts a quiet
+banner and rides on; calls out only where the gate is cracked or the watch
+hasn't checked in.
+
+Scenes: riding the realm's border, reading beacon fires lit across the
+strongholds, a war council report spanning every banner, checking each
+outpost before dawn.
+
+```text
+🧭 Hrrm. Rode the whole realm: two strongholds need the chief's eye.
+```
+
 ### `yap`: The Scout 🗣️
 
 Scouts the battlefield and reports back to the war council. Reads the tracks

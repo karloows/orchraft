@@ -11,7 +11,7 @@
 
 <p align="center">
   <a href="https://github.com/karloows/orchraft/actions/workflows/validate-plugin.yaml"><img alt="Plugin validation" src="https://img.shields.io/github/actions/workflow/status/karloows/orchraft/validate-plugin.yaml?style=flat-square&label=checks&color=6B7A4B"></a>
-  <img alt="14 skills" src="https://img.shields.io/badge/skills-14-6B7A4B?style=flat-square">
+  <img alt="15 skills" src="https://img.shields.io/badge/skills-15-6B7A4B?style=flat-square">
   <img alt="Runs on Claude Code, Codex and Grok Build" src="https://img.shields.io/badge/runs%20on-Claude%20Code%20%C2%B7%20Codex%20%C2%B7%20Grok-1B1712?style=flat-square">
   <a href="LICENSE"><img alt="License Apache 2.0" src="https://img.shields.io/badge/license-Apache--2.0-1B1712?style=flat-square"></a>
 </p>
@@ -62,6 +62,7 @@ the anvil as we cover the rest of the lifecycle.
 | `runes` | 📖 Rune-Reader | Summarizes the live state of a branch, PR, checks, and standing review findings. Read-only. |
 | `reckoning` | 🗂️ Reckoner | Lists every review finding consciously declined rather than fixed, across the whole repo's pull requests. Read-only. |
 | `plunder` | 💰 Quartermaster | Reports real repo-wide shipping signal — PRs opened, findings roast caught and their fixed/declined fate, time-to-land. Read-only. |
+| `muster` | 🧭 Warden | Reports actionable open-PR state — failing/pending checks, merge conflicts, unresolved review threads — across every repo you own. Read-only. |
 | `herald` | 📯 Herald | Drafts release notes from the pull requests actually merged, plus any commit pushed straight to the base branch, then writes them into the GitHub release once you approve. |
 | `warchief` | ⚔️ War Council | Chooses the next lifecycle role without treating orchestration as approval for mutations. |
 | `watchtower` | 👁️ Watchtower | Surfaces a short read-only nudge about actionable PR state. |
@@ -124,6 +125,9 @@ moves the ground under an installed copy.
 - Read-only GitHub access is enough for `runes`, `reckoning`,
   `plunder`, `watchtower`, `yap`, and `warplan` when they're only
   reading PR/issue state, not changing it.
+- `gh` installed and authenticated for `muster`, specifically — it enumerates
+  every repo you own via `gh api user/repos`, which no MCP tool in this
+  session exposes directly. Read-only access is enough; it never writes.
 - `jq` for the two ambient hooks (`watchtower-nudge.sh` and
   `main-commit-nudge.sh`) to parse their JSON input — both degrade to
   silence, not an error, when it's missing.
@@ -176,8 +180,8 @@ cache).
 The skills load as `/orchraft:warplan`, `/orchraft:quest`, `/orchraft:ship`,
 `/orchraft:land`, `/orchraft:roast`, `/orchraft:yap`, `/orchraft:lore`,
 `/orchraft:chronicle`, `/orchraft:runes`, `/orchraft:reckoning`,
-`/orchraft:plunder`, `/orchraft:herald`, `/orchraft:warchief`, and
-`/orchraft:watchtower`. They read
+`/orchraft:plunder`, `/orchraft:muster`, `/orchraft:herald`,
+`/orchraft:warchief`, and `/orchraft:watchtower`. They read
 `context/policies/` from your repo when present and fall back to the
 policies bundled with the plugin.
 
@@ -213,7 +217,7 @@ target project:
 
 - `skills/` for the canonical `warplan`, `quest`, `ship`, `land`,
   `roast`, `yap`, `lore`, `chronicle`, `runes`, `reckoning`,
-  `plunder`, `herald`, `warchief`, and `watchtower` workflows.
+  `plunder`, `muster`, `herald`, `warchief`, and `watchtower` workflows.
 - `context/policies/` for approval, branch, commit, lore, docs, review, and
   PR writing rules.
 - `context/personality.md` for the orc voice the skills use in success lines.
