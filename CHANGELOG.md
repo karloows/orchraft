@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.1.0](https://github.com/karloows/orchraft/compare/v1.0.3...v1.1.0) (2026-09-23)
+
+
+### Features
+
+* add muster status skill ([#64](https://github.com/karloows/orchraft/issues/64)) ([6fd678c](https://github.com/karloows/orchraft/commit/6fd678ca2c44694df188bfbed11ce67ef9025b4d))
+* add plunder status skill ([#63](https://github.com/karloows/orchraft/issues/63)) ([570f4bb](https://github.com/karloows/orchraft/commit/570f4bba8e65182429c19ed5a24912555cc9e83a))
+* add root plugin.json per the real Agent Plugins 1.0.0 standard ([#62](https://github.com/karloows/orchraft/issues/62)) ([9873c60](https://github.com/karloows/orchraft/commit/9873c60786d0821a8a4faffb886cd1a9748288fb))
+* **evals:** add quest and herald approval-gate cases ([#59](https://github.com/karloows/orchraft/issues/59)) ([b81a642](https://github.com/karloows/orchraft/commit/b81a64201631b83c786c666f255a2caf3472e1fa))
+
+
+### Bug Fixes
+
+* **codex:** bump the self-hosted marketplace's stale commit pin ([#57](https://github.com/karloows/orchraft/issues/57)) ([bd5ccab](https://github.com/karloows/orchraft/commit/bd5ccabc68839c99eefe529dc563b7719d158283))
+* **evals:** cover all gh issue/release mutation paths in the graders ([#60](https://github.com/karloows/orchraft/issues/60)) ([63c89ba](https://github.com/karloows/orchraft/commit/63c89ba5ff22ebd3265263e14040241816eb4442))
+
 ## [1.0.3](https://github.com/karloows/orchraft/compare/v1.0.2...v1.0.3) (2026-09-21)
 
 
