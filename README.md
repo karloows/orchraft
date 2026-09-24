@@ -12,7 +12,7 @@
 <p align="center">
   <a href="https://github.com/karloows/orchraft/actions/workflows/validate-plugin.yaml"><img alt="Plugin validation" src="https://img.shields.io/github/actions/workflow/status/karloows/orchraft/validate-plugin.yaml?style=flat-square&label=checks&color=6B7A4B"></a>
   <img alt="15 skills" src="https://img.shields.io/badge/skills-15-6B7A4B?style=flat-square">
-  <img alt="Runs on Claude Code, Codex, Grok Build and Cursor" src="https://img.shields.io/badge/runs%20on-Claude%20Code%20%C2%B7%20Codex%20%C2%B7%20Grok%20%C2%B7%20Cursor-1B1712?style=flat-square">
+  <img alt="Runs on Claude Code, Codex, Grok Build, Cursor and Devin" src="https://img.shields.io/badge/runs%20on-Claude%20Code%20%C2%B7%20Codex%20%C2%B7%20Grok%20%C2%B7%20Cursor%20%C2%B7%20Devin-1B1712?style=flat-square">
   <a href="LICENSE"><img alt="License Apache 2.0" src="https://img.shields.io/badge/license-Apache--2.0-1B1712?style=flat-square"></a>
 </p>
 
@@ -135,8 +135,8 @@ moves the ground under an installed copy.
 ## Layout
 
 - `skills/`: canonical agent skills, read directly by Claude Code, Codex,
-  Grok Build, and (as a packaged plugin) Cursor once orchraft is installed —
-  no per-ecosystem symlink layer.
+  Grok Build, Devin, and (as a packaged plugin) Cursor once orchraft is
+  installed — no per-ecosystem symlink layer.
 - `.claude-plugin/`: Claude Code plugin manifest and marketplace.
 - `.cursor-plugin/`: Cursor plugin manifest and self-hosted marketplace,
   installed via Cursor's Customize → From GitHub Repository GUI or
@@ -231,19 +231,37 @@ the same `skills/` files, and read `context/policies/` from your repo the
 same way. This install path hasn't been verified against a real Cursor app
 yet — say so if you confirm or refute it.
 
-## Windsurf And Zed
+## Install As A Devin Plugin (Formerly Windsurf)
 
-Neither has a plugin or marketplace mechanism to install `skills/` as
-registered commands — no `/orchraft:ship` here. Nothing to install either
-way, though: both already read this repo's root `AGENTS.md` automatically,
-with zero setup — Windsurf's Cascade treats it as an always-on rule
-included in its system prompt on every message, and Zed includes it as one
-of its default Agent Panel rule files. Ask the agent to ship, roast, or
-land the same way you would in Claude Code/Codex/Grok/Cursor; it follows
-the same rules, it just isn't a registered command. To get individual
-skills as real invokable skills, copy them yourself into Windsurf's
-`.windsurf/skills/` or Zed's `.agents/skills/` — see
-[Copy Into A Project](#copy-into-a-project).
+Windsurf is now Devin Desktop. Devin reads orchraft's existing
+`.claude-plugin/plugin.json`, so no Devin-specific manifest is needed:
+
+```shell
+devin plugins install karloows/orchraft
+```
+
+That adds orchraft to your personal scope, which Devin Desktop and the
+Devin CLI both use; installed plugins show on Desktop's Customize →
+Plugins page. The skills load as `/orchraft:ship`, `/orchraft:roast`, and
+the rest, from the same `skills/` files. Devin also reads this repo's root
+`AGENTS.md` as an always-on rule. This install path hasn't been verified
+against a real Devin install yet — say so if you confirm or refute it.
+
+## Zed
+
+Zed has no plugin mechanism for installing a skill set. Its built-in Zed
+Agent reads this repo's root `AGENTS.md` automatically, as long as no
+higher-priority instruction file (`.rules`, `.cursorrules`, and similar)
+sits in the project root, so asking it to ship, roast, or land follows the
+same rules without a registered command. To get individual skills as
+invokable skills in the Zed Agent, copy them into `.agents/skills/` — see
+[Copy Into A Project](#copy-into-a-project). External agents you run inside
+Zed, such as Claude Code or Codex, ignore Zed's loader; install orchraft
+into that agent instead, using its install section above.
+
+`ship`, `roast`, `land`, and `quest` still need the GitHub access listed
+under [Requirements](#requirements) to open pull requests, post reviews,
+merge, and manage issues.
 
 ## First 60 Seconds
 
