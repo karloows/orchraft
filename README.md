@@ -259,7 +259,8 @@ runs hooks from a Claude-format plugin, so don't count on the ambient
 
 Zed has no plugin mechanism, so nothing installs orchraft into your
 projects. To use it with the built-in Zed Agent, copy the skills you want
-into your project's `.agents/skills/`, along with `context/` — see
+into your project's `.agents/skills/` and `context/` into your project
+root — see
 [Copy Into A Project](#copy-into-a-project). Zed then offers them as
 invokable skills. External agents you run inside Zed, such as Claude Code
 or Codex, ignore Zed's loader; install orchraft into that agent instead,

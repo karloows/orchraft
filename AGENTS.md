@@ -165,8 +165,8 @@ hooks, and CI checks should win.
   `hooks/hooks.json` for a Claude-format plugin. **Not yet verified live**,
   same caveat as Cursor.
 - Zed has no plugin mechanism, so there's nothing to ship for it: users
-  copy skills into their own project's `.agents/skills/` (plus `context/`),
-  as README's Copy Into A Project describes. The Zed Agent reads a
+  copy skills into their own project's `.agents/skills/` and `context/`
+  into the project root, as README's Copy Into A Project describes. The Zed Agent reads a
   project's root `AGENTS.md`, so this file only reaches contributors with
   this repo open, and only while it is the first match in Zed's
   instruction-file list (`.rules`, `.cursorrules`, `.windsurfrules`,
