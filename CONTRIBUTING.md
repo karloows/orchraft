@@ -129,7 +129,7 @@ manifest of its own: it reads `.claude-plugin/plugin.json` when no
 field the Claude manifest can't carry. Devin also injects root
 `AGENTS.md` into every session where orchraft is installed, and nothing in
 the manifest turns that off, so treat anything added there as visible to
-Devin users too. Zed has no plugin mechanism; users copy skills into
+Devin users too. orchraft ships no Zed extension; users copy skills into
 their own project's `.agents/skills/`. When you work on this repo in Zed,
 the Zed Agent reads root `AGENTS.md` only while it is the first match in
 its priority list (`.rules`, `.cursorrules`, `.windsurfrules`,

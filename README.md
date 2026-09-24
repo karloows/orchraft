@@ -257,7 +257,7 @@ runs hooks from a Claude-format plugin, so don't count on the ambient
 
 ## Zed
 
-Zed has no plugin mechanism, so nothing installs orchraft into your
+orchraft doesn't ship a Zed extension, so nothing installs it into your
 projects. To use it with the built-in Zed Agent, copy the skills you want
 into your project's `.agents/skills/` and `context/` into your project
 root — see

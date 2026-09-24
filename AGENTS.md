@@ -164,11 +164,12 @@ hooks, and CI checks should win.
   users, not just contributors. Devin's docs don't say whether it runs
   `hooks/hooks.json` for a Claude-format plugin. **Not yet verified live**,
   same caveat as Cursor.
-- Zed has no plugin mechanism, so there's nothing to ship for it: users
-  copy skills into their own project's `.agents/skills/` and `context/`
-  into the project root, as README's Copy Into A Project describes. The Zed Agent reads a
-  project's root `AGENTS.md`, so this file only reaches contributors with
-  this repo open, and only while it is the first match in Zed's
+- Zed: orchraft ships no Zed extension or install path, so users copy
+  skills into their own project's `.agents/skills/` and `context/` into
+  the project root, as README's Copy Into A Project describes. The Zed
+  Agent reads a project's root `AGENTS.md`, so this file only reaches
+  contributors with this repo open, and only while it is the first match
+  in Zed's
   instruction-file list (`.rules`, `.cursorrules`, `.windsurfrules`,
   `.clinerules`, `.github/copilot-instructions.md`, `AGENT.md`,
   `AGENTS.md`, `CLAUDE.md`) — adding any file earlier in that list would
