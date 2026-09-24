@@ -37,9 +37,9 @@ Each skill's file is a single Markdown document with YAML frontmatter
 (`name`, `description`) that Claude Code uses to decide when to trigger it,
 followed by the workflow instructions themselves.
 
-Claude Code, Codex, Grok Build, and (as a packaged plugin) Cursor all read
-`skills/` directly once orchraft is installed — no per-ecosystem symlink
-layer. **Always edit the canonical file under `skills/`.**
+Claude Code, Codex, Grok Build, Devin, and (as a packaged plugin) Cursor all
+read `skills/` directly once orchraft is installed — no per-ecosystem
+symlink layer. **Always edit the canonical file under `skills/`.**
 
 ### Policies (`context/policies/*.md`)
 
@@ -106,7 +106,7 @@ templates for new ones.
 `plugin.json` and `marketplace.json` are the Claude Code plugin manifest
 and single-plugin marketplace. `plugin.json` declares no `skills` field —
 `skills/` at the repo root is the default component directory Claude Code,
-Codex, and Grok Build all scan without one, so installed users get
+Codex, Grok Build, and Devin all scan without one, so installed users get
 `/orchraft:warplan` etc. from the same canonical files described above.
 Don't hand-edit `plugin.json`'s `version` — `release-please` bumps it
 alongside `package.json`.
@@ -122,6 +122,19 @@ directory — no restructuring needed, just that one field — see
 `AGENTS.md`'s entry for the "not yet verified live" caveat.
 `.cursor-plugin/plugin.json`'s `version` is wired into
 `release-please-config.json`'s `extra-files` the same way.
+
+Devin (Devin Desktop, formerly Windsurf, and the Devin CLI) needs no
+manifest of its own: it reads `.claude-plugin/plugin.json` when no
+`.devin-plugin/plugin.json` exists, so don't add one unless Devin needs a
+field the Claude manifest can't carry. Devin also injects root
+`AGENTS.md` into every session where orchraft is installed, and nothing in
+the manifest turns that off, so treat anything added there as visible to
+Devin users too. orchraft ships no Zed extension; users copy skills into
+their own project's `.agents/skills/`. When you work on this repo in Zed,
+the Zed Agent reads root `AGENTS.md` only while it is the first match in
+its priority list (`.rules`, `.cursorrules`, `.windsurfrules`,
+`.clinerules`, and a few others come before `AGENTS.md`), so don't add any
+of those files to this repo.
 
 ## Design intent
 
@@ -152,7 +165,7 @@ bake in assumptions specific to this repo's own setup.
 - Don't add project-specific build/test/deploy/package commands anywhere in
   this repo's own instructions, and don't duplicate tool-specific mirrors.
   `skills/` at the repo root is the one place skill content lives — Claude
-  Code, Codex, and Grok Build all default-scan that exact path with no
+  Code, Codex, Grok Build, and Devin all default-scan that exact path with no
   manifest field needed; Cursor's `plugin.json` points at the same
   directory with one explicit `skills` field instead. Either way, no
   target-specific symlink or directory restructuring should be needed. If a

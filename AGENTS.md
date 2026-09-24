@@ -119,8 +119,8 @@ hooks, and CI checks should win.
   `skills` field either — under the real Agent Plugins 1.0.0 schema it
   targets (agent-plugins.org/schemas/1.0.0/plugin.schema.json), `skills`
   isn't a valid manifest property at all; component discovery is pure
-  `skills/` directory convention, the same one Claude Code and Grok Build
-  scan.
+  `skills/` directory convention, the same one Claude Code, Grok Build, and
+  Devin scan.
 - `plugin.json` (repo root): the current-preferred Agent Plugins 1.0.0
   manifest location, alongside `.codex-plugin/plugin.json` rather than
   replacing it — real, credible plugins (Sanity, Resend,
@@ -153,6 +153,29 @@ hooks, and CI checks should win.
   live**: unlike every other ecosystem entry in this file, this hasn't been
   installed into a real Cursor app and checked for a full 15-skill catalog
   — say so if you ever confirm or refute it live.
+- Devin (Devin Desktop, formerly Windsurf, and the Devin CLI) needs no new
+  manifest: it checks `.devin-plugin/plugin.json`, then
+  `.claude-plugin/plugin.json`, then root `plugin.json`, so it picks up
+  `.claude-plugin/plugin.json`, loads root `skills/`, and exposes them as
+  `/orchraft:<skill>` after `devin plugins install karloows/orchraft`.
+  Devin also injects this file into every session of every project where
+  the plugin is installed — a plugin-root `AGENTS.md` is always-on and no
+  manifest field disables it — so anything written here reaches Devin
+  users, not just contributors. Devin's docs don't say whether it runs
+  `hooks/hooks.json` for a Claude-format plugin. **Not yet verified live**,
+  same caveat as Cursor.
+- Zed: orchraft ships no Zed extension or install path, so users copy
+  skills into their own project's `.agents/skills/` and `context/` into
+  the project root, as README's Copy Into A Project describes. The Zed
+  Agent reads a project's root `AGENTS.md`, so this file only reaches
+  contributors with this repo open, and only while it is the first match
+  in Zed's
+  instruction-file list (`.rules`, `.cursorrules`, `.windsurfrules`,
+  `.clinerules`, `.github/copilot-instructions.md`, `AGENT.md`,
+  `AGENTS.md`, `CLAUDE.md`) — adding any file earlier in that list would
+  replace it. External agents run inside Zed (Claude Code, Codex, Gemini
+  CLI) use their own instruction files and plugin installs, not Zed's
+  loader.
 
 ## Hooks
 
@@ -267,8 +290,8 @@ falling back to the copy bundled with the plugin.
 - When a policy and a project-local template disagree, the target project wins.
 - Keep `CLAUDE.md` as a pointer to this file instead of duplicating these
   instructions.
-- Skills live only in `skills/` — Claude Code, Codex, Grok Build, and (as a
-  packaged plugin) Cursor all read it directly, so there is no
+- Skills live only in `skills/` — Claude Code, Codex, Grok Build, Devin, and
+  (as a packaged plugin) Cursor all read it directly, so there is no
   per-ecosystem symlink layer to keep in sync.
 - Don't edit the plugin manifest's `version` by hand; release-please bumps it
   alongside `package.json`.
