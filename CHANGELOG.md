@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/karloows/orchraft/compare/v1.1.0...v1.2.0) (2026-09-24)
+
+
+### Features
+
+* add Cursor plugin manifest and marketplace ([#70](https://github.com/karloows/orchraft/issues/70)) ([0b7a19e](https://github.com/karloows/orchraft/commit/0b7a19efc625061c38c9aafe668cffa4f12b4c11))
+
 ## [1.1.0](https://github.com/karloows/orchraft/compare/v1.0.3...v1.1.0) (2026-09-23)
 
 
