@@ -123,6 +123,12 @@ directory — no restructuring needed, just that one field — see
 `.cursor-plugin/plugin.json`'s `version` is wired into
 `release-please-config.json`'s `extra-files` the same way.
 
+Windsurf and Zed need no manifest, plugin, or rule file — both read root
+`AGENTS.md` automatically. Zed only reads the first match in its priority
+list (`.rules`, `.cursorrules`, `.windsurfrules`, `.clinerules`, and a few
+others come before `AGENTS.md`), so don't add any of those files to this
+repo.
+
 ## Design intent
 
 orchraft is meant to be portable: the workflows should explain how an

@@ -145,9 +145,6 @@ moves the ground under an installed copy.
   manifest and marketplace, reading the same `skills/`.
 - `.grok-plugin/`: Grok Build plugin marketplace, reading the same
   `skills/`.
-- `.windsurf/rules/orchraft.md`: Windsurf project rule, a condensed version
-  of this repo's own `AGENTS.md` for a host with no skill/plugin mechanism.
-  Zed needs no equivalent file — it already reads root `AGENTS.md` directly.
 - `hooks/`: a `SessionStart` hook that runs `watchtower`'s status checks
   automatically (a plain script, not a model call) so the nudge shows up
   without asking for it, and a `PreToolUse` hook that nudges — never
@@ -236,20 +233,17 @@ yet — say so if you confirm or refute it.
 
 ## Windsurf And Zed
 
-Neither has a plugin, marketplace, or slash-command mechanism to invoke a
-skill directly — no `/orchraft:ship` here. What they get instead is
-context, not commands:
-
-- **Windsurf** reads `.windsurf/rules/orchraft.md` as a project rule, a
-  condensed version of `AGENTS.md`'s approval rule and skill roster.
-  Copied automatically once this repo is cloned or the file is copied into
-  your project; no install step.
-- **Zed** already reads this repo's root `AGENTS.md` as one of its default
-  Agent Panel rule files — nothing extra to add.
-
-Ask the agent to ship, roast, or land the same way you would in Claude
-Code/Codex/Grok/Cursor; it follows the same rules, it just isn't a
-registered command.
+Neither has a plugin or marketplace mechanism to install `skills/` as
+registered commands — no `/orchraft:ship` here. Nothing to install either
+way, though: both already read this repo's root `AGENTS.md` automatically,
+with zero setup — Windsurf's Cascade treats it as an always-on rule
+included in its system prompt on every message, and Zed includes it as one
+of its default Agent Panel rule files. Ask the agent to ship, roast, or
+land the same way you would in Claude Code/Codex/Grok/Cursor; it follows
+the same rules, it just isn't a registered command. To get individual
+skills as real invokable skills, copy them yourself into Windsurf's
+`.windsurf/skills/` or Zed's `.agents/skills/` — see
+[Copy Into A Project](#copy-into-a-project).
 
 ## First 60 Seconds
 
@@ -281,9 +275,6 @@ target project:
   Each command falls back from `${CLAUDE_PLUGIN_ROOT}` to
   `${CLAUDE_PROJECT_DIR}`, so it resolves either way without editing the
   path.
-- `.windsurf/rules/orchraft.md` for Windsurf, or point Zed at your project's
-  own `AGENTS.md` — neither reads `skills/` directly, so keep this file (or
-  your `AGENTS.md`) in sync by hand if the skill roster changes.
 
 Copy `context/` together with the skills. The skills fall back to
 `${CLAUDE_PLUGIN_ROOT}/context/` only when running as the plugin; outside it,

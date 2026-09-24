@@ -153,18 +153,15 @@ hooks, and CI checks should win.
   live**: unlike every other ecosystem entry in this file, this hasn't been
   installed into a real Cursor app and checked for a full 15-skill catalog
   — say so if you ever confirm or refute it live.
-- `.windsurf/rules/orchraft.md`: Windsurf project rule, the instruction-tier
-  adapter pattern `ponytail` ships for hosts with no skill/plugin mechanism
-  (verified against its own real installed files, not just docs — see
-  `docs/agent-portability.md`'s Adapter Rule: "When a host only supports
-  project instructions, keep its copied rule text aligned with
-  `AGENTS.md`"). Windsurf has no plugin, marketplace, or slash-command path
-  to invoke a skill directly; this file is context an agent reads
-  passively, condensed from this file rather than a verbatim copy, covering
-  the Non-Negotiable approval rule and the skill roster's names and
-  purposes. Zed needs no equivalent file — it auto-includes root
-  `AGENTS.md` itself as one of its default Agent Panel rule files, the same
-  fact `ponytail`'s portability table documents for its own `AGENTS.md`.
+- Windsurf and Zed need no adapter file: both read this root `AGENTS.md`
+  automatically. Windsurf's Cascade treats it as an always-on rule, "the
+  full content is included in Cascade's system prompt on every message."
+  Zed loads the first match from `.rules`, `.cursorrules`,
+  `.windsurfrules`, `.clinerules`, `.github/copilot-instructions.md`,
+  `AGENT.md`, `AGENTS.md`, `CLAUDE.md` — so adding any file earlier in
+  that list would silently replace `AGENTS.md` for Zed users. Don't add a
+  copy of this file under a host-specific rules path; it would duplicate
+  content both hosts already get.
 
 ## Hooks
 
@@ -284,10 +281,6 @@ falling back to the copy bundled with the plugin.
   per-ecosystem symlink layer to keep in sync.
 - Don't edit the plugin manifest's `version` by hand; release-please bumps it
   alongside `package.json`.
-- `.windsurf/rules/orchraft.md` is a condensed copy of this file's own
-  Non-Negotiable rule and skill roster — the same drift risk the roster
-  warning above already names, just in a second file this grep doesn't
-  cover. Check it by eye when either changes here.
 
 ## What Not To Add Here
 
