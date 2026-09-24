@@ -257,15 +257,13 @@ runs hooks from a Claude-format plugin, so don't count on the ambient
 
 ## Zed
 
-Zed has no plugin mechanism for installing a skill set. Its built-in Zed
-Agent reads this repo's root `AGENTS.md` automatically, as long as no
-higher-priority instruction file (`.rules`, `.cursorrules`, and similar)
-sits in the project root, so asking it to ship, roast, or land follows the
-same rules without a registered command. To get individual skills as
-invokable skills in the Zed Agent, copy them into `.agents/skills/` — see
-[Copy Into A Project](#copy-into-a-project). External agents you run inside
-Zed, such as Claude Code or Codex, ignore Zed's loader; install orchraft
-into that agent instead, using its install section above.
+Zed has no plugin mechanism, so nothing installs orchraft into your
+projects. To use it with the built-in Zed Agent, copy the skills you want
+into your project's `.agents/skills/`, along with `context/` — see
+[Copy Into A Project](#copy-into-a-project). Zed then offers them as
+invokable skills. External agents you run inside Zed, such as Claude Code
+or Codex, ignore Zed's loader; install orchraft into that agent instead,
+using its install section above.
 
 `ship`, `roast`, `land`, and `quest` still need the GitHub access listed
 under [Requirements](#requirements) to open pull requests, post reviews,

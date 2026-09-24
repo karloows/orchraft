@@ -164,14 +164,17 @@ hooks, and CI checks should win.
   users, not just contributors. Devin's docs don't say whether it runs
   `hooks/hooks.json` for a Claude-format plugin. **Not yet verified live**,
   same caveat as Cursor.
-- Zed needs no adapter file either. Its built-in Zed Agent reads this root
-  `AGENTS.md` only when it is the first match in its instruction-file list:
-  `.rules`, `.cursorrules`, `.windsurfrules`, `.clinerules`,
-  `.github/copilot-instructions.md`, `AGENT.md`, `AGENTS.md`, `CLAUDE.md`
-  — so adding any file earlier in that list would silently replace
-  `AGENTS.md` for Zed users. External agents run inside Zed (Claude Code,
-  Codex, Gemini CLI) use their own instruction files and plugin installs,
-  not Zed's loader.
+- Zed has no plugin mechanism, so there's nothing to ship for it: users
+  copy skills into their own project's `.agents/skills/` (plus `context/`),
+  as README's Copy Into A Project describes. The Zed Agent reads a
+  project's root `AGENTS.md`, so this file only reaches contributors with
+  this repo open, and only while it is the first match in Zed's
+  instruction-file list (`.rules`, `.cursorrules`, `.windsurfrules`,
+  `.clinerules`, `.github/copilot-instructions.md`, `AGENT.md`,
+  `AGENTS.md`, `CLAUDE.md`) — adding any file earlier in that list would
+  replace it. External agents run inside Zed (Claude Code, Codex, Gemini
+  CLI) use their own instruction files and plugin installs, not Zed's
+  loader.
 
 ## Hooks
 
