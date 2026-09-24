@@ -126,7 +126,10 @@ directory — no restructuring needed, just that one field — see
 Devin (Devin Desktop, formerly Windsurf, and the Devin CLI) needs no
 manifest of its own: it reads `.claude-plugin/plugin.json` when no
 `.devin-plugin/plugin.json` exists, so don't add one unless Devin needs a
-field the Claude manifest can't carry. Zed has no plugin mechanism; its
+field the Claude manifest can't carry. Devin also injects root
+`AGENTS.md` into every session where orchraft is installed, and nothing in
+the manifest turns that off, so treat anything added there as visible to
+Devin users too. Zed has no plugin mechanism; its
 built-in Zed Agent reads root `AGENTS.md` only when it is the first match
 in its priority list (`.rules`, `.cursorrules`, `.windsurfrules`,
 `.clinerules`, and a few others come before `AGENTS.md`), so don't add any

@@ -243,9 +243,17 @@ devin plugins install karloows/orchraft
 That adds orchraft to your personal scope, which Devin Desktop and the
 Devin CLI both use; installed plugins show on Desktop's Customize →
 Plugins page. The skills load as `/orchraft:ship`, `/orchraft:roast`, and
-the rest, from the same `skills/` files. Devin also reads this repo's root
-`AGENTS.md` as an always-on rule. This install path hasn't been verified
-against a real Devin install yet — say so if you confirm or refute it.
+the rest, from the same `skills/` files. This install path hasn't been
+verified against a real Devin install yet — say so if you confirm or refute
+it.
+
+Two things to know before installing. Devin injects a plugin's root
+`AGENTS.md` into every session as an always-on rule, and no manifest
+setting turns that off — so orchraft's `AGENTS.md`, which is written for
+people working on orchraft itself, will sit in the context of every
+project where the plugin is active. And Devin's docs don't say whether it
+runs hooks from a Claude-format plugin, so don't count on the ambient
+`watchtower` nudge there.
 
 ## Zed
 

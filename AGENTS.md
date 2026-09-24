@@ -157,9 +157,13 @@ hooks, and CI checks should win.
   manifest: it checks `.devin-plugin/plugin.json`, then
   `.claude-plugin/plugin.json`, then root `plugin.json`, so it picks up
   `.claude-plugin/plugin.json`, loads root `skills/`, and exposes them as
-  `/orchraft:<skill>` after `devin plugins install karloows/orchraft`. It
-  also reads this root `AGENTS.md` as an always-on rule. **Not yet verified
-  live**, same caveat as Cursor.
+  `/orchraft:<skill>` after `devin plugins install karloows/orchraft`.
+  Devin also injects this file into every session of every project where
+  the plugin is installed — a plugin-root `AGENTS.md` is always-on and no
+  manifest field disables it — so anything written here reaches Devin
+  users, not just contributors. Devin's docs don't say whether it runs
+  `hooks/hooks.json` for a Claude-format plugin. **Not yet verified live**,
+  same caveat as Cursor.
 - Zed needs no adapter file either. Its built-in Zed Agent reads this root
   `AGENTS.md` only when it is the first match in its instruction-file list:
   `.rules`, `.cursorrules`, `.windsurfrules`, `.clinerules`,
