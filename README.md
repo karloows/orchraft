@@ -114,6 +114,10 @@ moves the ground under an installed copy.
 - Local `git` and file access — enough for `lore` and `chronicle` on a diff
   or file, and for `warchief`, which routes to the right skill without
   reading GitHub state itself.
+- A host sandbox that permits Git metadata writes and network access for
+  mutation workflows, or a host that supports per-command escalation. Some
+  hosts keep `.git` read-only even when workspace files are writable; `ship`
+  and `land` report that boundary rather than bypassing it.
 - A GitHub MCP connector configured for the session, authenticated with
   write access (not just read) for `ship`, `roast`, `land`, and `quest` —
   they create/update pull requests, post reviews, merge, and manage issues.
@@ -152,7 +156,7 @@ moves the ground under an installed copy.
   repository's default branch. The only ambient behaviors here — every
   other skill is invoked on purpose.
 - `context/policies/`: reusable approval, branch, commit, config, lore,
-  docs, review, and PR writing policies.
+  docs, review, sandbox, and PR writing policies.
 - `.orchraft.example.jsonc`: a starting point holding every setting at its
   default, with the accepted values in comments. Copy it to
   `.orchraft.jsonc` (or `.orchraft.json`) and edit what you want to change;

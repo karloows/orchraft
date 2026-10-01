@@ -189,9 +189,14 @@ Use this skill when the user asks the AI to ship work.
   the user explicitly asks to branch off or retarget the work.
 - If branch creation fails with a git refs collision such as an existing
   `docs` ref blocking `docs/...`, diagnose the local and remote refs with the
-  correct git commands before changing the branch name. Retry with approval
-  when the failure may be permission or sandbox related. Do not switch to a
+  correct git commands before changing the branch name. Do not switch to a
   less accurate type or unrelated branch name just to bypass the error.
+- If a git or network command fails because of the sandbox (read-only `.git`,
+  blocked network), follow `context/policies/sandbox-policy.md` (the target
+  repo's copy when it exists, otherwise
+  `${CLAUDE_PLUGIN_ROOT}/context/policies/sandbox-policy.md`): rerun that
+  command with escalation, never substitute the GitHub API for the local
+  commit, and stop if escalation is declined.
 - Never resolve a review thread whose finding this diff doesn't actually fix,
   and never resolve one without the user's current-turn go-ahead.
 - Never post a decline reply to a review thread without the user's
@@ -209,6 +214,10 @@ Use this skill when the user asks the AI to ship work.
 - Stop if intended and unrelated changes cannot be separated safely.
 - Stop if validation for the touched area fails, unless the user explicitly
   asks to ship despite the failure.
+- Stop if a required git or network command remains blocked by the host
+  sandbox after per-command escalation. Report the blocked command and tell
+  the user the exact command to rerun with approved git mutation access; do
+  not substitute a GitHub API for the local branch or commit steps.
 - Stop if local git hooks fail, abort the commit, or leave unexpected changes.
 - Stop if branch, commit, or pull request text would violate the policy files.
 

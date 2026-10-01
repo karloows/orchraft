@@ -161,8 +161,10 @@ Use this skill when the user asks the AI to land work end to end.
 - Stop if `git branch -d` refuses after a merge-commit landing — that means
   the branch did not land as expected. Do not escalate to `-D` to get past
   it.
-- If a required git or GitHub command is blocked by sandbox permissions, rerun
-  it with approval instead of abandoning the workflow.
+- If a required git or GitHub command is blocked by sandbox permissions,
+  follow `context/policies/sandbox-policy.md` (the target repo's copy when it
+  exists, otherwise `${CLAUDE_PLUGIN_ROOT}/context/policies/sandbox-policy.md`):
+  rerun that command with escalation, and stop if it is declined.
 
 ## Handoff
 
