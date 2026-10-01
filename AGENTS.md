@@ -253,6 +253,9 @@ falling back to the copy bundled with the plugin.
 - `context/policies/docs-policy.md`: rules for when to draft or update a
   standalone Markdown doc, how every claim must be grounded in a real
   source, and the shape and tone it should take.
+- `context/policies/sandbox-policy.md`: how to recognize a host sandbox block
+  (Codex's read-only `.git`, no network) and handle it by per-command
+  escalation, never by bypassing `ship`/`land` through the GitHub API.
 - `context/policies/review-policy.md`: reviewer priority order, severity
   levels, and findings format for PR review.
 - `context/policies/verification-policy.md`: what counts as validation before
