@@ -216,8 +216,8 @@ Use this skill when the user asks the AI to ship work.
   asks to ship despite the failure.
 - Stop if a required git or network command remains blocked by the host
   sandbox after per-command escalation. Report the blocked command and tell
-  the user to rerun with approved git mutation access; do not substitute a
-  GitHub API for the local branch or commit steps.
+  the user the exact command to rerun with approved git mutation access; do
+  not substitute a GitHub API for the local branch or commit steps.
 - Stop if local git hooks fail, abort the commit, or leave unexpected changes.
 - Stop if branch, commit, or pull request text would violate the policy files.
 

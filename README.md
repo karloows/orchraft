@@ -115,9 +115,9 @@ moves the ground under an installed copy.
   or file, and for `warchief`, which routes to the right skill without
   reading GitHub state itself.
 - A host sandbox that permits Git metadata writes and network access for
-  mutation workflows. Some hosts keep `.git` read-only even when workspace
-  files are writable; `ship` and `land` stop and report that boundary rather
-  than bypassing it.
+  mutation workflows, or a host that supports per-command escalation. Some
+  hosts keep `.git` read-only even when workspace files are writable; `ship`
+  and `land` report that boundary rather than bypassing it.
 - A GitHub MCP connector configured for the session, authenticated with
   write access (not just read) for `ship`, `roast`, `land`, and `quest` —
   they create/update pull requests, post reviews, merge, and manage issues.

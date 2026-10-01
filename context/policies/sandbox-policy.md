@@ -44,9 +44,11 @@ host-approved mode that explicitly permits those operations.
 - Rerun that one command with escalation. In Codex, that is
   `sandbox_permissions: "require_escalated"` with a short `justification`
   naming the exact action; elsewhere, the host's normal permission prompt.
-- Escalate per command. Do not ask the user to switch to
-  `danger-full-access`. They may opt in themselves, for example
-  `writable_roots` or `network_access = true` in Codex's `config.toml`.
+- Escalate per command using the narrowest permission that meets the need.
+  For network-only commands, `network_access = true` in Codex's `config.toml`
+  may be enough; `writable_roots` does not unlock `.git`. If a Git operation
+  still needs metadata access after scoped escalation, request full access for
+  that command only and justify the exact action.
 - If escalation is declined or unavailable, stop. Report which command was
   blocked and give the exact command for the user to run.
 
