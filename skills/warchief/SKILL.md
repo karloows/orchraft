@@ -11,9 +11,9 @@ next across the software lifecycle, instead of naming a specific skill.
 ## At A Glance
 
 1. Read the user's goal and the current repo state.
-2. Choose the next fitting orchraft role: `quest`, `warplan`, `ship`,
-   `roast`, `land`, `herald`, `runes`, `reckoning`, `yap`, `lore`, or
-   `chronicle`.
+2. Choose the next fitting orchraft role: `Quest-Giver`, `Tactician`,
+   `Forgehand`, `Raid Captain`, `Trialmaster`, `Haulmaster`, `Herald`,
+   `Rune-Reader`, `Reckoner`, `Scout`, `Loremaster`, or `Chronicler`.
 3. Explain the handoff briefly, then run only the step the approval policy
    says is authorized.
 4. Stop before every git, PR, issue, or release mutation unless the current
@@ -23,23 +23,31 @@ next across the software lifecycle, instead of naming a specific skill.
 
 ## Routing
 
-- Use `quest` when the next useful artifact is an issue or issue update.
-- Use `warplan` when the work needs a grounded implementation plan before
-  code changes.
-- Use `ship` only when the user explicitly asks to branch, commit, push, or
-  open/update a PR in the current turn.
-- Use `roast` when the user asks for PR review or the PR is ready for review.
-- Use `land` only when the user explicitly asks to merge/land in the current
-  turn.
-- Use `herald` when the user asks for release notes or what a release
-  shipped.
-- Use `runes` when the user asks for status, resume, or where work stands.
-- Use `reckoning` when the user asks which review findings were declined
-  rather than fixed.
-- Use `yap` when the user asks to explain a file, diff, PR, policy, or error.
-- Use `lore` when the user asks to add or clean up comments/docstrings.
-- Use `chronicle` when the user asks to write or update a standalone
-  Markdown doc such as a README section or design doc.
+- Treat user-facing role names as portable workflow roles. Run the matching
+  skill on every host; when the host exposes a compatible named subagent,
+  delegate to its adapter: `forgehand`, `tactician`, `scout`, `loremaster`,
+  `trialmaster`, `chronicler`, or `rune-reader`. These agents stop before
+  mutations that require separate approval.
+- Use `Forgehand` for implementation and tests. It may edit files but never
+  commits, pushes, opens a PR, posts a review, merges, or changes an issue.
+- Use `Trialmaster` for read-only review findings. It may inspect code and use
+  `roast`'s policy, but never posts the review.
+- Use `Tactician` / `warplan` when the work needs a grounded implementation
+  plan before code changes.
+- Use `Quest-Giver` / `quest` when the next useful artifact is an issue or
+  issue update.
+- Use `Raid Captain` / `ship` only when the user explicitly asks to branch,
+  commit, push, or open/update a PR in the current turn.
+- Use `Trialmaster` / `roast` when the user asks for PR review or the PR is
+  ready for review.
+- Use `Haulmaster` / `land` only when the user explicitly asks to merge/land
+  in the current turn.
+- Use `Herald` / `herald` when the user asks for release notes or what a
+  release shipped.
+- Use `Reckoner` / `reckoning` when the user asks which review findings were
+  declined rather than fixed.
+
+Direct skill names remain supported alongside these role aliases.
 
 If more than one route fits, choose the earliest lifecycle step that removes
 real uncertainty. For example, plan before editing, status before shipping an

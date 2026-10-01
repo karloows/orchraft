@@ -11,7 +11,7 @@
 
 <p align="center">
   <a href="https://github.com/karloows/orchraft/actions/workflows/validate-plugin.yaml"><img alt="Plugin validation" src="https://img.shields.io/github/actions/workflow/status/karloows/orchraft/validate-plugin.yaml?style=flat-square&label=checks&color=6B7A4B"></a>
-  <img alt="15 skills" src="https://img.shields.io/badge/skills-15-6B7A4B?style=flat-square">
+  <img alt="16 skills" src="https://img.shields.io/badge/skills-16-6B7A4B?style=flat-square">
   <img alt="Runs on Claude Code, Codex, Grok Build, Cursor and Devin" src="https://img.shields.io/badge/runs%20on-Claude%20Code%20%C2%B7%20Codex%20%C2%B7%20Grok%20%C2%B7%20Cursor%20%C2%B7%20Devin-1B1712?style=flat-square">
   <a href="LICENSE"><img alt="License Apache 2.0" src="https://img.shields.io/badge/license-Apache--2.0-1B1712?style=flat-square"></a>
 </p>
@@ -70,6 +70,7 @@ the anvil as we cover the rest of the lifecycle.
 
 | Skill | Clan role | What it does |
 | --- | --- | --- |
+| `forgehand` | 🔨 Forgehand | Implements requested code changes and runs focused validation without shipping work. |
 | `warplan` | 🗺️ Tactician | Drafts an implementation plan grounded in this repo's own conventions and precedent before any code is written. |
 | `quest` | 📌 Quest-Giver | Triages, creates, or updates a GitHub issue before implementation starts. |
 | `ship` | 🚢 Raid Captain | Creates a policy-compliant branch, commit, push, and pull request from the actual diff. |
@@ -85,6 +86,33 @@ the anvil as we cover the rest of the lifecycle.
 | `herald` | 📯 Herald | Drafts release notes from the pull requests actually merged, plus any commit pushed straight to the base branch, then writes them into the GitHub release once you approve. |
 | `warchief` | ⚔️ War Council | Chooses the next lifecycle role without treating orchestration as approval for mutations. |
 | `watchtower` | 👁️ Watchtower | Surfaces a short read-only nudge about actionable PR state. |
+
+## Developer Roles
+
+Ask for work using these Orc role names. The skills are portable; named
+subagents are optional host adapters. Roles never grant permissions or bypass
+approval gates.
+
+| Role | Use it for | Agent or skill |
+| --- | --- | --- |
+| Forgehand | Implementing code changes | Portable `forgehand` skill; named subagent where supported |
+| Tactician | Planning implementation | Claude Code subagent `orchraft:tactician`; read-only `warplan` |
+| Quest-Giver | Turning reports into issues | `quest` |
+| Loremaster | Comments and docstrings | Claude Code subagent `orchraft:loremaster`; workspace edits only |
+| Trialmaster | Reviewing code or pull requests | Claude Code subagent `orchraft:trialmaster`; read-only `roast` review |
+| Scout | Explaining code, diffs, errors, or policies | Claude Code subagent `orchraft:scout`; read-only `yap` |
+| Chronicler | README, ROADMAP, and design documents | Claude Code subagent `orchraft:chronicler`; workspace edits only |
+| Rune-Reader | Branch, PR, checks, and review status | Claude Code subagent `orchraft:rune-reader`; read-only `runes` |
+| Haulmaster | Landing an approved pull request | `land` |
+| Herald | Preparing release notes | `herald` |
+| Warchief | Choosing the next lifecycle step | `warchief` |
+
+For example: “Use the Forgehand to fix this bug” or “Have the Trialmaster
+review this pull request.” In Claude Code, invoke them as
+`orchraft:forgehand`, `orchraft:trialmaster`, `orchraft:tactician`, and the
+other listed agents. Direct skill names remain supported. Agents that can edit
+workspace files still stop before commit, push, PR, issue, release, and merge
+mutations.
 
 Today's march is `warplan` → `quest` → `lore` → `chronicle` → `ship` →
 `roast` → fix → `ship` → `land` → `herald`, with `yap` available at any
@@ -141,6 +169,9 @@ moves the ground under an installed copy.
 - `skills/`: canonical agent skills, read directly by Claude Code, Codex,
   Grok Build, Devin, and (as a packaged plugin) Cursor once orchraft is
   installed — no per-ecosystem symlink layer.
+- `agents/`: optional host adapters for safe local implementation, planning,
+  review, explanation, documentation, and status work. Portable behavior stays
+  in `skills/`.
 - `.claude-plugin/`: Claude Code plugin manifest and marketplace.
 - `.cursor-plugin/`: Cursor plugin manifest and self-hosted marketplace,
   installed via Cursor's Customize → From GitHub Repository GUI or
@@ -193,6 +224,15 @@ The skills load as `/orchraft:warplan`, `/orchraft:quest`, `/orchraft:ship`,
 `context/policies/` from your repo when present and fall back to the
 policies bundled with the plugin.
 
+The plugin also installs these compatible-host subagents: `orchraft:forgehand`,
+`orchraft:trialmaster`, `orchraft:tactician`, `orchraft:scout`,
+`orchraft:loremaster`, `orchraft:chronicler`, and `orchraft:rune-reader`.
+Codex and Zed use the same roles through portable skills and their native
+delegation features. Use requests such as “Use the Tactician to plan this
+change” or “Have the Trialmaster review this diff.” Remote-mutating roles such
+as Quest-Giver, Raid Captain, Haulmaster, and Herald remain skills so their
+approval gates stay explicit.
+
 To try a local checkout without installing, run
 `claude --plugin-dir /path/to/orchraft`.
 
@@ -203,9 +243,10 @@ codex plugin marketplace add karloows/orchraft
 codex plugin add orchraft@orchraft
 ```
 
-The skills load the same way as in Claude Code, from the same
-`skills/` files, and read `context/policies/` from your repo the
-same way.
+The skills load from the packaged `skills/` directory and read
+`context/policies/` from your repo the same way. Codex can delegate these
+workflows through its native subagent support; the Claude-specific `agents/`
+files are not required.
 
 ## Install As A Grok Build Plugin
 
@@ -289,7 +330,7 @@ interrupting for.
 For other agents, or to customize the files, copy the parts you need into a
 target project:
 
-- `skills/` for the canonical `warplan`, `quest`, `ship`, `land`,
+- `skills/` for the canonical `forgehand`, `warplan`, `quest`, `ship`, `land`,
   `roast`, `yap`, `lore`, `chronicle`, `runes`, `reckoning`,
   `plunder`, `muster`, `herald`, `warchief`, and `watchtower` workflows.
 - `context/policies/` for approval, branch, commit, lore, docs, review, and
