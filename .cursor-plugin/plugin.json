@@ -17,5 +17,6 @@
     "git"
   ],
   "category": "productivity",
-  "skills": "./skills/"
+  "skills": "./skills/",
+  "agents": "./agents/"
 }
