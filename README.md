@@ -11,7 +11,7 @@
 
 <p align="center">
   <a href="https://github.com/karloows/orchraft/actions/workflows/validate-plugin.yaml"><img alt="Plugin validation" src="https://img.shields.io/github/actions/workflow/status/karloows/orchraft/validate-plugin.yaml?style=flat-square&label=checks&color=6B7A4B"></a>
-  <img alt="16 skills" src="https://img.shields.io/badge/skills-16-6B7A4B?style=flat-square">
+  <img alt="18 skills" src="https://img.shields.io/badge/skills-18-6B7A4B?style=flat-square">
   <img alt="Runs on Claude Code, Codex, Grok Build, Cursor and Devin" src="https://img.shields.io/badge/runs%20on-Claude%20Code%20%C2%B7%20Codex%20%C2%B7%20Grok%20%C2%B7%20Cursor%20%C2%B7%20Devin-1B1712?style=flat-square">
   <a href="LICENSE"><img alt="License Apache 2.0" src="https://img.shields.io/badge/license-Apache--2.0-1B1712?style=flat-square"></a>
 </p>
@@ -70,6 +70,7 @@ the anvil as we cover the rest of the lifecycle.
 
 | Skill | Clan role | What it does |
 | --- | --- | --- |
+| `shaman` | 🪶 Shaman | Runs a read-only preflight for skills, policies, GitHub access, tools, config, and hooks. |
 | `forgehand` | 🔨 Forgehand | Implements requested code changes and runs focused validation without shipping work. |
 | `warplan` | 🗺️ Tactician | Drafts an implementation plan grounded in this repo's own conventions and precedent before any code is written. |
 | `quest` | 📌 Quest-Giver | Triages, creates, or updates a GitHub issue before implementation starts. |
@@ -104,6 +105,7 @@ approval gates.
 | Scout | Explaining code, diffs, errors, or policies | Claude Code subagent `orchraft:scout`; read-only `yap` |
 | Chronicler | README, ROADMAP, and design documents | Claude Code subagent `orchraft:chronicler`; workspace edits only |
 | Rune-Reader | Branch, PR, checks, and review status | Claude Code subagent `orchraft:rune-reader`; read-only `runes` |
+| Shaman | Setup and integration preflight | `shaman`; read-only |
 | Haulmaster | Landing an approved pull request | `land` |
 | Herald | Preparing release notes | `herald` |
 | Warchief | Choosing the next lifecycle step | `warchief` |
@@ -341,7 +343,7 @@ interrupting for.
 For other agents, or to customize the files, copy the parts you need into a
 target project:
 
-- `skills/` for the canonical `forgehand`, `warplan`, `quest`, `ship`, `land`,
+- `skills/` for the canonical `shaman`, `forgehand`, `warplan`, `quest`, `ship`, `land`,
   `roast`, `yap`, `lore`, `chronicle`, `runes`, `reckoning`,
   `plunder`, `muster`, `herald`, `warchief`, and `watchtower` workflows.
 - `context/policies/` for approval, branch, commit, lore, docs, review, and
