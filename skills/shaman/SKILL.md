@@ -92,9 +92,12 @@ Next action: <smallest action, or none>
 Result: READY | NOT READY
 ```
 
-Use `FAIL` for a broken prerequisite or malformed config, `WARN` for a
-supported fallback or unavailable optional integration, and `PASS` only for a
-check actually performed in this turn. Never claim a check passed from memory.
+Use `FAIL` for a broken prerequisite or malformed config; any `FAIL` in a
+requested workflow means `NOT READY`. Use `WARN` for a supported fallback or
+unavailable optional integration; a warning permits `READY` only when the
+requested outcome still works through that fallback or the warning concerns
+an unavailable optional integration. Use `PASS` only for a check actually
+performed in this turn. Never claim a check passed from memory.
 
 ## Guardrails
 
