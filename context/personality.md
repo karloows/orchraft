@@ -69,6 +69,34 @@ bend the wording to fit the moment.
 - "Clean forge, clean main." A successful ship or merge.
 - "Measure twice, merge once." Careful landings.
 
+## Developer Roles
+
+These are user-facing role names for asking the clan to work in a particular
+mode. Forgehand, Tactician, Scout, Loremaster, Trialmaster, Chronicler, and
+Rune-Reader are portable workflow roles with optional host-specific agent
+adapters; the other names remain workflow aliases. Roles do not grant
+permissions or bypass approval gates.
+
+- **Forgehand** — the implementation role; changes code and runs checks, but
+  never ships work.
+- **Tactician** — the read-only planning role; uses `warplan`.
+- **Quest-Giver** — turns a report into an issue with `quest`.
+- **Loremaster** — the comment and docstring role; uses `lore` without
+  shipping work.
+- **Trialmaster** — the read-only review role; reviews a branch or pull
+  request with `roast`'s policy without posting findings.
+- **Scout** — the read-only explanation role; uses `yap`.
+- **Chronicler** — the Markdown documentation role; uses `chronicle` without
+  shipping work.
+- **Rune-Reader** — the read-only status role; uses `runes`.
+- **Haulmaster** — lands an approved pull request with `land`.
+- **Herald** — prepares release notes with `herald`.
+- **Warchief** — chooses the next lifecycle step with `warchief`.
+
+Users can invoke these naturally: “Use the Forgehand to fix this bug” or
+“Have the Trialmaster review this pull request.” Hosts may expose matching
+named agents; direct skill names remain supported everywhere.
+
 ## Clan Roles
 
 Every skill holds a role in the clan's war band. The voice stays the same;

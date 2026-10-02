@@ -32,6 +32,10 @@ skill step that could be read as running to completion unattended.
 ## How To Use This Repo
 
 - Use the skills in `skills/` for end-to-end agent workflows.
+- Use the portable role skills in `skills/`: `forgehand`, `warplan`, `yap`,
+  `lore`, `roast`, `chronicle`, and `runes`. Hosts with packaged-agent support
+  may expose the matching `agents/` adapters, but those adapters never bypass
+  approval gates.
 - Use the policies in `context/policies/` for reusable naming and writing
   standards.
 - Use `context/personality.md` for the orc voice on user-facing surfaces
@@ -56,6 +60,8 @@ hooks, and CI checks should win.
 
 ## Skills
 
+- `skills/forgehand/SKILL.md`: portable implementation workflow that edits and
+  tests without committing, pushing, or changing GitHub.
 - `skills/warplan/SKILL.md`: AI-driven planning workflow that drafts
   an implementation plan grounded in this repo's own conventions and
   precedent, before any code is written.
@@ -105,22 +111,40 @@ hooks, and CI checks should win.
   gates.
 - `skills/watchtower/SKILL.md`: AI-driven read-only status nudge that
   surfaces actionable PR state without mutating git or GitHub.
+
+## Role Agents
+
+- `skills/forgehand/SKILL.md`: portable implementation workflow; edits and
+  tests, but never ships.
+- `agents/forgehand.md`: optional packaged-agent adapter for that skill.
+- `agents/tactician.md`: read-only planning agent backed by `warplan`.
+- `agents/scout.md`: read-only explanation agent backed by `yap`.
+- `agents/loremaster.md`: comment/docstring editing agent backed by `lore`.
+- `agents/trialmaster.md`: read-only review agent backed by `roast`.
+- `agents/chronicler.md`: Markdown documentation agent backed by `chronicle`.
+- `agents/rune-reader.md`: read-only status agent backed by `runes`.
+
+These are optional packaged-agent components. Approval-sensitive lifecycle
+work stays in skills so every host can require the user's current-turn
+approval.
+
+Codex should use the matching portable skill for a named role and may delegate
+that skill's task through its native subagent collaboration when enabled. Do
+not assume a named `agents/` component exists outside hosts that document it.
+
 - `.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json`: Claude
   Code plugin manifest and single-plugin marketplace. The manifest declares
   no `skills` field — `skills/` at the repo root is the default component
   directory Claude Code scans without one, so installed users get
-  `/orchraft:warplan`, `/orchraft:quest`, `/orchraft:ship`, `/orchraft:land`,
+  `/orchraft:forgehand`, `/orchraft:warplan`, `/orchraft:quest`, `/orchraft:ship`, `/orchraft:land`,
   `/orchraft:roast`, `/orchraft:runes`, `/orchraft:reckoning`,
   `/orchraft:plunder`, `/orchraft:muster`, `/orchraft:yap`,
   `/orchraft:lore`, `/orchraft:chronicle`, `/orchraft:herald`,
   `/orchraft:warchief`, and `/orchraft:watchtower` from the same canonical
   files.
-- `.codex-plugin/plugin.json`: Codex CLI plugin manifest. Declares no
-  `skills` field either — under the real Agent Plugins 1.0.0 schema it
-  targets (agent-plugins.org/schemas/1.0.0/plugin.schema.json), `skills`
-  isn't a valid manifest property at all; component discovery is pure
-  `skills/` directory convention, the same one Claude Code, Grok Build, and
-  Devin scan.
+- `.codex-plugin/plugin.json`: Codex CLI compatibility manifest. It explicitly
+  declares `skills: "./skills/"` so Codex loads the portable role and workflow
+  skills from the plugin package.
 - `plugin.json` (repo root): the current-preferred Agent Plugins 1.0.0
   manifest location, alongside `.codex-plugin/plugin.json` rather than
   replacing it — real, credible plugins (Sanity, Resend,
@@ -151,7 +175,7 @@ hooks, and CI checks should win.
   which declare `skills`/`category` the same way. Still no directory
   restructuring needed, just the one explicit field. **Not yet verified
   live**: unlike every other ecosystem entry in this file, this hasn't been
-  installed into a real Cursor app and checked for a full 15-skill catalog
+  installed into a real Cursor app and checked for a full 16-skill catalog
   — say so if you ever confirm or refute it live.
 - Devin (Devin Desktop, formerly Windsurf, and the Devin CLI) needs no new
   manifest: it checks `.devin-plugin/plugin.json`, then

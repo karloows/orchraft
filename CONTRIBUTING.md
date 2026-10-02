@@ -17,6 +17,7 @@ Each skill is a self-contained workflow the user invokes explicitly (except
 
 | Skill | Stage | What it does |
 | --- | --- | --- |
+| `forgehand` | implementation | Implements code changes and runs focused validation without committing or pushing. |
 | `warplan` | plan | Drafts an implementation plan grounded in this repo's own conventions and precedent, before code is written. |
 | `quest` | issue | Triages, creates, or updates a GitHub issue. |
 | `ship` | branch/commit/PR | Creates a policy-compliant branch, commit, push, and pull request from the actual diff. |
@@ -37,9 +38,17 @@ Each skill's file is a single Markdown document with YAML frontmatter
 (`name`, `description`) that Claude Code uses to decide when to trigger it,
 followed by the workflow instructions themselves.
 
+Role behavior lives in portable `skills/`; `agents/` contains optional
+host-specific adapters using the host's subagent frontmatter format. Keep
+adapters thin and put reusable workflow policy in `skills/` and
+`context/policies/`. Never turn an approval-sensitive skill into an agent that
+can silently mutate GitHub. Do not hardcode a model in shared adapters; let
+each host choose its model through native configuration.
+
 Claude Code, Codex, Grok Build, Devin, and (as a packaged plugin) Cursor all
-read `skills/` directly once orchraft is installed — no per-ecosystem
-symlink layer. **Always edit the canonical file under `skills/`.**
+read the canonical `skills/` directory once orchraft is installed. Hosts may
+declare that path in their manifests or discover it by convention. **Always
+edit the canonical file under `skills/`.**
 
 ### Policies (`context/policies/*.md`)
 
@@ -105,10 +114,9 @@ templates for new ones.
 ### Plugin manifest (`.claude-plugin/`)
 
 `plugin.json` and `marketplace.json` are the Claude Code plugin manifest
-and single-plugin marketplace. `plugin.json` declares no `skills` field —
-`skills/` at the repo root is the default component directory Claude Code,
-Codex, Grok Build, and Devin all scan without one, so installed users get
-`/orchraft:warplan` etc. from the same canonical files described above.
+and single-plugin marketplace. Claude Code discovers the root `skills/`
+directory by convention. Other hosts may declare the same path in their
+compatibility manifests, so installed users get the same canonical workflows.
 Don't hand-edit `plugin.json`'s `version` — `release-please` bumps it
 alongside `package.json`.
 
@@ -118,8 +126,8 @@ Repository GUI or `cursor-agent`'s interactive `/plugin` slash command —
 neither is a scriptable one-line install command like `codex plugin add`.
 Unlike Claude Code/Codex/Grok Build's directory convention, Cursor's
 `plugin.json` schema declares an
-explicit `"skills": "./skills/"` field pointing at the same canonical
-directory — no restructuring needed, just that one field — see
+explicit `"skills": "./skills/"` and `"agents": "./agents/"` fields pointing
+at the canonical skills and role-agent directories — no restructuring needed — see
 `AGENTS.md`'s entry for the "not yet verified live" caveat.
 `.cursor-plugin/plugin.json`'s `version` is wired into
 `release-please-config.json`'s `extra-files` the same way.
