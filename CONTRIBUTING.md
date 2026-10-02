@@ -42,7 +42,8 @@ Role behavior lives in portable `skills/`; `agents/` contains optional
 host-specific adapters using the host's subagent frontmatter format. Keep
 adapters thin and put reusable workflow policy in `skills/` and
 `context/policies/`. Never turn an approval-sensitive skill into an agent that
-can silently mutate GitHub.
+can silently mutate GitHub. Do not hardcode a model in shared adapters; let
+each host choose its model through native configuration.
 
 Claude Code, Codex, Grok Build, Devin, and (as a packaged plugin) Cursor all
 read the canonical `skills/` directory once orchraft is installed. Hosts may
