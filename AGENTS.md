@@ -7,13 +7,13 @@ default the user approves every git, pull request, issue, and release
 mutation; the one documented exception is the opt-in `Autonomous Mode` in
 `context/policies/approval-policy.md`, off unless a repo owner writes it in.
 The current skills cover planning, issues, pull requests, status,
-documentation, and release notes (`warchief`, `watchtower`, `warplan`,
+documentation, and release notes (`warchief`, `warpath`, `watchtower`, `warplan`,
 `quest`, `ship`, `roast`, `land`, `runes`, `reckoning`, `plunder`,
 `muster`, `yap`, `lore`, `chronicle`, `herald`); more workflows will cover
 the rest of the lifecycle.
 It is distributed as a Claude Code plugin and can also be copied into other
 projects. Keep this file as the map, not the rulebook: detailed branch,
-commit, PR, warplan, quest, ship, roast, land, runes, reckoning,
+commit, PR, warplan, quest, ship, roast, warpath, land, runes, reckoning,
 plunder, muster, yap, lore, chronicle, herald, warchief, and watchtower
 behavior lives in the files linked below.
 
@@ -33,7 +33,7 @@ skill step that could be read as running to completion unattended.
 
 - Use the skills in `skills/` for end-to-end agent workflows.
 - Use the portable role skills in `skills/`: `forgehand`, `warplan`, `yap`,
-  `lore`, `roast`, `chronicle`, and `runes`. Hosts with packaged-agent support
+  `lore`, `roast`, `chronicle`, `runes`, and `warpath`. Hosts with packaged-agent support
   may expose the matching `agents/` adapters, but those adapters never bypass
   approval gates.
 - Use the policies in `context/policies/` for reusable naming and writing
@@ -109,6 +109,9 @@ hooks, and CI checks should win.
 - `skills/warchief/SKILL.md`: AI-driven orchestration workflow that
   chooses the next lifecycle role and hands off without weakening approval
   gates.
+- `skills/warpath/SKILL.md`: AI-driven orchestration workflow that repeats
+  fix → ship → roast until the latest roast reports zero findings, then hands
+  off to land without merging.
 - `skills/watchtower/SKILL.md`: AI-driven read-only status nudge that
   surfaces actionable PR state without mutating git or GitHub.
 
@@ -121,6 +124,8 @@ hooks, and CI checks should win.
 - `agents/scout.md`: read-only explanation agent backed by `yap`.
 - `agents/loremaster.md`: comment/docstring editing agent backed by `lore`.
 - `agents/trialmaster.md`: read-only review agent backed by `roast`.
+- `agents/warpath.md`: approval-sensitive loop orchestrator backed by
+  `warpath`.
 - `agents/chronicler.md`: Markdown documentation agent backed by `chronicle`.
 - `agents/rune-reader.md`: read-only status agent backed by `runes`.
 
@@ -140,7 +145,7 @@ not assume a named `agents/` component exists outside hosts that document it.
   `/orchraft:roast`, `/orchraft:runes`, `/orchraft:reckoning`,
   `/orchraft:plunder`, `/orchraft:muster`, `/orchraft:yap`,
   `/orchraft:lore`, `/orchraft:chronicle`, `/orchraft:herald`,
-  `/orchraft:warchief`, and `/orchraft:watchtower` from the same canonical
+  `/orchraft:warpath`, `/orchraft:warchief`, and `/orchraft:watchtower` from the same canonical
   files.
 - `.codex-plugin/plugin.json`: Codex CLI compatibility manifest. It explicitly
   declares `skills: "./skills/"` so Codex loads the portable role and workflow

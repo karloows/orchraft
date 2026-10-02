@@ -12,7 +12,7 @@ next across the software lifecycle, instead of naming a specific skill.
 
 1. Read the user's goal and the current repo state.
 2. Choose the next fitting orchraft role: `Quest-Giver`, `Tactician`,
-   `Forgehand`, `Raid Captain`, `Trialmaster`, `Haulmaster`, `Herald`,
+  `Forgehand`, `Warpath`, `Raid Captain`, `Trialmaster`, `Haulmaster`, `Herald`,
    `Rune-Reader`, `Reckoner`, `Scout`, `Loremaster`, or `Chronicler`.
 3. Explain the handoff briefly, then run only the step the approval policy
    says is authorized.
@@ -30,6 +30,9 @@ next across the software lifecycle, instead of naming a specific skill.
   mutations that require separate approval.
 - Use `Forgehand` for implementation and tests. It may edit files but never
   commits, pushes, opens a PR, posts a review, merges, or changes an issue.
+- Use `Warpath` when the user explicitly asks to repeat fix → ship → roast
+  until the latest roast reports zero findings. It re-reads live state after
+  each cycle, pauses at approval gates, and hands off a clean PR to `land`.
 - Use `Trialmaster` for read-only review findings. It may inspect code and use
   `roast`'s policy, but never posts the review.
 - Use `Tactician` / `warplan` when the work needs a grounded implementation
@@ -72,6 +75,9 @@ unknown branch, and review before landing.
 - Do not chain multiple mutating skills from one approval. A clean `roast`
   may make `land` the next recommendation, but `land` still needs its own
   current-turn go-ahead.
+- `Warpath` is the explicit exception for orchestration, not for approval: it
+  may coordinate repeated lifecycle steps, but each mutation remains gated by
+  the approval policy.
 
 ## Handoff
 
