@@ -231,9 +231,10 @@ not assume a named `agents/` component exists outside hosts that document it.
   `cd <dir> &&` (or `;`) or uses `git -C <dir>`, so a commit into a linked
   worktree reads that worktree's branch; other shell forms fall back to the
   session's directory, and a session directory outside a git work tree
-  exits before the command is read at all. The default branch comes from `origin/HEAD`, falling back to `main`/`master` when no
-  remote ref exists; it does not read `baseBranch`, which would need a
-  second copy of `watchtower-nudge.sh`'s JSONC parsing. Deliberately scoped
+  exits before the command is read at all. The default branch comes from
+  `origin/HEAD`, falling back to `main`/`master` when no remote ref
+  exists; it does not read `baseBranch`, which would need a second copy of
+  `watchtower-nudge.sh`'s JSONC parsing. Deliberately scoped
   to that one branch, not every commit: a broader version would fire on
   `ship`'s own legitimate commits far more often than it would ever catch a
   real bypass, which is exactly the noise `watchtower-nudge.sh` is designed
