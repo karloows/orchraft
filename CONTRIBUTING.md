@@ -71,7 +71,7 @@ reimplementing:
 ### Formats (`context/formats/`)
 
 Formats live in `context/formats/` when they define a reusable document shape.
-The current formats are `trello-card.md`, `pull-request.md`, and `issue.md`.
+The current formats are `tracking-card.md`, `pull-request.md`, and `issue.md`.
 
 Skills read `context/policies/<file>` from the *target* repo first, falling
 back to the copy bundled with the plugin — so a project that installs
