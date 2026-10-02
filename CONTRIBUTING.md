@@ -22,6 +22,7 @@ Each skill is a self-contained workflow the user invokes explicitly (except
 | `quest` | issue | Triages, creates, or updates a GitHub issue. |
 | `ship` | branch/commit/PR | Creates a policy-compliant branch, commit, push, and pull request from the actual diff. |
 | `roast` | review | Reviews a PR against this repo's own policies and posts findings as a PR review with inline comments. |
+| `warpath` | orchestration | Repeats fix → ship → roast until the latest review reports zero findings; never merges. |
 | `land` | merge | Checks mergeability and CI, resolves the merge method, syncs the base branch, cleans up the branch. |
 | `yap` | explain | Explains a PR/diff, file, error/log, policy, or dependency, citing real sources. Read-only. |
 | `lore` | comments | Adds or fixes code comments/docstrings across a diff, file, or PR. Doesn't commit or push. |

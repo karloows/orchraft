@@ -75,6 +75,7 @@ the anvil as we cover the rest of the lifecycle.
 | `quest` | 📌 Quest-Giver | Triages, creates, or updates a GitHub issue before implementation starts. |
 | `ship` | 🚢 Raid Captain | Creates a policy-compliant branch, commit, push, and pull request from the actual diff. |
 | `roast` | 🔥 Trialmaster | Reviews the pull request against your repo's policies and posts findings as inline comments with fixes and copy-paste AI prompts. |
+| `warpath` | ⚔️ Warpath | Repeats fix → ship → roast until the latest review reports zero findings; never merges. |
 | `land` | 🏰 Haulmaster | Checks mergeability and CI, merges with the method your repository allows or your config names, syncs the base branch, and cleans up the branch. |
 | `yap` | 🗣️ Scout | Explains a PR, file, error, policy, or dependency, citing real sources instead of guessing. Read-only. |
 | `lore` | 📜 Loremaster | Adds or fixes code comments and docstrings across a diff, file, or PR to match your repo's lore policy. |
@@ -106,6 +107,7 @@ approval gates.
 | Haulmaster | Landing an approved pull request | `land` |
 | Herald | Preparing release notes | `herald` |
 | Warchief | Choosing the next lifecycle step | `warchief` |
+| Warpath | Repeating fix → ship → roast until clean | `warpath` |
 
 For example: “Use the Forgehand to fix this bug” or “Have the Trialmaster
 review this pull request.” In Claude Code, invoke them as
@@ -115,7 +117,7 @@ workspace files still stop before commit, push, PR, issue, release, and merge
 mutations.
 
 Today's march is `warplan` → `quest` → `lore` → `chronicle` → `ship` →
-`roast` → fix → `ship` → `land` → `herald`, with `yap` available at any
+`roast` → fix → `ship` → `roast` (repeat until clean) → `land` → `herald`, with `yap` available at any
 point.
 
 ## What A March Looks Like
@@ -221,13 +223,14 @@ The skills load as `/orchraft:forgehand`, `/orchraft:warplan`,
 `/orchraft:land`, `/orchraft:roast`, `/orchraft:yap`, `/orchraft:lore`,
 `/orchraft:chronicle`, `/orchraft:runes`, `/orchraft:reckoning`,
 `/orchraft:plunder`, `/orchraft:muster`, `/orchraft:herald`,
-`/orchraft:warchief`, and `/orchraft:watchtower`. They read
+`/orchraft:warpath`, `/orchraft:warchief`, and `/orchraft:watchtower`. They read
 `context/policies/` from your repo when present and fall back to the
 policies bundled with the plugin.
 
 The plugin also installs these compatible-host subagents: `orchraft:forgehand`,
 `orchraft:trialmaster`, `orchraft:tactician`, `orchraft:scout`,
-`orchraft:loremaster`, `orchraft:chronicler`, and `orchraft:rune-reader`.
+`orchraft:loremaster`, `orchraft:chronicler`, `orchraft:rune-reader`, and
+`orchraft:warpath`.
 Codex and Zed use the same roles through portable skills and their native
 delegation features. Use requests such as “Use the Tactician to plan this
 change” or “Have the Trialmaster review this diff.” Remote-mutating roles such
