@@ -17,6 +17,7 @@ Each skill is a self-contained workflow the user invokes explicitly (except
 
 | Skill | Stage | What it does |
 | --- | --- | --- |
+| `shaman` | setup | Runs a read-only preflight for skills, policies, GitHub access, tools, config, and hooks. |
 | `forgehand` | implementation | Implements code changes and runs focused validation without committing or pushing. |
 | `warplan` | plan | Drafts an implementation plan grounded in this repo's own conventions and precedent, before code is written. |
 | `quest` | issue | Triages, creates, or updates a GitHub issue. |
