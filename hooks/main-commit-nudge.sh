@@ -46,8 +46,35 @@ command_str=$(printf '%s' "$input" | jq -r '.tool_input.command // empty')
 [ -n "$command_str" ] || exit 0
 
 # Match "git commit" or "git push" as their own words, not a substring of
-# something else (e.g. a script path containing "git-commit-helper").
-printf '%s' "$command_str" | grep -qE '(^|[;&|]|[[:space:]])git[[:space:]]+(commit|push)([[:space:]]|$)' || exit 0
+# something else (e.g. a script path containing "git-commit-helper"). An
+# optional "-C <dir>" (bare, or a quoted path) between git and the
+# subcommand still counts.
+dir_re='("[^"]*"|'"'"'[^'"'"']*'"'"'|[^[:space:];&|]+)'
+printf '%s' "$command_str" | grep -qE '(^|[;&|]|[[:space:]])git([[:space:]]+-C[[:space:]]+'"$dir_re"')?[[:space:]]+(commit|push)([[:space:]]|$)' || exit 0
+
+# cwd is the session's directory, not necessarily where the git command
+# runs: "cd <worktree> && git commit" or "git -C <worktree> commit" commits
+# in another checkout, and reading cwd's branch there fired a false nudge on
+# every commit from a linked worktree while the session sat on main. Follow
+# a leading "cd <dir>" ending in && or ;, then a "git -C <dir>" (relative to
+# that cd, as the shell would), with a quoted path and ~ handled. Anything
+# else -- pushd, subshells, a cd later in the chain, variables in the path,
+# other git global options before -C -- is deliberately not parsed and falls
+# back to cwd; this is a nudge, not a shell interpreter. A target that does
+# not resolve to a git work tree exits silently.
+cd_re='^[[:space:]]*cd[[:space:]]+'"$dir_re"'[[:space:]]*(&&|;)'
+git_c_re='git[[:space:]]+-C[[:space:]]+'"$dir_re"'[[:space:]]+(commit|push)([[:space:]]|$)'
+enter() {
+  local dir=$1
+  # Expand ~ before unquoting: the shell leaves a quoted "~/x" literal.
+  case $dir in "~" | "~/"*) dir="$HOME${dir#\~}" ;; esac
+  dir=${dir#[\"\']}
+  dir=${dir%[\"\']}
+  cd "$dir" 2>/dev/null || exit 0
+  [ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" = true ] || exit 0
+}
+if [[ $command_str =~ $cd_re ]]; then enter "${BASH_REMATCH[1]}"; fi
+if [[ $command_str =~ $git_c_re ]]; then enter "${BASH_REMATCH[1]}"; fi
 
 branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null) || exit 0
 
