@@ -292,7 +292,8 @@ falling back to the copy bundled with the plugin.
   and edge cases like flaky or pre-existing failures.
 - `context/policies/writing-guidelines.md`: shared writing rules, PR title/body
   defaults, secret hygiene, and project-template override guidance.
-- `context/formats/trello-card.md`: canonical Markdown format for Trello cards.
+- `context/formats/tracking-card.md`: canonical Markdown format for external
+  tracking cards.
 - `context/formats/pull-request.md`: fallback title and body format for pull
   requests when a target project has no stricter template.
 - `context/formats/issue.md`: fallback title and body format for issues when a
