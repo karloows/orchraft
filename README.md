@@ -216,7 +216,8 @@ If the install reports that the plugin isn't active yet, run
 `/reload-plugins` (or `/reload-plugins --force` if it warns about the prompt
 cache).
 
-The skills load as `/orchraft:warplan`, `/orchraft:quest`, `/orchraft:ship`,
+The skills load as `/orchraft:forgehand`, `/orchraft:warplan`,
+`/orchraft:quest`, `/orchraft:ship`,
 `/orchraft:land`, `/orchraft:roast`, `/orchraft:yap`, `/orchraft:lore`,
 `/orchraft:chronicle`, `/orchraft:runes`, `/orchraft:reckoning`,
 `/orchraft:plunder`, `/orchraft:muster`, `/orchraft:herald`,

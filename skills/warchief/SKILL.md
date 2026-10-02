@@ -40,6 +40,14 @@ next across the software lifecycle, instead of naming a specific skill.
   commit, push, or open/update a PR in the current turn.
 - Use `Trialmaster` / `roast` when the user asks for PR review or the PR is
   ready for review.
+- Use `Rune-Reader` / `runes` when the user asks for status, resume, or where
+  work stands.
+- Use `Scout` / `yap` when the user asks to explain a file, diff, PR, policy,
+  or error.
+- Use `Loremaster` / `lore` when the user asks to add or clean up
+  comments/docstrings.
+- Use `Chronicler` / `chronicle` when the user asks to write or update a
+  standalone Markdown document.
 - Use `Haulmaster` / `land` only when the user explicitly asks to merge/land
   in the current turn.
 - Use `Herald` / `herald` when the user asks for release notes or what a
