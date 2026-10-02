@@ -127,6 +127,8 @@ Use this skill when the user asks the AI to land work end to end.
   out a branch another worktree holds and to delete the branch this worktree
   has checked out. Never remove the worktree yourself; tell the user to run
   `git worktree remove <path>`, then delete the branch from another checkout.
+  When a restored stash left local changes there, say removal will refuse
+  until they are committed or moved, and never suggest `--force`.
   Still restore any stash created for this workflow in place; `refs/stash` is
   shared by every worktree, so `stash@{0}` may belong to another.
 - Verify the branch actually landed before deleting it, using the check that
@@ -145,10 +147,16 @@ Use this skill when the user asks the AI to land work end to end.
 - Never reach for `git branch -D` because `-d` refused. Establish that the
   work landed first; a refusal that has not been explained is a stop, not a
   prompt to force.
-- After branch deletion, restore any local-changes stash created for this
+- Once the landing is verified and branch deletion is done or skipped
+  (linked worktree, `merge.deleteLocalBranch` `false`), restore any
+  local-changes stash created for this
   workflow by its recorded SHA: `git stash apply <sha>`, then drop the entry
   `git stash list --format='%gd %H'` shows for that SHA. Never use bare
-  `git stash pop`, which takes whatever is on top.
+  `git stash pop`, which takes whatever is on top. Check the SHA in the drop's
+  `Dropped stash@{n} (<sha>)` output: if another worktree stashed in between
+  and a different entry was dropped, put it back with
+  `git stash store -m "restored by land" <dropped-sha>` and report that this
+  workflow's own entry was left in the stash list.
 - If landing stops after creating a stash for this workflow, restore it once
   the worktree is usable.
 
