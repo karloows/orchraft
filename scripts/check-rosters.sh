@@ -8,6 +8,7 @@
 # Usage: scripts/check-rosters.sh [repo-root]
 set -uo pipefail
 cd "${1:-$(dirname "$0")/..}" || exit 2
+command -v jq >/dev/null || { echo "check-rosters: jq is required" >&2; exit 2; }
 
 expected=$(for d in skills/*/SKILL.md; do basename "$(dirname "$d")"; done | sort)
 count=$(printf '%s\n' "$expected" | wc -l | tr -d ' ')

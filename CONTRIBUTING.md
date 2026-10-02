@@ -117,6 +117,15 @@ baseline. See "Testing a skill change" below for how to run them, and
 `lore-no-git-mutation`, `roast-without-pr`, `ship-requires-request`) as
 templates for new ones.
 
+### Scripts (`scripts/`)
+
+`check-rosters.sh` compares `skills/` with every complete skill roster and
+skill count in `README.md`, `AGENTS.md`, `CONTRIBUTING.md`, and the bug
+report template, and checks that manifests declaring a `skills` path point
+at `./skills/`. The Validate Plugin workflow runs it; run
+`scripts/check-rosters.sh` locally after adding, renaming, or removing a
+skill. It needs `jq`.
+
 ### Plugin manifest (`.claude-plugin/`)
 
 `plugin.json` and `marketplace.json` are the Claude Code plugin manifest
