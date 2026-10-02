@@ -60,8 +60,11 @@ printf '%s' "$command_str" | grep -qE '(^|[;&|]|[[:space:]])git([[:space:]]+-C[[
 # that cd, as the shell would), with a quoted path and ~ handled. Anything
 # else -- pushd, subshells, a cd later in the chain, variables in the path,
 # other git global options before -C -- is deliberately not parsed and falls
-# back to cwd; this is a nudge, not a shell interpreter. A target that does
-# not resolve to a git work tree exits silently.
+# back to cwd; this is a nudge, not a shell interpreter. One resolved target
+# stands for the whole command, so a chain mixing "git -C <dir> commit" with
+# a bare "git push" is judged by the -C target alone. A non-git cwd already
+# exited above, so none of this runs from one. A target that does not
+# resolve to a git work tree exits silently.
 cd_re='^[[:space:]]*cd[[:space:]]+'"$dir_re"'[[:space:]]*(&&|;)'
 git_c_re='git[[:space:]]+-C[[:space:]]+'"$dir_re"'[[:space:]]+(commit|push)([[:space:]]|$)'
 enter() {
