@@ -6,8 +6,8 @@ first for solo developers with no one else to hand the busywork to. By
 default the user approves every git, pull request, issue, and release
 mutation; the one documented exception is the opt-in `Autonomous Mode` in
 `context/policies/approval-policy.md`, off unless a repo owner writes it in.
-The current skills cover planning, issues, pull requests, status,
-documentation, and release notes (`warchief`, `warpath`, `watchtower`, `warplan`,
+The current skills cover setup, planning, issues, pull requests, status,
+documentation, and release notes (`shaman`, `warchief`, `warpath`, `watchtower`, `warplan`,
 `quest`, `ship`, `roast`, `land`, `runes`, `reckoning`, `plunder`,
 `muster`, `yap`, `lore`, `chronicle`, `herald`); more workflows will cover
 the rest of the lifecycle.
@@ -60,6 +60,8 @@ hooks, and CI checks should win.
 
 ## Skills
 
+- `skills/shaman/SKILL.md`: read-only setup preflight for skills, policies,
+  GitHub access, tools, config, and hooks.
 - `skills/forgehand/SKILL.md`: portable implementation workflow that edits and
   tests without committing, pushing, or changing GitHub.
 - `skills/warplan/SKILL.md`: AI-driven planning workflow that drafts
