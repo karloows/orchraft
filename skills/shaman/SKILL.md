@@ -1,6 +1,6 @@
 ---
 name: shaman
-description: Run a read-only orchraft preflight for the current repository, checking skill loading, policy fallback, GitHub access, required tools, config parsing, and hook support before another workflow starts.
+description: Have the AI run a read-only orchraft setup preflight. Use when the user says shaman, asks whether orchraft is ready, or wants a preflight before another workflow.
 ---
 
 # Shaman Workflow
@@ -49,8 +49,8 @@ reads the signs of the current repository; it never repairs anything.
 ### Required tools
 
 - `git` is required for every workflow.
-- `jq` is required for the bundled hooks; missing `jq` is a warning if hooks
-  are not installed and a failure if they are.
+- `jq` is required for the bundled hooks; missing `jq` is a warning that
+  ambient nudges will be silent.
 - `gh` is required only when no authenticated GitHub connector is available.
 - Report missing optional tools plainly instead of inventing a workaround.
 
@@ -81,12 +81,12 @@ Use this compact format:
 
 ```text
 Repository: <root> (<branch>)
-PASS  Skills: <result>
-WARN  Policies: <local/fallback result>
-PASS  GitHub: <authenticated / connector / unavailable>
-PASS  Tools: <result>
-PASS  Config: <absent / valid path>
-PASS  Hooks: <supported / not installed>
+<status>  Skills: <result>
+<status>  Policies: <local/fallback result>
+<status>  GitHub: <authenticated / connector / unavailable>
+<status>  Tools: <result>
+<status>  Config: <absent / valid path>
+<status>  Hooks: <supported / not installed>
 
 Next action: <smallest action, or none>
 Result: READY | NOT READY
