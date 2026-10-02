@@ -124,6 +124,8 @@ Use this skill when the user asks the AI to land work end to end.
   out a branch another worktree holds and to delete the branch this worktree
   has checked out. Never remove the worktree yourself; tell the user to run
   `git worktree remove <path>`, then delete the branch from another checkout.
+  Still restore any stash created for this workflow in place; `refs/stash` is
+  shared by every worktree, so a leftover entry can be popped into another.
 - Verify the branch actually landed before deleting it, using the check that
   matches the merge method:
   - **Merge commit** — the branch's tip is an ancestor of the base branch, so
@@ -186,6 +188,7 @@ Use this skill when the user asks the AI to land work end to end.
 - Say whether the verified local branch was deleted, and when it was kept,
   why — `merge.deleteLocalBranch` being `false`, a landing that could not
   be verified, or a linked worktree.
+- In a linked worktree, say the local base branch was not synced.
 - If landing stops or fails, skip the landing phrase and state the blocker
   plainly.
 
