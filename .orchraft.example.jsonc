@@ -48,7 +48,12 @@
   // regardless. It is a setting a cooperating agent honors, not an enforced
   // boundary — use your agent platform's permission rules for that.
   //
-  // To pre-approve, name each skill and its actions:
+  // To pre-approve standalone shipping:
   //   "autonomous": { "ship": ["branch", "commit", "push", "pr"] }
+  // To let Warpath repeat fix → ship → roast without asking between cycles:
+  //   "autonomous": {
+  //     "ship": ["branch", "commit", "push", "pr"],
+  //     "warpath": ["branch", "commit", "push", "pr", "review"]
+  //   }
   "autonomous": {}
 }

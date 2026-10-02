@@ -30,10 +30,11 @@ review cannot be posted, stop and report the blocking state.
 ## Approval
 
 Read `context/policies/approval-policy.md` before starting. This workflow is
-an orchestrator, not a permission grant: pause before every commit, push, PR
-update, review, thread resolution, or other mutation unless the target repo's
-verified Autonomous Mode explicitly names that action. Landing always remains
-a separate, explicit user request.
+an orchestrator, not a permission grant. If the target repo's verified
+Autonomous Mode names the action under `autonomous.warpath`, continue through
+that action without asking again during this user-started run. Otherwise pause
+before every commit, push, PR update, review, thread resolution, or other
+mutation. Landing always remains a separate, explicit user request.
 
 Do not create a stored loop state file. Re-read live git and GitHub state after
 each handoff so a resumed run cannot mistake a stale roast for a clean one.
