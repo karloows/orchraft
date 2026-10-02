@@ -79,7 +79,8 @@ Use this skill when the user asks the AI to land work end to end.
 - Confirm required check status by reading it fresh from the connected tool
   in the current turn; don't assume it from an earlier turn or a prior pass.
 - If tracked, staged, or untracked local changes are present, stash all of
-  them (including untracked files) before landing and record the stash ref.
+  them (including untracked files) before landing and record the new stash's
+  commit SHA (`git rev-parse stash@{0}` right after creating it).
 
 ## Default Path
 
@@ -125,7 +126,7 @@ Use this skill when the user asks the AI to land work end to end.
   has checked out. Never remove the worktree yourself; tell the user to run
   `git worktree remove <path>`, then delete the branch from another checkout.
   Still restore any stash created for this workflow in place; `refs/stash` is
-  shared by every worktree, so a leftover entry can be popped into another.
+  shared by every worktree, so `stash@{0}` may belong to another.
 - Verify the branch actually landed before deleting it, using the check that
   matches the merge method:
   - **Merge commit** — the branch's tip is an ancestor of the base branch, so
@@ -143,7 +144,9 @@ Use this skill when the user asks the AI to land work end to end.
   work landed first; a refusal that has not been explained is a stop, not a
   prompt to force.
 - After branch deletion, restore any local-changes stash created for this
-  workflow with `git stash pop` or the repository-equivalent restore command.
+  workflow by its recorded SHA: `git stash apply <sha>`, then drop the entry
+  `git stash list --format='%gd %H'` shows for that SHA. Never use bare
+  `git stash pop`, which takes whatever is on top.
 - If landing stops after creating a stash for this workflow, restore it once
   the worktree is usable.
 
@@ -155,7 +158,7 @@ Use this skill when the user asks the AI to land work end to end.
 - Stop if local changes cannot be stashed cleanly (e.g. an existing conflicting
   stash or a stash command failure); do not merge or delete the branch.
 - Stop if a stash created for this workflow cannot be restored after landing;
-  report the stash ref for manual recovery.
+  report the stash SHA for manual recovery.
 - Stop if local `HEAD` does not match the PR head before merging.
 - Stop if required jobs, checks, or mergeability status are pending, missing,
   failing, or errored.
