@@ -61,7 +61,7 @@ reads the signs of the current repository; it never repairs anything.
 - Parse the selected file as JSON. For `.jsonc`, use the same quote-aware
   comment stripping convention as `hooks/watchtower-nudge.sh`; never strip
   `//` inside a quoted URL.
-- A malformed file is a `FAIL` that names the file and parse error, then
+- A malformed file is a `WARN` that names the file and parse error, then
   explain that workflows will continue with documented defaults. Do not edit
   or rewrite the file.
 - For a valid file, check only the documented types that affect the requested
