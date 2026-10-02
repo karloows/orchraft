@@ -79,8 +79,10 @@ Use this skill when the user asks the AI to land work end to end.
 - Confirm required check status by reading it fresh from the connected tool
   in the current turn; don't assume it from an earlier turn or a prior pass.
 - If tracked, staged, or untracked local changes are present, stash all of
-  them (including untracked files) before landing and record the new stash's
-  commit SHA (`git rev-parse stash@{0}` right after creating it).
+  them (including untracked files) before landing with
+  `git stash push -u -m "orchraft-land <branch> <timestamp>"`, then record
+  its commit SHA from the `git stash list --format='%H %gs'` line carrying
+  that message, never from `stash@{0}`.
 
 ## Default Path
 
