@@ -48,6 +48,8 @@ This document defines how AI agents must generate:
 
 These rules override default LLM behavior.
 
+The fallback PR shape is defined in `context/formats/pull-request.md`.
+
 ---
 
 ## 1. Tone & Style

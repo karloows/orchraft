@@ -190,6 +190,8 @@ moves the ground under an installed copy.
   other skill is invoked on purpose.
 - `context/policies/`: reusable approval, branch, commit, config, lore,
   docs, review, sandbox, and PR writing policies.
+- `context/formats/`: reusable document formats, including the Trello card
+  and fallback pull request and issue formats.
 - `.orchraft.example.jsonc`: a starting point holding every setting at its
   default, with the accepted values in comments. Copy it to
   `.orchraft.jsonc` (or `.orchraft.json`) and edit what you want to change;
@@ -206,6 +208,11 @@ moves the ground under an installed copy.
   referenced directly by any page.
 
 Edit the canonical skill files in `skills/` directly.
+
+To enable Trello card context in a target project, copy
+`context/formats/trello-card.md` into that project's `context/formats/`
+directory. Sessions can then read and draft cards in that format without a
+Trello integration.
 
 ## Install As A Claude Code Plugin
 

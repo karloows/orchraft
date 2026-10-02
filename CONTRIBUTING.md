@@ -68,6 +68,10 @@ reimplementing:
 | `review-policy.md` | Reviewer priority order, severity levels, findings format for PR review. |
 | `verification-policy.md` | What counts as validation before a change is reported ready to ship/land; honest reporting; flaky/pre-existing failures. |
 | `writing-guidelines.md` | Shared writing rules, PR title/body defaults, secret hygiene, project-template override precedence. |
+### Formats (`context/formats/`)
+
+Formats live in `context/formats/` when they define a reusable document shape.
+The current formats are `trello-card.md`, `pull-request.md`, and `issue.md`.
 
 Skills read `context/policies/<file>` from the *target* repo first, falling
 back to the copy bundled with the plugin — so a project that installs
