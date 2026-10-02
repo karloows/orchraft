@@ -13,8 +13,9 @@ findings instead of stopping after one ship or roast pass.
 1. Read the live branch and pull-request state with `runes`.
 2. If findings exist, hand them to `Forgehand` for fixes.
 3. When fixes are ready, hand off to `Raid Captain` / `ship`.
-4. Run `Trialmaster` / `roast` against the new pull-request head.
-5. Repeat from step 2 until the latest roast reports zero findings.
+4. Run `roast` against the current pull-request head, including the initial
+   head when no prior roast exists.
+5. If findings remain, repeat from step 2; otherwise the latest roast is clean.
 6. Recommend `Haulmaster` / `land`; do not merge as part of this loop.
 
 ## Completion
