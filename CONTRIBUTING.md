@@ -126,8 +126,8 @@ Repository GUI or `cursor-agent`'s interactive `/plugin` slash command —
 neither is a scriptable one-line install command like `codex plugin add`.
 Unlike Claude Code/Codex/Grok Build's directory convention, Cursor's
 `plugin.json` schema declares an
-explicit `"skills": "./skills/"` field pointing at the same canonical
-directory — no restructuring needed, just that one field — see
+explicit `"skills": "./skills/"` and `"agents": "./agents/"` fields pointing
+at the canonical skills and role-agent directories — no restructuring needed — see
 `AGENTS.md`'s entry for the "not yet verified live" caveat.
 `.cursor-plugin/plugin.json`'s `version` is wired into
 `release-please-config.json`'s `extra-files` the same way.
