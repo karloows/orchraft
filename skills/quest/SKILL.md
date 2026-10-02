@@ -77,8 +77,8 @@ issue, or triage/update one that already exists — the lifecycle stage before
   values it actually supports; omit `type`/`issue_fields` entirely if the
   repository doesn't have them.
 - Read any repository issue template (`.github/ISSUE_TEMPLATE/`) and follow
-  its required fields first, falling back to a plain title/body when the repo
-  has none.
+  its required fields first, falling back to `context/formats/issue.md` when
+  the repo has none, then to a plain title/body if that format is absent.
 
 ## Default Path
 
