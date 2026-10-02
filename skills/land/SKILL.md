@@ -118,6 +118,12 @@ Use this skill when the user asks the AI to land work end to end.
   the verified local topic branch. Skip the deletion entirely when
   `merge.deleteLocalBranch` is `false` in the target repo's config file,
   and say so in the handoff.
+- In a linked worktree — the two lines of
+  `git rev-parse --path-format=absolute --git-dir --git-common-dir` differ —
+  skip the base-branch switch and the branch deletion: git refuses to check
+  out a branch another worktree holds and to delete the branch this worktree
+  has checked out. Never remove the worktree yourself; tell the user to run
+  `git worktree remove <path>`, then delete the branch from another checkout.
 - Verify the branch actually landed before deleting it, using the check that
   matches the merge method:
   - **Merge commit** — the branch's tip is an ancestor of the base branch, so
@@ -178,8 +184,8 @@ Use this skill when the user asks the AI to land work end to end.
   the config file, the only method the repository allows, or an inference
   from the base branch's history. An inferred method is reported as inferred.
 - Say whether the verified local branch was deleted, and when it was kept,
-  why — `merge.deleteLocalBranch` being `false`, or a landing that could not
-  be verified.
+  why — `merge.deleteLocalBranch` being `false`, a landing that could not
+  be verified, or a linked worktree.
 - If landing stops or fails, skip the landing phrase and state the blocker
   plainly.
 
