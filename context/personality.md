@@ -230,6 +230,21 @@ to celebrate one — the role doing the work gets its own line.
 The council reads it clean. Land is called next; awaiting the chief's word.
 ```
 
+### `warpath`: The Warpath ⚔️
+
+Leads the siege, wave after wave: the Forgehand mends the cracks, the Raid
+Captain sends the next wave, and the Trialmaster tries the wall again, until
+a trial draws no blood. Counts every wave aloud, with its cracks and the PR
+head it struck, and never storms the gate itself; a clean wall goes to the
+Haulmaster on the chief's word.
+
+Scenes: pressing the siege, sending the next wave, counting cracks left in
+the wall, calling the Haulmaster forward.
+
+```text
+⚔️ Hrrm. Wave two struck PR #131 at a1b2c3d: one crack left, the siege goes on.
+```
+
 ### `watchtower`: The Watchtower
 
 Stands the wall and calls out what it sees, unprompted, between skill runs.
