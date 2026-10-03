@@ -6,8 +6,8 @@ first for solo developers with no one else to hand the busywork to. By
 default the user approves every git, pull request, issue, and release
 mutation; the one documented exception is the opt-in `Autonomous Mode` in
 `context/policies/approval-policy.md`, off unless a repo owner writes it in.
-The current skills cover setup, planning, issues, pull requests, status,
-documentation, and release notes (`shaman`, `warchief`, `warpath`, `watchtower`, `warplan`,
+The current skills cover setup, planning, implementation, issues, pull
+requests, status, documentation, and release notes (`shaman`, `forgehand`, `warchief`, `warpath`, `watchtower`, `warplan`,
 `quest`, `ship`, `roast`, `land`, `runes`, `reckoning`, `plunder`,
 `muster`, `yap`, `lore`, `chronicle`, `herald`); more workflows will cover
 the rest of the lifecycle.
@@ -143,7 +143,7 @@ not assume a named `agents/` component exists outside hosts that document it.
   Code plugin manifest and single-plugin marketplace. The manifest declares
   no `skills` field — `skills/` at the repo root is the default component
   directory Claude Code scans without one, so installed users get
-  `/orchraft:forgehand`, `/orchraft:warplan`, `/orchraft:quest`, `/orchraft:ship`, `/orchraft:land`,
+  `/orchraft:shaman`, `/orchraft:forgehand`, `/orchraft:warplan`, `/orchraft:quest`, `/orchraft:ship`, `/orchraft:land`,
   `/orchraft:roast`, `/orchraft:runes`, `/orchraft:reckoning`,
   `/orchraft:plunder`, `/orchraft:muster`, `/orchraft:yap`,
   `/orchraft:lore`, `/orchraft:chronicle`, `/orchraft:herald`,
@@ -182,7 +182,7 @@ not assume a named `agents/` component exists outside hosts that document it.
   which declare `skills`/`category` the same way. Still no directory
   restructuring needed, just the one explicit field. **Not yet verified
   live**: unlike every other ecosystem entry in this file, this hasn't been
-  installed into a real Cursor app and checked for a full 16-skill catalog
+  installed into a real Cursor app and checked for a full 18-skill catalog
   — say so if you ever confirm or refute it live.
 - Devin (Devin Desktop, formerly Windsurf, and the Devin CLI) needs no new
   manifest: it checks `.devin-plugin/plugin.json`, then
@@ -308,9 +308,11 @@ falling back to the copy bundled with the plugin.
 - When adding or removing a skill, `skills/` is the inventory and
   every doc that restates it has to follow. `grep -rn watchtower *.md` finds
   the rosters, since each one names every skill; the skill-count badge in
-  `README.md` holds a number rather than names, so check it separately.
-  Nothing enforces either — `reckoning` reached `main` missing from
-  `CONTRIBUTING.md`.
+  `README.md` holds a number rather than names. `scripts/check-rosters.sh`
+  enforces both in CI: it compares `skills/` with every complete roster and
+  skill count it knows about and names the file, line, and missing or
+  extra skill. A new complete roster has to be added to that script, or
+  nothing checks it.
 - The same applies to policies: `context/policies/` is the inventory, and
   `grep -rn commit-policy *.md` finds the docs that list them by filename.
   `README.md`'s Layout entry names them in prose instead, so a filename

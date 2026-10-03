@@ -16,15 +16,22 @@ body:
       label: Which skill, policy, or hook?
       description: Pick the one closest to where the bug happened.
       options:
+        - shaman
+        - forgehand
         - warplan
         - quest
         - ship
         - roast
+        - warpath
         - land
         - yap
         - lore
         - chronicle
         - runes
+        - reckoning
+        - plunder
+        - muster
+        - herald
         - warchief
         - watchtower
         - "hooks/watchtower-nudge.sh"
