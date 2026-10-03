@@ -25,7 +25,8 @@ Use this skill when the user asks the AI to land work end to end.
 3. Resolve the merge method, then merge.
 4. Sync the local base branch, verify the topic branch actually landed
    before deleting it, and restore any local-changes stash created for this
-   workflow.
+   workflow. In a linked worktree, skip the sync and the deletion but still
+   restore the stash.
 5. Report the result with the actual merge method and branch state.
 
 ## What This Is Not
@@ -79,7 +80,10 @@ Use this skill when the user asks the AI to land work end to end.
 - Confirm required check status by reading it fresh from the connected tool
   in the current turn; don't assume it from an earlier turn or a prior pass.
 - If tracked, staged, or untracked local changes are present, stash all of
-  them (including untracked files) before landing and record the stash ref.
+  them (including untracked files) before landing with
+  `git stash push -u -m "orchraft-land <branch> <timestamp>"`, then record
+  its commit SHA from the `git stash list --format='%H %gs'` line carrying
+  that message, never from `stash@{0}`.
 
 ## Default Path
 
@@ -118,6 +122,16 @@ Use this skill when the user asks the AI to land work end to end.
   the verified local topic branch. Skip the deletion entirely when
   `merge.deleteLocalBranch` is `false` in the target repo's config file,
   and say so in the handoff.
+- In a linked worktree — the two lines of
+  `git rev-parse --path-format=absolute --git-dir --git-common-dir` differ —
+  skip the base-branch switch and the branch deletion: git refuses to check
+  out a branch another worktree holds and to delete the branch this worktree
+  has checked out. Never remove the worktree yourself; tell the user to run
+  `git worktree remove <path>`, then delete the branch from another checkout.
+  When a restored stash left local changes there, say removal will refuse
+  until they are committed or moved, and never suggest `--force`.
+  Still restore any stash created for this workflow in place; `refs/stash` is
+  shared by every worktree, so `stash@{0}` may belong to another.
 - Verify the branch actually landed before deleting it, using the check that
   matches the merge method:
   - **Merge commit** — the branch's tip is an ancestor of the base branch, so
@@ -134,8 +148,16 @@ Use this skill when the user asks the AI to land work end to end.
 - Never reach for `git branch -D` because `-d` refused. Establish that the
   work landed first; a refusal that has not been explained is a stop, not a
   prompt to force.
-- After branch deletion, restore any local-changes stash created for this
-  workflow with `git stash pop` or the repository-equivalent restore command.
+- Once the landing is verified and branch deletion is done or skipped
+  (linked worktree, `merge.deleteLocalBranch` `false`), restore any
+  local-changes stash created for this
+  workflow by its recorded SHA: `git stash apply <sha>`, then drop the entry
+  `git stash list --format='%gd %H'` shows for that SHA. Never use bare
+  `git stash pop`, which takes whatever is on top. Check the SHA in the drop's
+  `Dropped stash@{n} (<sha>)` output: if another worktree stashed in between
+  and a different entry was dropped, put it back with
+  `git stash store -m "restored by land" <dropped-sha>` and report that this
+  workflow's own entry was left in the stash list.
 - If landing stops after creating a stash for this workflow, restore it once
   the worktree is usable.
 
@@ -147,7 +169,7 @@ Use this skill when the user asks the AI to land work end to end.
 - Stop if local changes cannot be stashed cleanly (e.g. an existing conflicting
   stash or a stash command failure); do not merge or delete the branch.
 - Stop if a stash created for this workflow cannot be restored after landing;
-  report the stash ref for manual recovery.
+  report the stash SHA for manual recovery.
 - Stop if local `HEAD` does not match the PR head before merging.
 - Stop if required jobs, checks, or mergeability status are pending, missing,
   failing, or errored.
@@ -178,8 +200,9 @@ Use this skill when the user asks the AI to land work end to end.
   the config file, the only method the repository allows, or an inference
   from the base branch's history. An inferred method is reported as inferred.
 - Say whether the verified local branch was deleted, and when it was kept,
-  why — `merge.deleteLocalBranch` being `false`, or a landing that could not
-  be verified.
+  why — `merge.deleteLocalBranch` being `false`, a landing that could not
+  be verified, or a linked worktree.
+- In a linked worktree, say the local base branch was not synced.
 - If landing stops or fails, skip the landing phrase and state the blocker
   plainly.
 
