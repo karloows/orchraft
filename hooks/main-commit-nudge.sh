@@ -50,7 +50,7 @@ command_str=$(printf '%s' "$input" | jq -r '.tool_input.command // empty')
 # optional "-C <dir>" (bare, or a quoted path) between git and the
 # subcommand still counts.
 dir_re='("[^"]*"|'"'"'[^'"'"']*'"'"'|[^[:space:];&|]+)'
-printf '%s' "$command_str" | grep -qE '(^|[;&|]|[[:space:]])git([[:space:]]+-C[[:space:]]+'"$dir_re"')?[[:space:]]+(commit|push)([[:space:]]|$)' || exit 0
+printf '%s' "$command_str" | grep -qE '(^|[;&|]|[[:space:]])git([[:space:]]+-C[[:space:]]+'"$dir_re"')?[[:space:]]+(commit|push)([[:space:];&|]|$)' || exit 0
 
 # cwd is the session's directory, not necessarily where the git command
 # runs: "cd <worktree> && git commit" or "git -C <worktree> commit" commits
@@ -66,14 +66,21 @@ printf '%s' "$command_str" | grep -qE '(^|[;&|]|[[:space:]])git([[:space:]]+-C[[
 # exited above, so none of this runs from one. A target that does not
 # resolve to a git work tree exits silently, except a failed "cd <dir>;",
 # which falls back to cwd because the git command still runs there.
+# "git -C" only counts at the start of a command (string start or after a
+# separator), so "git commit -m 'fix git -C x push'" isn't read as a target.
 cd_re='^[[:space:]]*cd[[:space:]]+'"$dir_re"'[[:space:]]*(&&|;)'
-git_c_re='git[[:space:]]+-C[[:space:]]+'"$dir_re"'[[:space:]]+(commit|push)([[:space:]]|$)'
+git_c_re='(^|[;&|])[[:space:]]*git[[:space:]]+-C[[:space:]]+'"$dir_re"'[[:space:]]+(commit|push)([[:space:];&|]|$)'
 enter() {
   local dir=$1 sep=${2:-}
   # Expand ~ before unquoting: the shell leaves a quoted "~/x" literal.
   case $dir in "~" | "~/"*) dir="$HOME${dir#\~}" ;; esac
   dir=${dir#[\"\']}
   dir=${dir%[\"\']}
+  # git -C ignores an empty path and never consults CDPATH; a shell cd does.
+  if [ "$sep" = "-C" ]; then
+    [ -n "$dir" ] || return
+    dir=$(CDPATH='' cd -- "$dir" 2>/dev/null && pwd) || exit 0
+  fi
   if ! cd "$dir" 2>/dev/null; then
     # After a failed "cd <dir>;" the shell still runs the git command, in the
     # original directory, so keep judging cwd. After "&&" it never runs.
@@ -83,7 +90,7 @@ enter() {
   [ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" = true ] || exit 0
 }
 if [[ $command_str =~ $cd_re ]]; then enter "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}"; fi
-if [[ $command_str =~ $git_c_re ]]; then enter "${BASH_REMATCH[1]}"; fi
+if [[ $command_str =~ $git_c_re ]]; then enter "${BASH_REMATCH[2]}" -C; fi
 
 branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null) || exit 0
 
