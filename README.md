@@ -203,6 +203,8 @@ moves the ground under an installed copy.
   applies.
 - `evals/`: `claude plugin eval` cases that check skill behavior (e.g. `ship`
   refusing to commit without a request) rather than file syntax.
+- `scripts/check-rosters.sh`: a CI check that fails when a doc's skill list
+  or skill count drifts from `skills/`.
 - `assets/`: art used by this README. `orc.png` is the mascot in the header,
   `orc-intro.svg` is the animated banner, and `orc-armor.png` is the original
   illustration that banner embeds — kept as the source of the artwork, not
@@ -227,7 +229,7 @@ If the install reports that the plugin isn't active yet, run
 `/reload-plugins` (or `/reload-plugins --force` if it warns about the prompt
 cache).
 
-The skills load as `/orchraft:forgehand`, `/orchraft:warplan`,
+The skills load as `/orchraft:shaman`, `/orchraft:forgehand`, `/orchraft:warplan`,
 `/orchraft:quest`, `/orchraft:ship`,
 `/orchraft:land`, `/orchraft:roast`, `/orchraft:yap`, `/orchraft:lore`,
 `/orchraft:chronicle`, `/orchraft:runes`, `/orchraft:reckoning`,
@@ -345,7 +347,8 @@ target project:
 
 - `skills/` for the canonical `shaman`, `forgehand`, `warplan`, `quest`, `ship`, `land`,
   `roast`, `yap`, `lore`, `chronicle`, `runes`, `reckoning`,
-  `plunder`, `muster`, `herald`, `warchief`, and `watchtower` workflows.
+  `plunder`, `muster`, `herald`, `warpath`, `warchief`, and `watchtower`
+  workflows.
 - `context/policies/` for approval, branch, commit, lore, docs, review, and
   PR writing rules.
 - `context/personality.md` for the orc voice the skills use in success lines.
