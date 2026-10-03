@@ -20,14 +20,25 @@ fail() { echo "roster drift: $*" >&2; status=1; }
 # Names are the skill tokens matched by <name-regex> between the first
 # <start-regex> line and the next <end-regex> line.
 check() {
-  local file=$1 label=$2 start=$3 end=$4 pat=$5 line found
+  local file=$1 label=$2 start=$3 end=$4 pat=$5 line names found
   line=$(grep -nE "$start" "$file" | head -1 | cut -d: -f1)
   if [ -z "$line" ]; then
     fail "$file: $label not found (no line matches /$start/)"
     return
   fi
-  found=$(awk -v l="$line" -v e="$end" 'NR >= l {print} NR > l && $0 ~ e {exit}' "$file" |
-    grep -oE "$pat" | sed -E 's/[^a-z-]+$//; s/.*[^a-z-]//' | sort -u)
+  # Without its end line the range would run to end of file and could still
+  # match, so a renamed end anchor fails as loudly as a renamed start.
+  if ! awk -v l="$line" -v e="$end" 'NR > l && $0 ~ e {f=1; exit} END {exit !f}' "$file"; then
+    fail "$file: $label end not found (no line after $line matches /$end/)"
+    return
+  fi
+  names=$(awk -v l="$line" -v e="$end" 'NR >= l {print} NR > l && $0 ~ e {exit}' "$file" |
+    grep -oE "$pat" | sed -E 's/[^a-z-]+$//; s/.*[^a-z-]//' | sort)
+  found=$(uniq <<< "$names")
+  uniq -d <<< "$names" | while read -r n; do
+    [ -n "$n" ] && echo "roster drift: $file:$line: $label lists '$n' more than once" >&2
+  done
+  [ "$names" = "$found" ] || status=1
   comm -23 <(echo "$expected") <(echo "$found") | while read -r n; do
     [ -n "$n" ] && echo "roster drift: $file:$line: $label is missing skill '$n'" >&2
   done
