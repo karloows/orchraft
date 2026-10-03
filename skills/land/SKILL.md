@@ -25,7 +25,8 @@ Use this skill when the user asks the AI to land work end to end.
 3. Resolve the merge method, then merge.
 4. Sync the local base branch, verify the topic branch actually landed
    before deleting it, and restore any local-changes stash created for this
-   workflow.
+   workflow. In a linked worktree, skip the sync and the deletion but still
+   restore the stash.
 5. Report the result with the actual merge method and branch state.
 
 ## What This Is Not
