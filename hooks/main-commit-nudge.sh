@@ -64,19 +64,25 @@ printf '%s' "$command_str" | grep -qE '(^|[;&|]|[[:space:]])git([[:space:]]+-C[[
 # stands for the whole command, so a chain mixing "git -C <dir> commit" with
 # a bare "git push" is judged by the -C target alone. A non-git cwd already
 # exited above, so none of this runs from one. A target that does not
-# resolve to a git work tree exits silently.
+# resolve to a git work tree exits silently, except a failed "cd <dir>;",
+# which falls back to cwd because the git command still runs there.
 cd_re='^[[:space:]]*cd[[:space:]]+'"$dir_re"'[[:space:]]*(&&|;)'
 git_c_re='git[[:space:]]+-C[[:space:]]+'"$dir_re"'[[:space:]]+(commit|push)([[:space:]]|$)'
 enter() {
-  local dir=$1
+  local dir=$1 sep=${2:-}
   # Expand ~ before unquoting: the shell leaves a quoted "~/x" literal.
   case $dir in "~" | "~/"*) dir="$HOME${dir#\~}" ;; esac
   dir=${dir#[\"\']}
   dir=${dir%[\"\']}
-  cd "$dir" 2>/dev/null || exit 0
+  if ! cd "$dir" 2>/dev/null; then
+    # After a failed "cd <dir>;" the shell still runs the git command, in the
+    # original directory, so keep judging cwd. After "&&" it never runs.
+    [ "$sep" = ";" ] && return
+    exit 0
+  fi
   [ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" = true ] || exit 0
 }
-if [[ $command_str =~ $cd_re ]]; then enter "${BASH_REMATCH[1]}"; fi
+if [[ $command_str =~ $cd_re ]]; then enter "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}"; fi
 if [[ $command_str =~ $git_c_re ]]; then enter "${BASH_REMATCH[1]}"; fi
 
 branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null) || exit 0
