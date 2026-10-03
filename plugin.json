@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "orchraft",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "A clan of orcs hauling a solo dev's mundane chores, so the code wins the glory.",
   "author": {
     "name": "karloows",
