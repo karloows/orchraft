@@ -28,7 +28,7 @@ command -v jq >/dev/null 2>&1 || exit 0
 
 input=$(cat)
 cwd=$(printf '%s' "$input" | jq -r '.cwd // empty')
-if [ -n "$cwd" ] && ! cd "$cwd" 2>/dev/null; then
+if [ -n "$cwd" ] && ! cd "$cwd" >/dev/null 2>&1; then
   exit 0
 fi
 
@@ -88,7 +88,9 @@ enter() {
     [ -n "$dir" ] || return
     dir=$(CDPATH='' cd -- "$dir" 2>/dev/null && pwd) || exit 0
   fi
-  if ! cd "$dir" 2>/dev/null; then
+  # cd prints the new directory when CDPATH resolved it; that must not reach
+  # stdout, which carries only the hook's JSON.
+  if ! cd "$dir" >/dev/null 2>&1; then
     # After a failed "cd <dir>;" the shell still runs the git command, in the
     # original directory, so keep judging cwd. After "&&" it never runs.
     [ "$sep" = ";" ] && return
