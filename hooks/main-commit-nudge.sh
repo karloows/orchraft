@@ -28,9 +28,16 @@ command -v jq >/dev/null 2>&1 || exit 0
 
 input=$(cat)
 cwd=$(printf '%s' "$input" | jq -r '.cwd // empty')
-if [ -n "$cwd" ] && ! cd "$cwd" 2>/dev/null; then
+if [ -n "$cwd" ] && ! cd "$cwd" >/dev/null 2>&1; then
   exit 0
 fi
+
+# GIT_DIR, GIT_WORK_TREE, and the other repository variables Claude inherits
+# (for instance when it was started from a git hook) are deliberately left
+# set. The Bash tool and this hook run in the same environment -- both see
+# them -- so git answers every question below the way it will for the command
+# itself. Clearing them here would make the hook judge a different repository
+# from the one the command acts on.
 
 # Establish relevance before inspecting the command at all: this hook has
 # nothing to say about a Bash call outside a git repository, so it exits
@@ -46,8 +53,57 @@ command_str=$(printf '%s' "$input" | jq -r '.tool_input.command // empty')
 [ -n "$command_str" ] || exit 0
 
 # Match "git commit" or "git push" as their own words, not a substring of
-# something else (e.g. a script path containing "git-commit-helper").
-printf '%s' "$command_str" | grep -qE '(^|[;&|]|[[:space:]])git[[:space:]]+(commit|push)([[:space:]]|$)' || exit 0
+# something else (e.g. a script path containing "git-commit-helper"). An
+# optional "-C <dir>" (bare, or a quoted path) between git and the
+# subcommand still counts.
+dir_re='("[^"]*"|'"'"'[^'"'"']*'"'"'|[^[:space:];&|]+)'
+printf '%s' "$command_str" | grep -qE '(^|[;&|]|[[:space:]])git([[:space:]]+-C[[:space:]]+'"$dir_re"')?[[:space:]]+(commit|push)([[:space:];&|]|$)' || exit 0
+
+# cwd is the session's directory, not necessarily where the git command
+# runs: "cd <worktree> && git commit" or "git -C <worktree> commit" commits
+# in another checkout, and reading cwd's branch there fired a false nudge on
+# every commit from a linked worktree while the session sat on main. Follow
+# a leading "cd <dir>" ending in && or ;, then a "git -C <dir>" (relative to
+# that cd, as the shell would), with a quoted path and ~ handled. Anything
+# else -- pushd, subshells, a cd later in the chain, variables in the path,
+# other git global options before -C -- is deliberately not parsed and falls
+# back to cwd; this is a nudge, not a shell interpreter. The branch judged is
+# the target checkout's current branch: a push refspec such as "topic:main"
+# is not parsed. One resolved target
+# stands for the whole command, so a chain mixing "git -C <dir> commit" with
+# a bare "git push" is judged by the -C target alone, and a leading "cd <dir>"
+# into a directory that is not a work tree ends the check before a later
+# "git -C <repo>" is read. A non-git cwd already
+# exited above, so none of this runs from one. A target that does not
+# resolve to a git work tree exits silently, except a failed "cd <dir>;",
+# which falls back to cwd because the git command still runs there.
+# "git -C" only counts at the start of a command (string start or after a
+# separator), so "git commit -m 'fix git -C x push'" isn't read as a target.
+cd_re='^[[:space:]]*cd[[:space:]]+'"$dir_re"'[[:space:]]*(&&|;)'
+git_c_re='(^|[;&|])[[:space:]]*git[[:space:]]+-C[[:space:]]+'"$dir_re"'[[:space:]]+(commit|push)([[:space:];&|]|$)'
+enter() {
+  local dir=$1 sep=${2:-}
+  # Expand ~ before unquoting: the shell leaves a quoted "~/x" literal.
+  case $dir in "~" | "~/"*) dir="$HOME${dir#\~}" ;; esac
+  dir=${dir#[\"\']}
+  dir=${dir%[\"\']}
+  # git -C ignores an empty path and never consults CDPATH; a shell cd does.
+  if [ "$sep" = "-C" ]; then
+    [ -n "$dir" ] || return
+    dir=$(CDPATH='' cd -- "$dir" 2>/dev/null && pwd) || exit 0
+  fi
+  # cd prints the new directory when CDPATH resolved it; that must not reach
+  # stdout, which carries only the hook's JSON.
+  if ! cd "$dir" >/dev/null 2>&1; then
+    # After a failed "cd <dir>;" the shell still runs the git command, in the
+    # original directory, so keep judging cwd. After "&&" it never runs.
+    [ "$sep" = ";" ] && return
+    exit 0
+  fi
+  [ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" = true ] || exit 0
+}
+if [[ $command_str =~ $cd_re ]]; then enter "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}"; fi
+if [[ $command_str =~ $git_c_re ]]; then enter "${BASH_REMATCH[2]}" -C; fi
 
 branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null) || exit 0
 

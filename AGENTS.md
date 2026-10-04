@@ -225,11 +225,19 @@ not assume a named `agents/` component exists outside hosts that document it.
   when `gh` is missing or unauthenticated.
 - `hooks/main-commit-nudge.sh`: nudges (never blocks — always
   `permissionDecision: allow`) when a `Bash` command is about to run `git
-  commit` or `git push` while the current branch is the repository's
-  default branch, the one bypass `ship`'s own Guardrails single out. The
-  branch comes from `origin/HEAD`, falling back to `main`/`master` when no
-  remote ref exists; it does not read `baseBranch`, which would need a
-  second copy of `watchtower-nudge.sh`'s JSONC parsing. Deliberately scoped
+  commit` or `git push` while the checkout it targets has the repository's
+  default branch checked out, the one bypass `ship`'s own Guardrails single
+  out. It reads that checkout's current branch and does not parse push
+  refspecs, so `git push origin topic:main` from a topic branch gets no
+  nudge. The
+  target is the session's directory unless the command starts with
+  `cd <dir> &&` (or `;`) or uses `git -C <dir>`, so a commit into a linked
+  worktree reads that worktree's branch; other shell forms fall back to the
+  session's directory, and a session directory outside a git work tree
+  exits before the command is read at all. The default branch comes from
+  `origin/HEAD`, falling back to `main`/`master` when no remote ref
+  exists; it does not read `baseBranch`, which would need a second copy of
+  `watchtower-nudge.sh`'s JSONC parsing. Deliberately scoped
   to that one branch, not every commit: a broader version would fire on
   `ship`'s own legitimate commits far more often than it would ever catch a
   real bypass, which is exactly the noise `watchtower-nudge.sh` is designed
