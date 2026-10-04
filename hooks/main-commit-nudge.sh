@@ -32,12 +32,12 @@ if [ -n "$cwd" ] && ! cd "$cwd" >/dev/null 2>&1; then
   exit 0
 fi
 
-# Claude Code started from a git hook inherits git's repository variables, and
-# changing directory does not clear them: every git call below would read the
-# hook's repository, not the checkout the command targets (a missed nudge, or a
-# false one). Drop them so git finds the repository from the directory alone.
-unset GIT_DIR GIT_WORK_TREE GIT_COMMON_DIR GIT_INDEX_FILE GIT_PREFIX \
-  GIT_OBJECT_DIRECTORY GIT_ALTERNATE_OBJECT_DIRECTORIES GIT_NAMESPACE
+# GIT_DIR, GIT_WORK_TREE, and the other repository variables Claude inherits
+# (for instance when it was started from a git hook) are deliberately left
+# set. The Bash tool and this hook run in the same environment -- both see
+# them -- so git answers every question below the way it will for the command
+# itself. Clearing them here would make the hook judge a different repository
+# from the one the command acts on.
 
 # Establish relevance before inspecting the command at all: this hook has
 # nothing to say about a Bash call outside a git repository, so it exits
