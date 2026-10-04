@@ -228,6 +228,18 @@ claude plugin eval . --case <name> --runs 1 --no-publish
   machine whose Docker credential store holds symlinks — the default
   Docker Desktop layout on macOS — so run those cases where that store is
   absent.
+- The `no-git-mutation` graders on the read-only status cases fail closed.
+  Any `git <subcommand>` counts as a mutation unless it is on the
+  read-only list in the grader's `input_match` (`status`, `log`, `diff`,
+  `show`, and similar), and the commands that both read and write
+  (`branch`, `stash`, `tag`, `config`, and a few more) match only their
+  write forms. A command that merely contains `git <word>` in prose, such
+  as `grep "git workflow" README.md`, therefore fails the case. That is
+  deliberate: anchoring `git` to the start of a command would let a write
+  slip past a leading `echo` or `grep`. If a case trips on a legitimate
+  read-only command, add it to the list in all five graders (they are
+  byte-identical) and test the new regex against both mutating and
+  read-only commands before pushing.
 
 ## Trying a skill change locally
 
