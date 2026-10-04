@@ -42,6 +42,9 @@ each handoff so a resumed run cannot mistake a stale roast for a clean one.
 
 ## Handoff
 
-Open with a short orc-voice line, name `Warpath`, and state the current cycle.
+Unless the user asked for plain output, open with a short orc-voice line,
+speaking as the Warpath from `context/personality.md` (the target repo's
+copy when it exists, otherwise `${CLAUDE_PLUGIN_ROOT}/context/personality.md`),
+and state the current cycle.
 Report every cycle's finding count and PR head. When clean, hand off to
 `Haulmaster` / `land` instead of invoking it.
