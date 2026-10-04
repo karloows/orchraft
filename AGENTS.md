@@ -225,8 +225,11 @@ not assume a named `agents/` component exists outside hosts that document it.
   when `gh` is missing or unauthenticated.
 - `hooks/main-commit-nudge.sh`: nudges (never blocks — always
   `permissionDecision: allow`) when a `Bash` command is about to run `git
-  commit` or `git push` while the branch it targets is the repository's
-  default branch, the one bypass `ship`'s own Guardrails single out. The
+  commit` or `git push` while the checkout it targets has the repository's
+  default branch checked out, the one bypass `ship`'s own Guardrails single
+  out. It reads that checkout's current branch and does not parse push
+  refspecs, so `git push origin topic:main` from a topic branch gets no
+  nudge. The
   target is the session's directory unless the command starts with
   `cd <dir> &&` (or `;`) or uses `git -C <dir>`, so a commit into a linked
   worktree reads that worktree's branch; other shell forms fall back to the
