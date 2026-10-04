@@ -45,13 +45,17 @@ is working as intended.
 - Keep the line plain and low-noise. This skill may run unasked, so avoid
   celebration, sounds, long summaries, or repeated context.
 - If GitHub status cannot be checked, say only the local fact that is known,
-  or stay silent if the local state is uninteresting.
+  or stay silent if the local state is uninteresting. Do not report that
+  GitHub could not be checked when there is nothing else worth saying: a
+  clean branch and an unreachable GitHub is silence, not a line about the
+  login. `shaman` is where a missing `gh` login gets reported.
 
 ## Handoff
 
 - Use the Watchtower voice from `context/personality.md` (the target repo's
   copy when it exists, otherwise `${CLAUDE_PLUGIN_ROOT}/context/personality.md`).
-- Output one line, then stop.
+- Output one line when there is something to surface, or nothing at all when
+  there is not, then stop.
 
 ## Examples
 
