@@ -117,6 +117,15 @@ baseline. See "Testing a skill change" below for how to run them, and
 `lore-no-git-mutation`, `roast-without-pr`, `ship-requires-request`) as
 templates for new ones.
 
+### Scripts (`scripts/`)
+
+`check-rosters.sh` compares `skills/` with every complete skill roster and
+skill count in `README.md`, `AGENTS.md`, `CONTRIBUTING.md`, and the bug
+report template, and checks that manifests declaring a `skills` path point
+at `./skills/`. The Validate Plugin workflow runs it; run
+`scripts/check-rosters.sh` locally after adding, renaming, or removing a
+skill. It needs `jq`.
+
 ### Plugin manifest (`.claude-plugin/`)
 
 `plugin.json` and `marketplace.json` are the Claude Code plugin manifest
@@ -219,6 +228,24 @@ claude plugin eval . --case <name> --runs 1 --no-publish
   machine whose Docker credential store holds symlinks — the default
   Docker Desktop layout on macOS — so run those cases where that store is
   absent.
+- The `no-git-mutation` graders on the read-only status cases fail closed.
+  Any `git <subcommand>` or `gh <noun> <verb>` counts as a mutation unless
+  it is on the read-only list in the grader's `input_match` (`status`,
+  `log`, `diff`, `show`, `view`, `list`, and similar), and the git commands
+  that both read and write (`branch`, `stash`, `tag`, `config`, and a few
+  more) match only their write forms. A command that merely contains
+  `git <word>` in prose, such as `grep "git workflow" README.md`,
+  therefore fails the case. That is deliberate: anchoring `git` to the
+  start of a command would let a write slip past a leading `echo` or
+  `grep`. If a case trips on a legitimate read-only command, add it to the
+  list in all five graders (they are byte-identical) and test the new
+  regex against both mutating and read-only commands before pushing.
+  Known limits: quoted arguments are skipped as one unit, but an escaped
+  quote inside a quoted argument, the `'\''` idiom, and a backtick
+  substitution that contains a `|`, `;`, or `&` are not parsed, and an
+  unclosed quote is a shell syntax error that cannot run. Handling those
+  takes a shell tokenizer, not a longer regex; write one only if a case
+  needs it.
 
 ## Trying a skill change locally
 
@@ -252,7 +279,7 @@ branch.
 - If you're adding a new skill, update the skill table in `README.md`, the
   skill list in `AGENTS.md`, and the table above in the same PR. They all
   describe the same skills and drift the moment one is updated alone;
-  `grep -rn watchtower *.md` finds the rosters.
+  `scripts/check-rosters.sh` names any roster or skill count you missed.
 - If you're adding a new policy, list it in `AGENTS.md`'s Policies section
   too.
 - If you're adding a setting to `context/policies/config-policy.md`, or
