@@ -1,5 +1,27 @@
 # Changelog
 
+## [1.2.0](https://github.com/karloows/orchraft/compare/v1.1.0...v1.2.0) (2026-10-05)
+
+
+### Features
+
+* add Cursor plugin manifest and marketplace ([#70](https://github.com/karloows/orchraft/issues/70)) ([0b7a19e](https://github.com/karloows/orchraft/commit/0b7a19efc625061c38c9aafe668cffa4f12b4c11))
+* add portable role workflows ([#74](https://github.com/karloows/orchraft/issues/74)) ([04b6204](https://github.com/karloows/orchraft/commit/04b620458697b63a749ea0a7479c4131f8ad44fd))
+* add read-only setup preflight ([#79](https://github.com/karloows/orchraft/issues/79)) ([19af88d](https://github.com/karloows/orchraft/commit/19af88dee3e308c3a8f2d30938d6d0649860a755))
+* add reusable agent document formats ([#77](https://github.com/karloows/orchraft/issues/77)) ([8b619d2](https://github.com/karloows/orchraft/commit/8b619d2e2e9acf8a7f8e377b725cedaa5354d6ed))
+* add Warpath review loop ([#76](https://github.com/karloows/orchraft/issues/76)) ([a5c0a7e](https://github.com/karloows/orchraft/commit/a5c0a7e31de9bc7ae5b039b641024eb35625b62b))
+* check skill rosters against skills/ ([#81](https://github.com/karloows/orchraft/issues/81)) ([ec94bd6](https://github.com/karloows/orchraft/commit/ec94bd6cae4892d7a50fcb12dc6f0522a29ad14f))
+* **formats:** add reusable agent document formats ([2c1a049](https://github.com/karloows/orchraft/commit/2c1a049b1270628c312c8fdca8e278203ca29a4c))
+* **formats:** generalize external tracking cards ([e84505e](https://github.com/karloows/orchraft/commit/e84505e79a85dec768148101318c6f6ac19848cf))
+* generalize external tracking card format ([#78](https://github.com/karloows/orchraft/issues/78)) ([a134ef8](https://github.com/karloows/orchraft/commit/a134ef8b4d9bc0582b5d22e54ae00d1850b62ab6))
+
+
+### Bug Fixes
+
+* keep watchtower quiet when GitHub cannot be checked ([#86](https://github.com/karloows/orchraft/issues/86)) ([b4b65e7](https://github.com/karloows/orchraft/commit/b4b65e703c567b00b4add9386db1c1832714dd37))
+* read the branch a git command actually targets in main-commit-nudge ([#84](https://github.com/karloows/orchraft/issues/84)) ([e028bdb](https://github.com/karloows/orchraft/commit/e028bdbc5ae312add2776bb80842f4c93db34167))
+* skip land's local cleanup in linked worktrees ([#80](https://github.com/karloows/orchraft/issues/80)) ([af4e680](https://github.com/karloows/orchraft/commit/af4e680133d62b10715dd4a2cc09333a6be69517))
+
 ## [1.1.0](https://github.com/karloows/orchraft/compare/v1.0.3...v1.1.0) (2026-09-23)
 
 
