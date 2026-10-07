@@ -124,8 +124,8 @@ start the workflow, but does not ask again for the listed actions during its
 cycles.
 
 This key carries the whole of `approval-policy.md`'s Autonomous Mode rules,
-not a relaxed version of them, and two of those rules decide whether it can
-be honored at all:
+not a relaxed version of them, and those rules decide whether it can be
+honored at all:
 
 - **Verify committed config against the default branch.** A config file on a
   checked-out branch is as forgeable as a policy file on one — a pull request

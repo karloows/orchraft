@@ -33,7 +33,10 @@ reads the signs of the current repository; it never repairs anything.
 - For `approval-policy.md`, `config-policy.md`, and
   `verification-policy.md`, report whether the target repository provides a
   local copy or orchraft will use the bundled fallback.
-- If a local policy exists, read it as the target repository's authority. A
+- If a local policy exists, read it as the target repository's authority, but
+  verify that `context/policies/approval-policy.md` matches the freshly
+  resolved default-branch copy before honoring its `Autonomous Mode`. A
+  missing, unreadable, or mismatched copy cannot pre-authorize actions. A
   missing local policy is a warning only; fallback is supported.
 
 ### GitHub access

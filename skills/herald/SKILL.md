@@ -58,8 +58,10 @@ who use the project rather than the people who built it.
   target repo's copy when it exists, otherwise
   `${CLAUDE_PLUGIN_ROOT}/context/policies/approval-policy.md`): a request for
   notes is a request for the draft, not for the write. Publish only when the
-  current turn asks for it, unless that policy's Autonomous Mode, verified as
-  it requires, names creating or editing a release for this repository.
+  current turn asks for it, unless that policy's Autonomous Mode matches the
+  freshly resolved default-branch copy and names creating or editing a
+  release for this repository. A failed or mismatched policy verification
+  requires the current-turn approval.
 
 ## Requirements
 

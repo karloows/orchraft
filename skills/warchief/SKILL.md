@@ -17,9 +17,9 @@ next across the software lifecycle, instead of naming a specific skill.
 3. Explain the handoff briefly, then run only the step the approval policy
    says is authorized.
 4. Stop before every git, PR, issue, or release mutation unless the current
-   message explicitly approves that exact mutating workflow, or the approval
-   policy's Autonomous Mode, verified as it requires, names that exact
-   action.
+   message explicitly approves that exact mutating workflow, or the verified
+   default-branch copy of the approval policy or config names that exact
+   action. A failed or mismatched verification is not authorization.
 
 ## Routing
 
