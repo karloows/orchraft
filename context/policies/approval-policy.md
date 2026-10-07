@@ -85,10 +85,15 @@ writes down, not something a skill infers or a single chat reply grants.
   currently checked-out copy or a possibly-stale local tracking ref. If the
   check fails for any reason, or the files disagree, fall back to asking every
   time; never treat a failed or skipped verification as permission.
+- Treat the config path as absent only after successfully resolving the
+  repository and default branch and confirming that the exact active path is
+  missing. Treat fetch, ref-resolution, and API errors as failed verification.
 - If the active config is absent from the default branch, it may still be
-  honored as a machine-local override when `git check-ignore` confirms that
-  exact path is ignored. An untracked config that is not ignored is not an
-  override and still requires approval.
+  honored as a machine-local override when a trusted source independent of
+  the checked-out branch, such as a machine-local exclude or the default
+  branch's ignore files, causes `git check-ignore` to report that exact path
+  as ignored. A pull request's `.gitignore` change does not qualify. An
+  untracked config without a trusted ignore source still requires approval.
 - The override must name the specific actions it pre-authorizes (for example,
   "`ship` may branch, commit, push, and open/update a PR without asking each
   time"). A blanket "approve everything" entry is not valid — list the
