@@ -1,18 +1,20 @@
-# macOS Finder metadata
+# macOS metadata
 .DS_Store
-# npm/node dependency cache
+# Node.js dependencies
 node_modules/
-# local env var overrides (direnv)
+# direnv local environment overrides
 .envrc
-# local MCP server config, may contain secrets/tokens
+# local MCP server config; may contain secrets or tokens
 .mcp.json
 # per-machine Claude Code permission overrides
-.claude/settings.local.json
-# internal roadmap, not for the shipped plugin
+.claude/**
+# maintainer-only roadmap
 ROADMAP.md
-# a maintainer's own orchraft settings; the shipped template is
-# .orchraft.example.jsonc. Projects that install orchraft normally commit
-# theirs so the whole repo shares one answer.
+# maintainer-only orchraft settings; the shipped template is
+# .orchraft.example.jsonc, while installed projects normally commit theirs.
 .orchraft.json
 .orchraft.jsonc
-*/config.toml
+# local Codex configuration
+.codex/**
+# marketing and video assets are not part of the shipped plugin
+promo

@@ -42,10 +42,10 @@ it goes. A blind `s://.*::` also truncates the `//` in a URL, so one
 strand every setting in it; `hooks/watchtower-nudge.sh` has a worked
 example.
 
-Commit the config file rather than ignoring it, so everyone working in the
-repository — and the agent, on any machine — resolves a setting the same
-way. A per-machine preference belongs in a local ignore, not in a file the
-skills read as the repository's answer.
+Commit shared config so everyone working in the repository — and the agent,
+on any machine — resolves those settings the same way. A per-machine
+preference may live in a local `.gitignore`d config; skills read that local
+file when the repository's default branch does not carry the same config.
 
 `.orchraft.example.jsonc` carries every setting documented below, each with
 a comment naming its accepted values, so copying it changes no behavior
@@ -124,24 +124,29 @@ start the workflow, but does not ask again for the listed actions during its
 cycles.
 
 This key carries the whole of `approval-policy.md`'s Autonomous Mode rules,
-not a relaxed version of them, and two of those rules decide whether it can
-be honored at all:
+not a relaxed version of them, and those rules decide whether it can be
+honored at all:
 
-- **Verify it against the default branch, never the working tree.** A config
-  file on a checked-out branch is as forgeable as a policy file on one — a
-  pull request from anyone can add a config that pre-authorizes pushes.
-  Resolve which filename is active first (`.orchraft.jsonc` when both
-  exist), then read that same filename from the repository's default branch
+- **Verify committed config against the default branch.** A config file on a
+  checked-out branch is as forgeable as a policy file on one — a pull request
+  from anyone can add a config that pre-authorizes pushes. Resolve which
+  filename is active first (`.orchraft.jsonc` when both exist), then read that
+  same filename from the repository's default branch
   (`git show origin/<default-branch>:<that file>`, fetched fresh, or the
   equivalent authenticated API call) and compare. Reading a different
   filename than the one in play compares two unrelated files. If the read
   fails, or disagrees with the checked-out copy, ask every time. A failed
-  check is never permission.
-- **A config the default branch does not carry is not an override.** A
-  pull request that introduces `.orchraft.jsonc` where the default branch
-  has only `.orchraft.json`, or introduces a config where none existed, has
-  added the file rather than inherited it — treat the missing counterpart
-  as a disagreement and ask.
+  check is never permission. Treat the path as absent only after successfully
+  resolving the repository and default branch and confirming that the exact
+  active path is missing. Treat fetch, ref-resolution, and API errors as
+  failed checks.
+- **A local ignored config is a valid machine-local override.** If the active
+  config is absent from the default branch, honor it only when
+  `git check-ignore` confirms that exact path is ignored by a trusted source
+  independent of the checked-out branch, such as a machine-local exclude or
+  the default branch's ignore files. A pull request's `.gitignore` change
+  does not qualify. If no trusted source ignores the exact path, treat it as a
+  disagreement and ask.
 - **Named actions only.** A blanket `true`, `"all"`, or `["*"]` is not
   valid and is treated as absent. List the actions.
 
