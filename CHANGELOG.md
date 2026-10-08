@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/karloows/orchraft/compare/v1.2.0...v1.2.1) (2026-10-08)
+
+
+### Bug Fixes
+
+* honor ignored local orchraft config ([#87](https://github.com/karloows/orchraft/issues/87)) ([5758887](https://github.com/karloows/orchraft/commit/57588871734271fad000d7d35da2f247eae695bb))
+
 ## [1.2.0](https://github.com/karloows/orchraft/compare/v1.1.0...v1.2.0) (2026-10-05)
 
 
