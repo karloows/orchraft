@@ -38,6 +38,11 @@ reads the signs of the current repository; it never repairs anything.
   resolved default-branch copy before honoring its `Autonomous Mode`. A
   missing, unreadable, or mismatched copy cannot pre-authorize actions. A
   missing local policy is a warning only; fallback is supported.
+- When checking Autonomous Mode from the active config, apply the shared
+  config-policy verification rules: compare committed config with the default
+  branch, or require a trusted exact-path ignore source for a local config
+  absent from that branch. Failed or mismatched verification cannot authorize
+  actions.
 
 ### GitHub access
 
