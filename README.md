@@ -330,6 +330,24 @@ using its install section above.
 under [Requirements](#requirements) to open pull requests, post reviews,
 merge, and manage issues.
 
+## opencode
+
+opencode can't install a Claude Code plugin, so a script installs the
+pieces in opencode's own layout:
+
+```sh
+scripts/install-opencode.sh /path/to/your/project
+```
+
+It copies `skills/` to `.agents/skills/` and `context/` to the project
+root, and converts `agents/*.md` into `.opencode/agents/` subagents (the
+read-only ones get `edit: deny`). opencode reads `AGENTS.md` itself. Checked
+against opencode 2.2.5: the skills, the agents, and `AGENTS.md` load.
+
+The `watchtower` and main-branch commit nudges are not ported. opencode
+2.x plugins can't hook tool calls or session start, and its old hook-style
+plugin format no longer loads, so `hooks/` stays Claude Code only.
+
 ## First 60 Seconds
 
 No command needed to see it work. As a Claude Code plugin install,
