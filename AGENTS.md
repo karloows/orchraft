@@ -208,6 +208,14 @@ not assume a named `agents/` component exists outside hosts that document it.
   CLI) use their own instruction files and plugin installs, not Zed's
   loader.
 
+- opencode: has no plugin install, so `scripts/install-opencode.sh <project>`
+  copies `skills/` to `.agents/skills/` and `context/` to the project root,
+  and converts `agents/*.md` into `.opencode/agents/` subagents (the
+  read-only ones get `edit: deny`). opencode reads a project's `AGENTS.md`
+  itself. The hooks are not ported: opencode 2.x plugins can't hook tool
+  calls or session start. Verified live against opencode 2.2.5 for skills,
+  agents, and `AGENTS.md` loading only, not a model run.
+
 ## Hooks
 
 - `hooks/hooks.json`: declares a `SessionStart` hook (matched on

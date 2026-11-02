@@ -6,7 +6,8 @@ src=$(cd "$(dirname "$0")/.." && pwd)
 dst=${1:?usage: install-opencode.sh <target-project-dir>}
 
 mkdir -p "$dst/.agents" "$dst/.opencode/agents"
-cp -R "$src/skills" "$dst/.agents/skills"
+mkdir -p "$dst/.agents/skills"
+cp -R "$src/skills/." "$dst/.agents/skills/"
 cp -R "$src/context" "$dst/"
 
 # Claude agent -> opencode agent: drop name/tools/skills, add mode, and deny
