@@ -90,4 +90,5 @@ for f in "$src"/agents/*.md; do
   ' "$f" | sed -E 's#skills/#.agents/skills/#g; s#orchraft:([a-z-]+)#\1#g' > "$tmp"
   copy_new "$tmp" "$dst/.opencode/agents/$(basename "$f")" || exit 1
 done
+echo "note: read-only agents' shell rules come after your project rules in opencode, so they override a project shell deny; re-add hard denies in .opencode/agents/*.md."
 echo "note: warpath delegates to forgehand, so set experimental.subagent_depth to 2 in your opencode config (default 1)."
