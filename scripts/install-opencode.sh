@@ -16,6 +16,9 @@ copy_new() {
 
 mkdir -p "$dst/.agents/skills" "$dst/.opencode/agents"
 cp -R "$src/skills/." "$dst/.agents/skills/"
+# Skills cite each other as skills/<name>/SKILL.md; point those at the installed path.
+find "$dst/.agents/skills" -name SKILL.md -exec sed -i.bak -E 's#skills/([a-z-]+)/SKILL\.md#.agents/skills/\1/SKILL.md#g' {} + \
+  && find "$dst/.agents/skills" -name SKILL.md.bak -delete
 (cd "$src/context" && find . -type f ! -name .DS_Store) | while read -r f; do
   copy_new "$src/context/${f#./}" "$dst/context/${f#./}"
 done
