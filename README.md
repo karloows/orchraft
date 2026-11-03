@@ -341,11 +341,16 @@ scripts/install-opencode.sh /path/to/your/project
 
 It copies `skills/` to `.agents/skills/` (refreshed on every run) and
 `context/` to the project root, and converts `agents/*.md` into
-`.opencode/agents/` subagents. The read-only ones get `edit: deny`, cannot
-delegate (except `warpath`, the orchestrator), and ask before any shell
-command outside a short list of read-only `git`/`gh`/file commands. That is
+`.opencode/agents/` subagents. Every agent without the `Agent` tool in its
+Claude definition gets `task: deny`; the read-only ones also get `edit: deny`
+and ask before any shell command outside a short list of read-only
+`git`/`gh`/file commands. That is
 a guardrail, not a sandbox: an allowed command can still redirect output, so
-the agent's own instructions remain the rule. A `context/` or agent file that already exists in the project is kept, not
+the agent's own instructions remain the rule. `warpath` is the one agent
+that delegates, to `forgehand`, and opencode's default
+`experimental.subagent_depth` of 1 stops a subagent from starting another, so
+set it to `2` in your own opencode config; the installer never edits that
+file. A `context/` or agent file that already exists in the project is kept, not
 overwritten, so your edited policies survive a re-run. opencode reads
 `AGENTS.md` itself. Checked against opencode 2.2.5: the skills, the agents,
 and `AGENTS.md` load.

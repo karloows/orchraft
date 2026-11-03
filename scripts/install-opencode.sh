@@ -24,9 +24,14 @@ done
 # edits when the Claude tool list had no Edit/Write. Body is kept verbatim
 # except skill paths and the plugin-qualified agent names (orchraft:forgehand
 # -> forgehand), which are plain names once installed this way.
-# Read-only agents ask before any shell command outside this list, and cannot
-# delegate unless they are orchestrators. A guardrail, not a sandbox: an
+# Read-only agents ask before any shell command outside this list. Any agent
+# without the Agent tool in its Claude tool list cannot delegate, so it gets
+# task: deny whether or not it can edit. A guardrail, not a sandbox: an
 # allowed command can still redirect output, so the agent text stays the rule.
+# warpath is the one agent that delegates (to forgehand and trialmaster). It is
+# a subagent here, and opencode's default experimental.subagent_depth of 1 stops
+# a subagent from starting another, so the user must set it to 2 in their own
+# opencode config. This script never edits that config.
 readonly_bash=$(for c in "git status" "git log" "git diff" "git show" \
   "git branch --show-current" "git branch --list" "git rev-parse" \
   "git remote -v" "git remote get-url" "git ls-files" "gh pr view" \
@@ -40,12 +45,15 @@ for f in "$src"/agents/*.md; do
   grep -E '^tools:.*Agent' "$f" >/dev/null && del=1 || del=0
   ro="$readonly_bash" awk -v rw="$rw" -v del="$del" '
     /^---$/ && n < 2 { n++
-      if (n == 2) { print "mode: subagent"; if (rw == 0) { print "permission:\n  edit: deny"
+      if (n == 2) { print "mode: subagent"
+        if (rw == 0 || del == 0) print "permission:"
+        if (rw == 0) print "  edit: deny"
         if (del == 0) print "  task: deny"
-        print "  bash:\n    \"*\": ask"; print ENVIRON["ro"] } }
+        if (rw == 0) { print "  bash:\n    \"*\": ask"; print ENVIRON["ro"] } }
       print; next }
     n == 1 && !/^description:/ { next }
     { print }
   ' "$f" | sed -E 's#skills/#.agents/skills/#g; s#orchraft:([a-z-]+)#\1#g' > "$tmp"
   copy_new "$tmp" "$dst/.opencode/agents/$(basename "$f")"
 done
+echo "note: warpath delegates to forgehand, so set experimental.subagent_depth to 2 in your opencode config (default 1)."

@@ -209,10 +209,11 @@ not assume a named `agents/` component exists outside hosts that document it.
   loader.
 - opencode: has no plugin install, so `scripts/install-opencode.sh <project>`
   copies `skills/` to `.agents/skills/` and `context/` to the project root,
-  and converts `agents/*.md` into `.opencode/agents/` subagents (the
-  read-only ones get `edit: deny`, no delegation except `warpath`, and
-  ask-before-shell outside a read-only command list). opencode reads a
-  project's `AGENTS.md` itself. Existing `context/` and agent files in the target are kept. The
+  and converts `agents/*.md` into `.opencode/agents/` subagents (all
+  get `task: deny` except `warpath`; read-only ones also get `edit: deny` and
+  ask-before-shell outside a read-only command list; `warpath` needs
+  `experimental.subagent_depth: 2` in the user's opencode config). opencode
+  reads a project's `AGENTS.md` itself. Existing `context/` and agent files in the target are kept. The
   hooks are not ported yet: opencode 2.2.5's plugin API exposes a tool
   `execute.before` hook and an event subscription, so a port looks possible
   but is unwritten and untested. Verified live against opencode 2.2.5 for
