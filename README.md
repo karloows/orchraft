@@ -334,11 +334,12 @@ merge, and manage issues.
 
 opencode can't install a Claude Code plugin, so a script installs the
 pieces in opencode's own layout. Clone orchraft, then run the script from
-that checkout with your project's path:
+inside that checkout with your project's path:
 
 ```sh
 git clone https://github.com/karloows/orchraft
-orchraft/scripts/install-opencode.sh /path/to/your/project
+cd orchraft
+scripts/install-opencode.sh /path/to/your/project
 ```
 
 It copies `skills/` to `.agents/skills/` (refreshed on every run) and
