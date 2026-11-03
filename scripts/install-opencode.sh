@@ -14,7 +14,10 @@ copy_new() {
   # Write beside the target, then link into place only if it is still absent, so
   # an interrupted copy never leaves a partial file that later runs call "kept".
   # cat, not cp: a mktemp source is 0600 and cp would carry that mode over.
-  part="$2.part.$$"
+  # mktemp creates the file exclusively, so a planted symlink is never followed;
+  # it is 0600, so restore the mode the umask would have given a plain write.
+  part=$(mktemp "$2.part.XXXXXX") || return 1
+  chmod "$(printf '%o' $((0666 & ~$(umask))))" "$part" || { rm -f "$part"; return 1; }
   # Callers use "|| exit 1", which turns set -e off in here, so check each step.
   cat "$1" > "$part" || { rm -f "$part"; return 1; }
   if ! ln "$part" "$2" 2>/dev/null; then
