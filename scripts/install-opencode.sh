@@ -92,4 +92,4 @@ for f in "$src"/agents/*.md; do
   copy_new "$tmp" "$dst/.opencode/agents/$(basename "$f")" || exit 1
 done
 echo "note: read-only agents' shell rules come after your project rules in opencode, so they override a project shell deny; re-add hard denies in .opencode/agents/*.md."
-echo "note: warpath delegates to forgehand, so set experimental.subagent_depth to 2 in your opencode config (default 1)."
+echo "note: warpath delegates to forgehand and trialmaster, so set experimental.subagent_depth to 2 in your opencode config (default 1)."

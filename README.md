@@ -354,7 +354,8 @@ after your project's, so these shell rules win over a project `shell` deny for
 the same command (a denied `cat *` becomes allowed, other denies become
 `ask`); if you rely on hard denies, add them to the generated agent files
 too. `warpath` is the one agent
-that delegates, to `forgehand`, and opencode's default
+that delegates, to `forgehand` and, for read-only analysis before `roast`,
+`trialmaster`, and opencode's default
 `experimental.subagent_depth` of 1 stops a subagent from starting another, so
 set it to `2` in your own opencode config; the installer never edits that
 file. A `context/` or agent file that already exists in the project is kept, not
