@@ -15,9 +15,10 @@ copy_new() {
   # an interrupted copy never leaves a partial file that later runs call "kept".
   # cat, not cp: a mktemp source is 0600 and cp would carry that mode over.
   # mktemp creates the file exclusively, so a planted symlink is never followed;
-  # it is 0600, so restore the mode the umask would have given a plain write.
+  # it is 0600, so restore the mode a plain write would get, capped at 0644 so a
+  # permissive umask never makes an installed file group- or world-writable.
   part=$(mktemp "$2.part.XXXXXX") || return 1
-  chmod "$(printf '%o' $((0666 & ~$(umask))))" "$part" || { rm -f "$part"; return 1; }
+  chmod "$(printf '%o' $((0644 & ~$(umask))))" "$part" || { rm -f "$part"; return 1; }
   # Callers use "|| exit 1", which turns set -e off in here, so check each step.
   cat "$1" > "$part" || { rm -f "$part"; return 1; }
   if ! ln "$part" "$2" 2>/dev/null; then
@@ -32,6 +33,20 @@ copy_new() {
   rm -f "$part"
 }
 
+# The skills directory and its parent must be real directories too, or cp -R
+# would copy through the link into wherever it points.
+# The same goes for every other directory it writes into: .opencode/agents and
+# the context tree (each directory orchraft's context/ has, since copy_new
+# would otherwise write through a linked context/policies).
+check_dirs() {
+  while IFS= read -r d; do
+    if [ -L "$d" ]; then echo "refusing to install through symlink $d" >&2; exit 1; fi
+  done
+}
+{
+  printf '%s\n' "$dst/.agents" "$dst/.agents/skills" "$dst/.opencode" "$dst/.opencode/agents" "$dst/context"
+  (cd "$src/context" && find . -mindepth 1 -type d) | while IFS= read -r d; do printf '%s\n' "$dst/context/${d#./}"; done
+} | check_dirs
 mkdir -p "$dst/.agents/skills" "$dst/.opencode/agents"
 # Refuse to write through a symlink where an orchraft skill file or directory
 # belongs: cp and the rewrite below would follow it into the user's own files.
@@ -59,7 +74,9 @@ done
 # edits when the Claude tool list had no Edit/Write. Body is kept verbatim
 # except skill paths and the plugin-qualified agent names (orchraft:forgehand
 # -> forgehand), which are plain names once installed this way.
-# Read-only agents ask before any shell command outside this list. Any agent
+# Read-only agents ask before any shell command outside this list. File reads
+# (cat, grep, ...) are left out: they have the read tools, and a shell read
+# would skip opencode's ask on .env files. Any agent
 # without the Agent tool in its Claude tool list cannot delegate, so it gets
 # task: deny whether or not it can edit. A guardrail, not a sandbox: an
 # allowed command can still redirect output, so the agent text stays the rule.
@@ -70,7 +87,7 @@ done
 readonly_bash=$(for c in "git status" "git log" "git diff" "git show" \
   "git branch --show-current" "git branch --list" "git rev-parse" \
   "git remote -v" "git remote get-url" "git ls-files" "gh pr view" \
-  "gh pr list" "gh pr checks" "gh pr diff" ls cat grep rg head tail wc jq; do
+  "gh pr list" "gh pr checks" "gh pr diff" ls; do
   printf '    "%s *": allow\n' "$c"; done)
 
 tmp=$(mktemp)

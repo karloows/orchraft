@@ -216,8 +216,10 @@ not assume a named `agents/` component exists outside hosts that document it.
   reads a project's `AGENTS.md` itself. Existing `context/` and agent files in the target are kept. The
   hooks are not ported yet: opencode 2.2.5's plugin API exposes a tool
   `execute.before` hook and an event subscription, so a port looks possible
-  but is unwritten and untested. Verified live against opencode 2.2.5 for
-  skills, agents, and `AGENTS.md` loading only, not a model run.
+  but is unwritten and untested. Checked live against opencode 2.2.5
+  only for agent loading (`opencode debug agents --standalone` lists the
+  eight agents with their permissions), not skills, `AGENTS.md`, or a model
+  run.
 
 ## Hooks
 

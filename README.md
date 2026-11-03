@@ -347,11 +347,11 @@ It copies `skills/` to `.agents/skills/` (refreshed on every run) and
 `.opencode/agents/` subagents. Every agent without the `Agent` tool in its
 Claude definition gets `task: deny`; the read-only ones also get `edit: deny`
 and ask before any shell command outside a short list of read-only
-`git`/`gh`/file commands. That is
+`git`/`gh`/`ls` commands. That is
 a guardrail, not a sandbox: an allowed command can still redirect output, so
 the agent's own instructions remain the rule. opencode appends agent rules
 after your project's, so these shell rules win over a project `shell` deny for
-the same command (a denied `cat *` becomes allowed, other denies become
+the same command (a denied `ls *` becomes allowed, other denies become
 `ask`); if you rely on hard denies, add them to the generated agent files
 too. `warpath` is the one agent
 that delegates, to `forgehand` and, for read-only analysis before `roast`,
@@ -359,16 +359,32 @@ that delegates, to `forgehand` and, for read-only analysis before `roast`,
 `experimental.subagent_depth` of 1 stops a subagent from starting another, so
 set it to `2` in your own opencode config; the installer never edits that
 file. A `context/` or agent file that already exists in the project is kept, not
-overwritten, so your edited policies survive a re-run. opencode reads
-`AGENTS.md` itself. Checked against opencode 2.2.5: the skills, the agents,
-and `AGENTS.md` load.
+overwritten, so your edited policies survive a re-run.
+
+What opencode 2.2.5 does with these files, from its own docs at the
+[v2.2.5 tag](https://github.com/anomalyco/opencode/tree/v2.2.5/services/www/src/docs/content):
+[`skills.mdx`](https://github.com/anomalyco/opencode/blob/v2.2.5/services/www/src/docs/content/skills.mdx)
+lists `.agents/skills` as a project skills location,
+[`agents.mdx`](https://github.com/anomalyco/opencode/blob/v2.2.5/services/www/src/docs/content/agents.mdx)
+loads Markdown agents from `.opencode/agents/<name>.md`, and
+[`instructions.mdx`](https://github.com/anomalyco/opencode/blob/v2.2.5/services/www/src/docs/content/instructions.mdx)
+loads a project `AGENTS.md`. The one check run here: after installing into a
+scratch project, `opencode debug agents --standalone` run in that project
+listed the eight converted agents (`chronicler`, `forgehand`, `loremaster`,
+`rune-reader`, `scout`, `tactician`, `trialmaster`, `warpath`) with the
+`edit`, `shell`, and `subagent` permission rules written as above. Skill and
+`AGENTS.md` loading, and any model run, were not checked here.
 
 The `watchtower` and main-branch commit nudges are not ported yet, so
 `hooks/` stays Claude Code only. opencode 2.2.5's plugin API does expose a
 tool `execute.before` hook and an event subscription (see
-`packages/plugin/src/promise/tool.ts` and `event.ts` upstream), so a port
-looks possible, but none has been written or run here. A plugin written for
-the older hook-style API failed to load on 2.2.5.
+[`tool.ts`](https://github.com/anomalyco/opencode/blob/v2.2.5/packages/plugin/src/promise/tool.ts)
+and
+[`event.ts`](https://github.com/anomalyco/opencode/blob/v2.2.5/packages/plugin/src/promise/event.ts)),
+so a port looks possible, but none has been written or run here. opencode's
+[V1 migration guide](https://github.com/anomalyco/opencode/blob/v2.2.5/services/www/src/docs/content/build/plugins/migrate-v1.mdx)
+says V1 plugin code does not run on V2, so a hook-style plugin has to be
+ported, not renamed.
 
 ## First 60 Seconds
 
