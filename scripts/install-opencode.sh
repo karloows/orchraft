@@ -42,11 +42,12 @@ mkdir -p "$dst/.agents/skills" "$dst/.opencode/agents"
 done
 cp -R "$src/skills/." "$dst/.agents/skills/"
 # Skills cite each other as skills/<name>/SKILL.md; point those at the installed
-# path. Only the files just copied are touched, never a skill the user added.
+# path, and shaman's plugin-package wording at the installed skills directory.
+# Only the files just copied are touched, never a skill the user added.
 rw_tmp=$(mktemp)
 for f in "$src"/skills/*/SKILL.md; do
   t="$dst/.agents/skills/${f#"$src"/skills/}"
-  sed -E 's#skills/([a-z-]+)/SKILL\.md#.agents/skills/\1/SKILL.md#g' "$t" > "$rw_tmp"
+  sed -E 's#skills/([a-z-]+)/SKILL\.md#.agents/skills/\1/SKILL.md#g; s# and the orchraft plugin root##g; s#the loaded orchraft package contains `skills/` and#`.agents/skills/` contains#g; s#inspect the package for the other#inspect `.agents/skills/` for the other#g' "$t" > "$rw_tmp"
   cat "$rw_tmp" > "$t"
 done
 rm -f "$rw_tmp"
