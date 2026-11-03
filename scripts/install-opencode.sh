@@ -1,24 +1,51 @@
 #!/usr/bin/env bash
 # Install orchraft into a project for opencode: skills, policies, and the agents converted to opencode's format.
+# Skills are orchraft-owned and refreshed on every run. Policies and agents may
+# be customised or hand-written in the target, so an existing file is kept.
 # Usage: scripts/install-opencode.sh <target-project-dir>
 set -euo pipefail
 src=$(cd "$(dirname "$0")/.." && pwd)
 dst=${1:?usage: install-opencode.sh <target-project-dir>}
 
-mkdir -p "$dst/.agents" "$dst/.opencode/agents"
-mkdir -p "$dst/.agents/skills"
+# copy_new <from> <to>: copy unless <to> already exists.
+copy_new() {
+  if [ -e "$2" ]; then echo "kept existing $2"; return; fi
+  mkdir -p "$(dirname "$2")"
+  cp "$1" "$2"
+}
+
+mkdir -p "$dst/.agents/skills" "$dst/.opencode/agents"
 cp -R "$src/skills/." "$dst/.agents/skills/"
-cp -R "$src/context" "$dst/"
+(cd "$src/context" && find . -type f ! -name .DS_Store) | while read -r f; do
+  copy_new "$src/context/${f#./}" "$dst/context/${f#./}"
+done
 
 # Claude agent -> opencode agent: drop name/tools/skills, add mode, and deny
-# edits when the Claude tool list had no Edit/Write. Body is kept verbatim.
+# edits when the Claude tool list had no Edit/Write. Body is kept verbatim
+# except skill paths and the plugin-qualified agent names (orchraft:forgehand
+# -> forgehand), which are plain names once installed this way.
+# Read-only agents ask before any shell command outside this list, and cannot
+# delegate unless they are orchestrators. A guardrail, not a sandbox: an
+# allowed command can still redirect output, so the agent text stays the rule.
+readonly_bash=$(for c in "git status" "git log" "git diff" "git show" \
+  "git branch --show-current" "git branch --list" "git rev-parse" \
+  "git remote -v" "git remote get-url" "git ls-files" "gh pr view" \
+  "gh pr list" "gh pr checks" "gh pr diff" ls cat grep rg head tail wc jq; do
+  printf '    "%s *": allow\n' "$c"; done)
+
+tmp=$(mktemp)
+trap 'rm -f "$tmp"' EXIT
 for f in "$src"/agents/*.md; do
   grep -E '^tools:.*(Edit|Write)' "$f" >/dev/null && rw=1 || rw=0
-  awk -v rw="$rw" '
+  grep -E '^tools:.*Agent' "$f" >/dev/null && del=1 || del=0
+  ro="$readonly_bash" awk -v rw="$rw" -v del="$del" '
     /^---$/ && n < 2 { n++
-      if (n == 2) { print "mode: subagent"; if (rw == 0) print "permission:\n  edit: deny" }
+      if (n == 2) { print "mode: subagent"; if (rw == 0) { print "permission:\n  edit: deny"
+        if (del == 0) print "  task: deny"
+        print "  bash:\n    \"*\": ask"; print ENVIRON["ro"] } }
       print; next }
     n == 1 && !/^description:/ { next }
     { print }
-  ' "$f" | sed 's#skills/#.agents/skills/#g' > "$dst/.opencode/agents/$(basename "$f")"
+  ' "$f" | sed -E 's#skills/#.agents/skills/#g; s#orchraft:([a-z-]+)#\1#g' > "$tmp"
+  copy_new "$tmp" "$dst/.opencode/agents/$(basename "$f")"
 done

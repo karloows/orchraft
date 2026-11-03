@@ -339,14 +339,23 @@ pieces in opencode's own layout:
 scripts/install-opencode.sh /path/to/your/project
 ```
 
-It copies `skills/` to `.agents/skills/` and `context/` to the project
-root, and converts `agents/*.md` into `.opencode/agents/` subagents (the
-read-only ones get `edit: deny`). opencode reads `AGENTS.md` itself. Checked
-against opencode 2.2.5: the skills, the agents, and `AGENTS.md` load.
+It copies `skills/` to `.agents/skills/` (refreshed on every run) and
+`context/` to the project root, and converts `agents/*.md` into
+`.opencode/agents/` subagents. The read-only ones get `edit: deny`, cannot
+delegate (except `warpath`, the orchestrator), and ask before any shell
+command outside a short list of read-only `git`/`gh`/file commands. That is
+a guardrail, not a sandbox: an allowed command can still redirect output, so
+the agent's own instructions remain the rule. A `context/` or agent file that already exists in the project is kept, not
+overwritten, so your edited policies survive a re-run. opencode reads
+`AGENTS.md` itself. Checked against opencode 2.2.5: the skills, the agents,
+and `AGENTS.md` load.
 
-The `watchtower` and main-branch commit nudges are not ported. opencode
-2.x plugins can't hook tool calls or session start, and its old hook-style
-plugin format no longer loads, so `hooks/` stays Claude Code only.
+The `watchtower` and main-branch commit nudges are not ported yet, so
+`hooks/` stays Claude Code only. opencode 2.2.5's plugin API does expose a
+tool `execute.before` hook and an event subscription (see
+`packages/plugin/src/promise/tool.ts` and `event.ts` upstream), so a port
+looks possible, but none has been written or run here. A plugin written for
+the older hook-style API failed to load on 2.2.5.
 
 ## First 60 Seconds
 
