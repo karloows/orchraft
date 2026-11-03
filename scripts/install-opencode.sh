@@ -15,8 +15,17 @@ copy_new() {
   # an interrupted copy never leaves a partial file that later runs call "kept".
   # cat, not cp: a mktemp source is 0600 and cp would carry that mode over.
   part="$2.part.$$"
-  cat "$1" > "$part"
-  ln "$part" "$2" 2>/dev/null || echo "kept existing $2"
+  # Callers use "|| exit 1", which turns set -e off in here, so check each step.
+  cat "$1" > "$part" || { rm -f "$part"; return 1; }
+  if ! ln "$part" "$2" 2>/dev/null; then
+    if [ -e "$2" ] || [ -L "$2" ]; then
+      echo "kept existing $2"
+    else
+      echo "failed to install $2" >&2
+      rm -f "$part"
+      return 1
+    fi
+  fi
   rm -f "$part"
 }
 
@@ -31,7 +40,7 @@ for f in "$src"/skills/*/SKILL.md; do
 done
 rm -f "$rw_tmp"
 (cd "$src/context" && find . -type f ! -name .DS_Store) | while read -r f; do
-  copy_new "$src/context/${f#./}" "$dst/context/${f#./}"
+  copy_new "$src/context/${f#./}" "$dst/context/${f#./}" || exit 1
 done
 
 # Claude agent -> opencode agent: drop name/tools/skills, add mode, and deny
@@ -68,6 +77,6 @@ for f in "$src"/agents/*.md; do
     n == 1 && !/^description:/ { next }
     { print }
   ' "$f" | sed -E 's#skills/#.agents/skills/#g; s#orchraft:([a-z-]+)#\1#g' > "$tmp"
-  copy_new "$tmp" "$dst/.opencode/agents/$(basename "$f")"
+  copy_new "$tmp" "$dst/.opencode/agents/$(basename "$f")" || exit 1
 done
 echo "note: warpath delegates to forgehand, so set experimental.subagent_depth to 2 in your opencode config (default 1)."
