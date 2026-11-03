@@ -11,7 +11,13 @@ dst=${1:?usage: install-opencode.sh <target-project-dir>}
 copy_new() {
   if [ -e "$2" ]; then echo "kept existing $2"; return; fi
   mkdir -p "$(dirname "$2")"
-  cat "$1" > "$2" # not cp: a mktemp source is 0600 and cp would carry that over
+  # Write beside the target, then link into place only if it is still absent, so
+  # an interrupted copy never leaves a partial file that later runs call "kept".
+  # cat, not cp: a mktemp source is 0600 and cp would carry that mode over.
+  part="$2.part.$$"
+  cat "$1" > "$part"
+  ln "$part" "$2" 2>/dev/null || echo "kept existing $2"
+  rm -f "$part"
 }
 
 mkdir -p "$dst/.agents/skills" "$dst/.opencode/agents"
