@@ -11,17 +11,19 @@ dst=${1:?usage: install-opencode.sh <target-project-dir>}
 copy_new() {
   if [ -e "$2" ]; then echo "kept existing $2"; return; fi
   mkdir -p "$(dirname "$2")"
-  cp "$1" "$2"
+  cat "$1" > "$2" # not cp: a mktemp source is 0600 and cp would carry that over
 }
 
 mkdir -p "$dst/.agents/skills" "$dst/.opencode/agents"
 cp -R "$src/skills/." "$dst/.agents/skills/"
 # Skills cite each other as skills/<name>/SKILL.md; point those at the installed
 # path. Only the files just copied are touched, never a skill the user added.
+rw_tmp=$(mktemp)
 for f in "$src"/skills/*/SKILL.md; do
-  sed -i.bak -E 's#skills/([a-z-]+)/SKILL\.md#.agents/skills/\1/SKILL.md#g' "$dst/.agents/skills/${f#"$src"/skills/}"
-  rm -f "$dst/.agents/skills/${f#"$src"/skills/}.bak"
+  t="$dst/.agents/skills/${f#"$src"/skills/}"
+  sed -E 's#skills/([a-z-]+)/SKILL\.md#.agents/skills/\1/SKILL.md#g' "$t" > "$rw_tmp" && cat "$rw_tmp" > "$t"
 done
+rm -f "$rw_tmp"
 (cd "$src/context" && find . -type f ! -name .DS_Store) | while read -r f; do
   copy_new "$src/context/${f#./}" "$dst/context/${f#./}"
 done
