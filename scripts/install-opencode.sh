@@ -30,13 +30,21 @@ copy_new() {
 }
 
 mkdir -p "$dst/.agents/skills" "$dst/.opencode/agents"
+# Refuse to write through a symlink where an orchraft skill file or directory
+# belongs: cp and the rewrite below would follow it into the user's own files.
+(cd "$src/skills" && find . -mindepth 1 -print) | while read -r f; do
+  if [ -L "$dst/.agents/skills/${f#./}" ]; then
+    echo "refusing to overwrite symlink $dst/.agents/skills/${f#./}" >&2; exit 1
+  fi
+done
 cp -R "$src/skills/." "$dst/.agents/skills/"
 # Skills cite each other as skills/<name>/SKILL.md; point those at the installed
 # path. Only the files just copied are touched, never a skill the user added.
 rw_tmp=$(mktemp)
 for f in "$src"/skills/*/SKILL.md; do
   t="$dst/.agents/skills/${f#"$src"/skills/}"
-  sed -E 's#skills/([a-z-]+)/SKILL\.md#.agents/skills/\1/SKILL.md#g' "$t" > "$rw_tmp" && cat "$rw_tmp" > "$t"
+  sed -E 's#skills/([a-z-]+)/SKILL\.md#.agents/skills/\1/SKILL.md#g' "$t" > "$rw_tmp"
+  cat "$rw_tmp" > "$t"
 done
 rm -f "$rw_tmp"
 (cd "$src/context" && find . -type f ! -name .DS_Store) | while read -r f; do
