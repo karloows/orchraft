@@ -388,6 +388,13 @@ the result, `ctx.session.hook("context", ...)` to inject it into the next
 model request's system prompt, and `ctx.tool.hook("execute.after", ...)` to
 append the main-branch commit nudge to a `bash` tool's result.
 
+Unlike the Claude Code `PreToolUse` hook this ports, which warns before the
+`git commit`/`push` runs, the opencode nudge fires after it: `execute.before`
+has no result yet for the main-branch nudge to append text to, and the model
+only ever sees a tool's result, not a pre-execution hook's return value. So on
+opencode this is an after-the-fact note that a commit or push to the base
+branch already happened, not a chance to reconsider first.
+
 Checked live against the installed opencode 2.2.5 binary: the object-return
 style documented at [opencode.ai/docs/plugins](https://opencode.ai/docs/plugins)
 (`export const Foo = async ({directory, ...}) => ({hooks})`) is rejected by
@@ -400,7 +407,10 @@ the hook/subscribe calls without error. `ctx.location.directory` was checked
 the same way. The watchtower nudge keeps one pending slot per session in a
 `Map`, not a persistent store, so it is lost if the server restarts between
 `session.created` and that session's first model request — the same
-best-effort nudge Claude Code's own hook already is. A tool result whose
+best-effort nudge Claude Code's own hook already is. The plugin also
+subscribes to `session.deleted` to clear a session's pending slot if it's
+abandoned before ever prompting, so that `Map` can't grow unbounded over a
+long-lived server. A tool result whose
 `output`/`content` isn't already a plain string (true for opencode's
 built-in `bash` tool) is left untouched rather than guessing how to splice
 text into structured content.

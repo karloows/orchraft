@@ -12,7 +12,9 @@
 // code runs under Bun, so the global Bun.$ shell API is available without
 // an import; ctx.location.directory, ctx.event.subscribe,
 // ctx.session.hook("context", ...), and ctx.tool.hook("execute.after", ...)
-// all load and run without error.
+// all load and run without error. The main-branch commit/push nudge below
+// therefore surfaces after the git command already ran, not before it like
+// the Claude Code PreToolUse hook it ports -- see the comment on that hook.
 const hooksDir = new URL("../hooks/", import.meta.url)
 
 async function runHook(directory, script, stdin) {
@@ -36,9 +38,16 @@ export default {
     // Not awaited: this iterates for the plugin's lifetime, setup must
     // return so the rest of the server can start.
     ;(async () => {
-      for await (const event of ctx.event.subscribe({ types: ["session.created"] })) {
+      for await (const event of ctx.event.subscribe({ types: ["session.created", "session.deleted"] })) {
         const sessionID = event.data?.sessionID
         if (!sessionID) continue
+        if (event.type === "session.deleted") {
+          // A session created and abandoned without ever prompting never
+          // fires the "context" hook below, so without this its entry
+          // would sit in pendingBySession for the server's lifetime.
+          pendingBySession.delete(sessionID)
+          continue
+        }
         const text = await runHook(directory, "watchtower-nudge.sh", { cwd: directory })
         if (text) pendingBySession.set(sessionID, text)
       }
@@ -51,6 +60,13 @@ export default {
       event.system.push({ type: "text", text })
     })
 
+    // Registered on execute.after, not execute.before: the Claude Code hook
+    // this ports warns before the git command runs, but execute.before has
+    // no result yet to append text to, and the model only ever sees a tool
+    // result, not a pre-execution hook's return value. So unlike the
+    // Claude Code hook, this nudge reaches the model only after the commit
+    // or push to main has already happened -- an after-the-fact note, not
+    // a chance to reconsider first.
     await ctx.tool.hook("execute.after", async (event) => {
       if (event.tool !== "bash" || event.status !== "completed") return
       const command = event.input?.command

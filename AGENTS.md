@@ -224,7 +224,9 @@ not assume a named `agents/` component exists outside hosts that document it.
   copies of `hooks/*.sh` installed alongside it at `.opencode/hooks/`, via
   `ctx.event.subscribe`, `ctx.session.hook("context", ...)`, and
   `ctx.tool.hook("execute.after", ...)` — see README's opencode section for
-  what was checked live. Checked live against opencode 2.2.5 for agent
+  what was checked live, including why the main-branch commit nudge fires
+  after the git command runs rather than before like the Claude Code hook
+  it ports. Checked live against opencode 2.2.5 for agent
   loading (`opencode debug agents --standalone` lists the eight agents with
   their permissions) and for the plugin hooks (loads with no warning;
   `ctx.location.directory` and the hook/subscribe calls confirmed via a
