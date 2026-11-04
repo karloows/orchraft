@@ -78,7 +78,10 @@ done
   chmod "$(printf '%o' $((0644 & ~$(umask))))" "$part" && mv -f "$part" "$t" || { rm -f "$part"; exit 1; }
 done
 (cd "$src/context" && find . -type f ! -name .DS_Store) | while read -r f; do
-  copy_new "$src/context/${f#./}" "$dst/context/${f#./}" || exit 1
+  part=$(mktemp) || exit 1
+  sed -E 's#skills/([a-z-]+)/SKILL\.md#.agents/skills/\1/SKILL.md#g' "$src/context/${f#./}" > "$part" || { rm -f "$part"; exit 1; }
+  copy_new "$part" "$dst/context/${f#./}" || { rm -f "$part"; exit 1; }
+  rm -f "$part"
 done
 
 # Claude agent -> opencode agent: drop name/tools/skills, add mode, and deny

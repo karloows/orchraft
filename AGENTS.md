@@ -207,9 +207,10 @@ not assume a named `agents/` component exists outside hosts that document it.
   replace it. External agents run inside Zed (Claude Code, Codex, Gemini
   CLI) use their own instruction files and plugin installs, not Zed's
   loader.
-- opencode: has no plugin install, so `scripts/install-opencode.sh <project>`
-  copies `skills/` to `.agents/skills/` and `context/` to the project root,
-  and converts `agents/*.md` into `.opencode/agents/` subagents (all
+- opencode: can't install a Claude Code plugin, so
+  `scripts/install-opencode.sh <project>` copies `skills/` to
+  `.agents/skills/` and `context/` to the project root, and converts
+  `agents/*.md` into `.opencode/agents/` subagents (all
   get `task: deny` except `warpath`; read-only ones also get `edit: deny` and
   ask-before-shell outside a short git/gh/ls list, a guardrail, not a sandbox; `warpath` needs
   `experimental.subagent_depth: 2` in the user's opencode config). opencode
