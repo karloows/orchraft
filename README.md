@@ -346,9 +346,9 @@ It copies `skills/` to `.agents/skills/` (refreshed on every run) and
 `context/` to the project root, and converts `agents/*.md` into
 `.opencode/agents/` subagents. Every agent without the `Agent` tool in its
 Claude definition gets `task: deny`; the read-only ones also get `edit: deny`
-and ask before any shell command outside a short list of read-only
+and ask before any shell command outside a short list of
 `git`/`gh`/`ls` commands. That is
-a guardrail, not a sandbox: an allowed command can still redirect output, so
+a guardrail, not a sandbox: an allowed command can still redirect output or write through an option such as `git log --output=`, so
 the agent's own instructions remain the rule. opencode appends agent rules
 after your project's, so these shell rules win over a project `shell` deny for
 the same command (a denied `ls *` becomes allowed, other denies become

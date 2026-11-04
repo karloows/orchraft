@@ -211,7 +211,7 @@ not assume a named `agents/` component exists outside hosts that document it.
   copies `skills/` to `.agents/skills/` and `context/` to the project root,
   and converts `agents/*.md` into `.opencode/agents/` subagents (all
   get `task: deny` except `warpath`; read-only ones also get `edit: deny` and
-  ask-before-shell outside a read-only command list; `warpath` needs
+  ask-before-shell outside a short git/gh/ls list, a guardrail, not a sandbox; `warpath` needs
   `experimental.subagent_depth: 2` in the user's opencode config). opencode
   reads a project's `AGENTS.md` itself. Existing `context/` and agent files in the target are kept. The
   hooks are not ported yet: opencode 2.2.5's plugin API exposes a tool

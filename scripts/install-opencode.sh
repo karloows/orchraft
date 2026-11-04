@@ -86,7 +86,7 @@ done
 # a subagent here, and opencode's default experimental.subagent_depth of 1 stops
 # a subagent from starting another, so the user must set it to 2 in their own
 # opencode config. This script never edits that config.
-readonly_bash=$(for c in "git status" "git log" "git diff" "git show" \
+readonly_bash=$(for c in "git status" "git log" "git show" \
   "git branch --show-current" "git branch --list" "git rev-parse" \
   "git remote -v" "git remote get-url" "git ls-files" "gh pr view" \
   "gh pr list" "gh pr checks" "gh pr diff" ls; do
