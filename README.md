@@ -342,7 +342,7 @@ cd orchraft
 scripts/install-opencode.sh /path/to/your/project
 ```
 
-It copies `skills/` to `.agents/skills/` (refreshed on every run) and
+It copies `skills/` to `.agents/skills/` (the files orchraft ships are overwritten on every run; files from older revisions are not removed) and
 `context/` to the project root, and converts `agents/*.md` into
 `.opencode/agents/` subagents. Every agent without the `Agent` tool in its
 Claude definition gets `task: deny`; the read-only ones also get `edit: deny`
@@ -353,12 +353,15 @@ the agent's own instructions remain the rule. opencode appends agent rules
 after your project's, so these shell rules win over a project `shell` deny for
 the same command (a denied `ls *` becomes allowed, other denies become
 `ask`); if you rely on hard denies, add them to the generated agent files
-too. `warpath` is the one agent
-that delegates, to `forgehand` and, for read-only analysis before `roast`,
-`trialmaster`, and opencode's default
+too.
+
+`warpath` is the one agent that delegates: to `forgehand`, and to
+`trialmaster` for read-only analysis before `roast`. opencode's default
 `experimental.subagent_depth` of 1 stops a subagent from starting another, so
 set it to `2` in your own opencode config; the installer never edits that
-file. A `context/` or agent file that already exists in the project is kept, not
+file.
+
+A `context/` or agent file that already exists in the project is kept, not
 overwritten, so your edited policies survive a re-run.
 
 What opencode 2.2.5 does with these files, from its own docs at the
@@ -368,10 +371,9 @@ lists `.agents/skills` as a project skills location,
 [`agents.mdx`](https://github.com/anomalyco/opencode/blob/v2.2.5/services/www/src/docs/content/agents.mdx)
 loads Markdown agents from `.opencode/agents/<name>.md`, and
 [`instructions.mdx`](https://github.com/anomalyco/opencode/blob/v2.2.5/services/www/src/docs/content/instructions.mdx)
-loads a project `AGENTS.md`. The one check run here, recorded in this pull request (#89) and
-reproducible with the installer and command below: after installing into a
-scratch project, `opencode debug agents --standalone` run in that project
-listed the eight converted agents (`chronicler`, `forgehand`, `loremaster`,
+loads a project `AGENTS.md`. The one check, on opencode 2.2.5: after running
+the installer on a scratch project, `opencode debug agents --standalone` run in
+that project listed the eight converted agents (`chronicler`, `forgehand`, `loremaster`,
 `rune-reader`, `scout`, `tactician`, `trialmaster`, `warpath`) with the
 `edit`, `shell`, and `subagent` permission rules written as above. Skill and
 `AGENTS.md` loading, and any model run, were not checked here.

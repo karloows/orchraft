@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Install orchraft into a project for opencode: skills, policies, and the agents converted to opencode's format.
-# Skills are orchraft-owned and refreshed on every run. Policies and agents may
+# Skill files orchraft ships are overwritten on every run; stale ones from older revisions are left. Policies and agents may
 # be customised or hand-written in the target, so an existing file is kept.
 # Usage: scripts/install-opencode.sh <target-project-dir>
 set -euo pipefail
