@@ -207,6 +207,25 @@ not assume a named `agents/` component exists outside hosts that document it.
   replace it. External agents run inside Zed (Claude Code, Codex, Gemini
   CLI) use their own instruction files and plugin installs, not Zed's
   loader.
+- opencode: can't install a Claude Code plugin, so
+  `scripts/install-opencode.sh <project>` copies `skills/` to
+  `.agents/skills/` and `context/` to the project root, and converts
+  `agents/*.md` into `.opencode/agents/` subagents (all
+  get `task: deny` except `warpath`; read-only ones also get `edit: deny` and
+  ask-before-shell outside a short git/gh/ls list, a guardrail, not a sandbox; `warpath` needs
+  `experimental.subagent_depth: 2` in the user's opencode config). opencode
+  reads a project's `AGENTS.md` itself (sources: opencode v2.2.5's
+  [`skills.mdx`](https://github.com/anomalyco/opencode/blob/v2.2.5/services/www/src/docs/content/skills.mdx),
+  [`agents.mdx`](https://github.com/anomalyco/opencode/blob/v2.2.5/services/www/src/docs/content/agents.mdx),
+  [`instructions.mdx`](https://github.com/anomalyco/opencode/blob/v2.2.5/services/www/src/docs/content/instructions.mdx);
+  the converter is `scripts/install-opencode.sh`, and README's opencode section
+  lists the permission rules and the one check run). Existing `context/` and agent files in the target are kept. The
+  hooks are not ported yet: opencode 2.2.5's plugin API exposes a tool
+  `execute.before` hook and an event subscription, so a port looks possible
+  but is unwritten and untested. Checked live against opencode 2.2.5
+  only for agent loading (`opencode debug agents --standalone` lists the
+  eight agents with their permissions), not skills, `AGENTS.md`, or a model
+  run.
 
 ## Hooks
 
