@@ -378,16 +378,50 @@ that project listed the eight converted agents (`chronicler`, `forgehand`, `lore
 `edit`, `shell`, and `subagent` permission rules written as above. Skill and
 `AGENTS.md` loading, and any model run, were not checked here.
 
-The `watchtower` and main-branch commit nudges are not ported yet, so
-`hooks/` stays Claude Code only. opencode 2.2.5's plugin API does expose a
-tool `execute.before` hook and an event subscription (see
-[`tool.ts`](https://github.com/anomalyco/opencode/blob/v2.2.5/packages/plugin/src/promise/tool.ts)
-and
-[`event.ts`](https://github.com/anomalyco/opencode/blob/v2.2.5/packages/plugin/src/promise/event.ts)),
-so a port looks possible, but none has been written or run here. opencode's
-[V1 migration guide](https://github.com/anomalyco/opencode/blob/v2.2.5/services/www/src/docs/content/build/plugins/migrate-v1.mdx)
-says V1 plugin code does not run on V2, so a hook-style plugin has to be
-ported, not renamed.
+The `watchtower` and main-branch commit nudges are ported:
+`scripts/opencode-plugin/orchraft-hooks.js` is installed alongside copies of
+`hooks/*.sh` at `.opencode/hooks/`, and shells out to those same scripts
+(`Bun.$`, available globally since the plugin runs under Bun) instead of
+reimplementing their bash/git/gh checks in JS. `ctx.session.hook("context",
+...)` runs the watchtower check once per session (gated on that hook, not a
+`session.created` subscription, so it still runs for a session resumed with
+`opencode --continue` after a server restart, which never fires
+`session.created`) and injects it into that model request's system prompt.
+`ctx.tool.hook("execute.after", ...)` appends the main-branch commit nudge to
+the built-in `shell` tool's result.
+
+Unlike the Claude Code `PreToolUse` hook this ports, which warns before the
+`git commit`/`push` runs, the opencode nudge fires after it: `execute.before`
+has no result yet for the main-branch nudge to append text to, and the model
+only ever sees a tool's result, not a pre-execution hook's return value. So on
+opencode this is an after-the-fact note that a commit or push to the base
+branch already happened, not a chance to reconsider first.
+
+Checked live against the installed opencode 2.2.5 binary: the object-return
+style documented at [opencode.ai/docs/plugins](https://opencode.ai/docs/plugins)
+(`export const Foo = async ({directory, ...}) => ({hooks})`) is rejected by
+that build with `Plugin must export a default definition with an id and an
+effect or setup function`; a default export of `{id, setup}` loads with no
+such warning, and a deliberate throw from inside `setup` after calling
+`ctx.tool.hook`, `ctx.session.hook`, and checking `ctx.event.subscribe`
+surfaced verbatim in the server log, confirming all three exist and accept
+the hook/subscribe calls without error. `ctx.location.directory` was checked
+the same way. `ctx.event.subscribe` is kept only for `session.deleted`, to
+stop its per-session dedupe `Set` from growing for the life of a long-running
+server.
+
+opencode 2.2.5's built-in shell tool is registered as `"shell"`, not
+`"bash"` (confirmed against `packages/core/src/tool/plugin/shell.ts` at the
+v2.2.5 tag). Its successful result is `{output, content, metadata}`, where
+`output` is a structured object (`exit`/`signal`/`truncated`/...) and
+`content` is an array of `{type, text}` parts, except for a backgrounded
+command, whose result is a plain `{output: <string>, shellID, ...}` with no
+`content` at all. The nudge is appended as a new `content` part when
+`content` is that array, as a plain string concatenation onto `content` or
+`output` otherwise, and the command's own call-level `workdir` (when the
+model set one) is resolved and used as the nudge's working directory instead
+of the plugin's fixed project directory, since a command can run in a
+different worktree than the one the plugin started in.
 
 ## First 60 Seconds
 

@@ -220,12 +220,22 @@ not assume a named `agents/` component exists outside hosts that document it.
   [`instructions.mdx`](https://github.com/anomalyco/opencode/blob/v2.2.5/services/www/src/docs/content/instructions.mdx);
   the converter is `scripts/install-opencode.sh`, and README's opencode section
   lists the permission rules and the one check run). Existing `context/` and agent files in the target are kept. The
-  hooks are not ported yet: opencode 2.2.5's plugin API exposes a tool
-  `execute.before` hook and an event subscription, so a port looks possible
-  but is unwritten and untested. Checked live against opencode 2.2.5
-  only for agent loading (`opencode debug agents --standalone` lists the
-  eight agents with their permissions), not skills, `AGENTS.md`, or a model
-  run.
+  hooks are ported: `scripts/opencode-plugin/orchraft-hooks.js` shells out to
+  copies of `hooks/*.sh` installed alongside it at `.opencode/hooks/`, via
+  `ctx.session.hook("context", ...)` (gated per-session so it also covers a
+  session resumed with `opencode --continue`, which fires no
+  `session.created`), `ctx.tool.hook("execute.after", ...)` against the
+  built-in `shell` tool (not `bash` — see README's opencode section for the
+  real tool name and result shape), and `ctx.event.subscribe` only for
+  `session.deleted` cleanup. See README's opencode section for
+  what was checked live, including why the main-branch commit nudge fires
+  after the git command runs rather than before like the Claude Code hook
+  it ports. Checked live against opencode 2.2.5 for agent
+  loading (`opencode debug agents --standalone` lists the eight agents with
+  their permissions) and for the plugin hooks (loads with no warning;
+  `ctx.location.directory` and the hook/subscribe calls confirmed via a
+  deliberate throw surfaced in the server log), not skills, `AGENTS.md`
+  loading, or a full model run exercising the hooks end to end.
 
 ## Hooks
 
