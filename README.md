@@ -382,11 +382,13 @@ The `watchtower` and main-branch commit nudges are ported:
 `scripts/opencode-plugin/orchraft-hooks.js` is installed alongside copies of
 `hooks/*.sh` at `.opencode/hooks/`, and shells out to those same scripts
 (`Bun.$`, available globally since the plugin runs under Bun) instead of
-reimplementing their bash/git/gh checks in JS. It uses `ctx.event.subscribe`
-on `session.created` to run the watchtower check once per session and queue
-the result, `ctx.session.hook("context", ...)` to inject it into the next
-model request's system prompt, and `ctx.tool.hook("execute.after", ...)` to
-append the main-branch commit nudge to a `bash` tool's result.
+reimplementing their bash/git/gh checks in JS. `ctx.session.hook("context",
+...)` runs the watchtower check once per session (gated on that hook, not a
+`session.created` subscription, so it still runs for a session resumed with
+`opencode --continue` after a server restart, which never fires
+`session.created`) and injects it into that model request's system prompt.
+`ctx.tool.hook("execute.after", ...)` appends the main-branch commit nudge to
+the built-in `shell` tool's result.
 
 Unlike the Claude Code `PreToolUse` hook this ports, which warns before the
 `git commit`/`push` runs, the opencode nudge fires after it: `execute.before`
@@ -404,16 +406,22 @@ such warning, and a deliberate throw from inside `setup` after calling
 `ctx.tool.hook`, `ctx.session.hook`, and checking `ctx.event.subscribe`
 surfaced verbatim in the server log, confirming all three exist and accept
 the hook/subscribe calls without error. `ctx.location.directory` was checked
-the same way. The watchtower nudge keeps one pending slot per session in a
-`Map`, not a persistent store, so it is lost if the server restarts between
-`session.created` and that session's first model request — the same
-best-effort nudge Claude Code's own hook already is. The plugin also
-subscribes to `session.deleted` to clear a session's pending slot if it's
-abandoned before ever prompting, so that `Map` can't grow unbounded over a
-long-lived server. A tool result whose
-`output`/`content` isn't already a plain string (true for opencode's
-built-in `bash` tool) is left untouched rather than guessing how to splice
-text into structured content.
+the same way. `ctx.event.subscribe` is kept only for `session.deleted`, to
+stop its per-session dedupe `Set` from growing for the life of a long-running
+server.
+
+opencode 2.2.5's built-in shell tool is registered as `"shell"`, not
+`"bash"` (confirmed against `packages/core/src/tool/plugin/shell.ts` at the
+v2.2.5 tag). Its successful result is `{output, content, metadata}`, where
+`output` is a structured object (`exit`/`signal`/`truncated`/...) and
+`content` is an array of `{type, text}` parts, except for a backgrounded
+command, whose result is a plain `{output: <string>, shellID, ...}` with no
+`content` at all. The nudge is appended as a new `content` part when
+`content` is that array, as a plain string concatenation onto `content` or
+`output` otherwise, and the command's own call-level `workdir` (when the
+model set one) is resolved and used as the nudge's working directory instead
+of the plugin's fixed project directory, since a command can run in a
+different worktree than the one the plugin started in.
 
 ## First 60 Seconds
 

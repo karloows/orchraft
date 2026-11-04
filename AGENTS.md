@@ -222,8 +222,12 @@ not assume a named `agents/` component exists outside hosts that document it.
   lists the permission rules and the one check run). Existing `context/` and agent files in the target are kept. The
   hooks are ported: `scripts/opencode-plugin/orchraft-hooks.js` shells out to
   copies of `hooks/*.sh` installed alongside it at `.opencode/hooks/`, via
-  `ctx.event.subscribe`, `ctx.session.hook("context", ...)`, and
-  `ctx.tool.hook("execute.after", ...)` — see README's opencode section for
+  `ctx.session.hook("context", ...)` (gated per-session so it also covers a
+  session resumed with `opencode --continue`, which fires no
+  `session.created`), `ctx.tool.hook("execute.after", ...)` against the
+  built-in `shell` tool (not `bash` — see README's opencode section for the
+  real tool name and result shape), and `ctx.event.subscribe` only for
+  `session.deleted` cleanup. See README's opencode section for
   what was checked live, including why the main-branch commit nudge fires
   after the git command runs rather than before like the Claude Code hook
   it ports. Checked live against opencode 2.2.5 for agent
