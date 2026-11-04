@@ -368,7 +368,8 @@ lists `.agents/skills` as a project skills location,
 [`agents.mdx`](https://github.com/anomalyco/opencode/blob/v2.2.5/services/www/src/docs/content/agents.mdx)
 loads Markdown agents from `.opencode/agents/<name>.md`, and
 [`instructions.mdx`](https://github.com/anomalyco/opencode/blob/v2.2.5/services/www/src/docs/content/instructions.mdx)
-loads a project `AGENTS.md`. The one check run here: after installing into a
+loads a project `AGENTS.md`. The one check run here, recorded in this pull request (#89) and
+reproducible with the installer and command below: after installing into a
 scratch project, `opencode debug agents --standalone` run in that project
 listed the eight converted agents (`chronicler`, `forgehand`, `loremaster`,
 `rune-reader`, `scout`, `tactician`, `trialmaster`, `warpath`) with the

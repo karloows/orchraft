@@ -51,28 +51,32 @@ check_dirs() {
 } | check_dirs
 mkdir -p "$dst/.agents/skills" "$dst/.opencode/agents"
 # Refuse to write through a symlink where an orchraft skill file or directory
-# belongs: cp and the rewrite below would follow it into the user's own files.
+# belongs: the writes below would follow it into the user's own files.
 (cd "$src/skills" && find . -mindepth 1 -print) | while read -r f; do
   if [ -L "$dst/.agents/skills/${f#./}" ]; then
     echo "refusing to overwrite symlink $dst/.agents/skills/${f#./}" >&2; exit 1
   fi
 done
-# Unlink each file orchraft ships first, so cp creates a fresh one: a skill file
-# hard-linked to another project's would otherwise be overwritten through the link.
-(cd "$src/skills" && find . -type f) | while read -r f; do
-  rm -f "$dst/.agents/skills/${f#./}"
-done
-cp -R "$src/skills/." "$dst/.agents/skills/"
 # Skills cite each other as skills/<name>/SKILL.md; point those at the installed
 # path, and shaman's plugin-package wording at the installed skills directory.
-# Only the files just copied are touched, never a skill the user added.
-rw_tmp=$(mktemp)
-for f in "$src"/skills/*/SKILL.md; do
-  t="$dst/.agents/skills/${f#"$src"/skills/}"
-  sed -E 's#skills/([a-z-]+)/SKILL\.md#.agents/skills/\1/SKILL.md#g; s# and the orchraft plugin root##g; s#the loaded orchraft package contains `skills/` and#`.agents/skills/` contains#g; s#inspect the package for the other#inspect `.agents/skills/` for the other#g' "$t" > "$rw_tmp"
-  rm -f "$t" && cat "$rw_tmp" > "$t"
+# Only files orchraft ships are written, never a skill the user added. Each one
+# is staged in a sibling file and renamed into place, so a failed copy leaves the
+# previous install intact and a hard link to another project's file is replaced,
+# not written through.
+(cd "$src/skills" && find . -mindepth 1 -type d) | while read -r d; do
+  mkdir -p "$dst/.agents/skills/${d#./}" || exit 1
 done
-rm -f "$rw_tmp"
+(cd "$src/skills" && find . -type f) | while read -r f; do
+  t="$dst/.agents/skills/${f#./}"
+  part=$(mktemp "$t.part.XXXXXX") || exit 1
+  if [ "${f##*/}" = SKILL.md ]; then
+    sed -E 's#skills/([a-z-]+)/SKILL\.md#.agents/skills/\1/SKILL.md#g; s# and the orchraft plugin root##g; s#the loaded orchraft package contains `skills/` and#`.agents/skills/` contains#g; s#inspect the package for the other#inspect `.agents/skills/` for the other#g' "$src/skills/${f#./}" > "$part"
+  else
+    cat "$src/skills/${f#./}" > "$part"
+  fi || { rm -f "$part"; exit 1; }
+  # mktemp files are 0600: give the file the mode a plain write would get, capped at 0644.
+  chmod "$(printf '%o' $((0644 & ~$(umask))))" "$part" && mv -f "$part" "$t" || { rm -f "$part"; exit 1; }
+done
 (cd "$src/context" && find . -type f ! -name .DS_Store) | while read -r f; do
   copy_new "$src/context/${f#./}" "$dst/context/${f#./}" || exit 1
 done
