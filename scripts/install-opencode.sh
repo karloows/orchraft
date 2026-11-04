@@ -57,6 +57,11 @@ mkdir -p "$dst/.agents/skills" "$dst/.opencode/agents"
     echo "refusing to overwrite symlink $dst/.agents/skills/${f#./}" >&2; exit 1
   fi
 done
+# Unlink each file orchraft ships first, so cp creates a fresh one: a skill file
+# hard-linked to another project's would otherwise be overwritten through the link.
+(cd "$src/skills" && find . -type f) | while read -r f; do
+  rm -f "$dst/.agents/skills/${f#./}"
+done
 cp -R "$src/skills/." "$dst/.agents/skills/"
 # Skills cite each other as skills/<name>/SKILL.md; point those at the installed
 # path, and shaman's plugin-package wording at the installed skills directory.
@@ -65,7 +70,7 @@ rw_tmp=$(mktemp)
 for f in "$src"/skills/*/SKILL.md; do
   t="$dst/.agents/skills/${f#"$src"/skills/}"
   sed -E 's#skills/([a-z-]+)/SKILL\.md#.agents/skills/\1/SKILL.md#g; s# and the orchraft plugin root##g; s#the loaded orchraft package contains `skills/` and#`.agents/skills/` contains#g; s#inspect the package for the other#inspect `.agents/skills/` for the other#g' "$t" > "$rw_tmp"
-  cat "$rw_tmp" > "$t"
+  rm -f "$t" && cat "$rw_tmp" > "$t"
 done
 rm -f "$rw_tmp"
 (cd "$src/context" && find . -type f ! -name .DS_Store) | while read -r f; do
