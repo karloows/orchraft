@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.0](https://github.com/karloows/orchraft/compare/v1.2.1...v1.3.0) (2026-11-04)
+
+
+### Features
+
+* add opencode install script ([#89](https://github.com/karloows/orchraft/issues/89)) ([085832b](https://github.com/karloows/orchraft/commit/085832bec9756aac69b7088c052b5acac5811c55))
+* port opencode watchtower and commit-nudge hooks ([#91](https://github.com/karloows/orchraft/issues/91)) ([212c2f3](https://github.com/karloows/orchraft/commit/212c2f39edca77b62daca8ef17daab78bc6d6891))
+
 ## [1.2.1](https://github.com/karloows/orchraft/compare/v1.2.0...v1.2.1) (2026-10-08)
 
 
