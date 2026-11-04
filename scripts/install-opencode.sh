@@ -19,6 +19,7 @@ copy_new() {
   # mktemp creates the file exclusively, so a planted symlink is never followed;
   # it is 0600, so restore the mode a plain write would get, capped at 0644 so a
   # permissive umask never makes an installed file group- or world-writable.
+  local part
   part=$(mktemp "$2.part.XXXXXX") || return 1
   chmod "$(printf '%o' $((0644 & ~$(umask))))" "$part" || { rm -f "$part"; return 1; }
   # Callers use "|| exit 1", which turns set -e off in here, so check each step.
