@@ -6,6 +6,8 @@
 set -euo pipefail
 src=$(cd "$(dirname "$0")/.." && pwd)
 dst=${1:?usage: install-opencode.sh <target-project-dir>}
+# A misspelled path must fail, not be created by mkdir -p below.
+[ -d "$dst" ] || { echo "target directory does not exist: $dst" >&2; exit 1; }
 
 # copy_new <from> <to>: copy unless <to> already exists.
 copy_new() {
