@@ -47,10 +47,10 @@ check_dirs() {
   done
 }
 {
-  printf '%s\n' "$dst/.agents" "$dst/.agents/skills" "$dst/.opencode" "$dst/.opencode/agents" "$dst/context"
+  printf '%s\n' "$dst/.agents" "$dst/.agents/skills" "$dst/.opencode" "$dst/.opencode/agents" "$dst/.opencode/plugins" "$dst/.opencode/hooks" "$dst/context"
   (cd "$src/context" && find . -mindepth 1 -type d) | while IFS= read -r d; do printf '%s\n' "$dst/context/${d#./}"; done
 } | check_dirs
-mkdir -p "$dst/.agents/skills" "$dst/.opencode/agents"
+mkdir -p "$dst/.agents/skills" "$dst/.opencode/agents" "$dst/.opencode/plugins" "$dst/.opencode/hooks"
 # Refuse to write through a symlink where an orchraft skill file or directory
 # belongs: the writes below would follow it into the user's own files.
 (cd "$src/skills" && find . -mindepth 1 -print) | while read -r f; do
@@ -84,6 +84,21 @@ done
   copy_new "$part" "$dst/context/${f#./}" || { rm -f "$part"; exit 1; }
   rm -f "$part"
 done
+
+# Port of hooks/hooks.json: scripts/opencode-plugin/orchraft-hooks.js shells
+# out to copies of hooks/*.sh placed alongside it at .opencode/hooks/, so the
+# state checks stay one source of truth across both hosts. Orchraft-shipped,
+# like skills: overwritten every run, not kept like a policy or agent file.
+for f in watchtower-nudge.sh main-commit-nudge.sh; do
+  t="$dst/.opencode/hooks/$f"
+  part=$(mktemp "$t.part.XXXXXX") || exit 1
+  cat "$src/hooks/$f" > "$part" || { rm -f "$part"; exit 1; }
+  chmod "$(printf '%o' $((0755 & ~$(umask))))" "$part" && mv -f "$part" "$t" || { rm -f "$part"; exit 1; }
+done
+t="$dst/.opencode/plugins/orchraft-hooks.js"
+part=$(mktemp "$t.part.XXXXXX") || exit 1
+cat "$src/scripts/opencode-plugin/orchraft-hooks.js" > "$part" || { rm -f "$part"; exit 1; }
+chmod "$(printf '%o' $((0644 & ~$(umask))))" "$part" && mv -f "$part" "$t" || { rm -f "$part"; exit 1; }
 
 # Claude agent -> opencode agent: drop name/tools/skills, add mode, and deny
 # edits when the Claude tool list had no Edit/Write. Body is kept verbatim
@@ -125,3 +140,4 @@ for f in "$src"/agents/*.md; do
 done
 echo "note: read-only agents' shell rules come after your project rules in opencode, so they override a project shell deny; re-add hard denies in .opencode/agents/*.md."
 echo "note: warpath delegates to forgehand and trialmaster, so set experimental.subagent_depth to 2 in your opencode config (default 1)."
+echo "note: .opencode/plugins/orchraft-hooks.js ports the watchtower and main-branch-commit nudges; both need jq on PATH, same as the Claude Code hooks."

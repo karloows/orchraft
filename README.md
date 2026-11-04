@@ -378,16 +378,32 @@ that project listed the eight converted agents (`chronicler`, `forgehand`, `lore
 `edit`, `shell`, and `subagent` permission rules written as above. Skill and
 `AGENTS.md` loading, and any model run, were not checked here.
 
-The `watchtower` and main-branch commit nudges are not ported yet, so
-`hooks/` stays Claude Code only. opencode 2.2.5's plugin API does expose a
-tool `execute.before` hook and an event subscription (see
-[`tool.ts`](https://github.com/anomalyco/opencode/blob/v2.2.5/packages/plugin/src/promise/tool.ts)
-and
-[`event.ts`](https://github.com/anomalyco/opencode/blob/v2.2.5/packages/plugin/src/promise/event.ts)),
-so a port looks possible, but none has been written or run here. opencode's
-[V1 migration guide](https://github.com/anomalyco/opencode/blob/v2.2.5/services/www/src/docs/content/build/plugins/migrate-v1.mdx)
-says V1 plugin code does not run on V2, so a hook-style plugin has to be
-ported, not renamed.
+The `watchtower` and main-branch commit nudges are ported:
+`scripts/opencode-plugin/orchraft-hooks.js` is installed alongside copies of
+`hooks/*.sh` at `.opencode/hooks/`, and shells out to those same scripts
+(`Bun.$`, available globally since the plugin runs under Bun) instead of
+reimplementing their bash/git/gh checks in JS. It uses `ctx.event.subscribe`
+on `session.created` to run the watchtower check once per session and queue
+the result, `ctx.session.hook("context", ...)` to inject it into the next
+model request's system prompt, and `ctx.tool.hook("execute.after", ...)` to
+append the main-branch commit nudge to a `bash` tool's result.
+
+Checked live against the installed opencode 2.2.5 binary: the object-return
+style documented at [opencode.ai/docs/plugins](https://opencode.ai/docs/plugins)
+(`export const Foo = async ({directory, ...}) => ({hooks})`) is rejected by
+that build with `Plugin must export a default definition with an id and an
+effect or setup function`; a default export of `{id, setup}` loads with no
+such warning, and a deliberate throw from inside `setup` after calling
+`ctx.tool.hook`, `ctx.session.hook`, and checking `ctx.event.subscribe`
+surfaced verbatim in the server log, confirming all three exist and accept
+the hook/subscribe calls without error. `ctx.location.directory` was checked
+the same way. The watchtower nudge keeps one pending slot per session in a
+`Map`, not a persistent store, so it is lost if the server restarts between
+`session.created` and that session's first model request — the same
+best-effort nudge Claude Code's own hook already is. A tool result whose
+`output`/`content` isn't already a plain string (true for opencode's
+built-in `bash` tool) is left untouched rather than guessing how to splice
+text into structured content.
 
 ## First 60 Seconds
 
