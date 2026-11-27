@@ -148,7 +148,7 @@ Markdown document — anything that isn't an in-code comment or docstring.
 
 ## Handoff
 
-- Follow the Handoff Contract in `context/personality.md` (target repo copy when present, else `${CLAUDE_PLUGIN_ROOT}/context/personality.md`). The opening line is the skill's own message, not part of the drafted document.
+- Follow the Handoff Contract in `context/personality.md` (target repo copy when present, else `${CLAUDE_PLUGIN_ROOT}/context/personality.md`; if the target copy lacks that section, use the bundled contract). The opening line is the skill's own message, not part of the drafted document.
 - List the files/sections touched and a one-line summary of what changed.
 - Remind the user that `ship` is the next step if they want these changes
   committed.

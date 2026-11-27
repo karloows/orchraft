@@ -49,7 +49,6 @@ fi
 # wrongly treat it as a work tree and fall through to command matching.
 [ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" = true ] || exit 0
 
-# Opt out via the repo's own config (context/policies/config-policy.md).
 # Same comment-stripping shape as watchtower-nudge.sh: the format allows //
 # comments, jq does not, and a blind strip would also truncate // in URLs.
 strip_jsonc() {
@@ -70,14 +69,6 @@ strip_jsonc() {
     print out
   }' "$1" 2>/dev/null
 }
-
-for cfg in .orchraft.jsonc .orchraft.json; do
-  [ -f "$cfg" ] || continue
-  disabled=$(strip_jsonc "$cfg" \
-    | jq -r '(.hooks.mainCommitNudge.enabled == false) | tostring' 2>/dev/null)
-  [ "$disabled" = "true" ] && exit 0
-  break
-done
 
 command_str=$(printf '%s' "$input" | jq -r '.tool_input.command // empty')
 [ -n "$command_str" ] || exit 0
@@ -134,6 +125,20 @@ enter() {
 }
 if [[ $command_str =~ $cd_re ]]; then enter "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}"; fi
 if [[ $command_str =~ $git_c_re ]]; then enter "${BASH_REMATCH[2]}" -C; fi
+
+# Opt out via the resolved target repository's own config
+# (context/policies/config-policy.md). Read from the target repo root after
+# target resolution so cd/git -C commands consult the right repository.
+repo_root=$(git rev-parse --show-toplevel 2>/dev/null) || repo_root=""
+if [ -n "$repo_root" ]; then
+  for cfg in "$repo_root/.orchraft.jsonc" "$repo_root/.orchraft.json"; do
+    [ -f "$cfg" ] || continue
+    disabled=$(strip_jsonc "$cfg" \
+      | jq -r '(.hooks.mainCommitNudge.enabled == false) | tostring' 2>/dev/null)
+    [ "$disabled" = "true" ] && exit 0
+    break
+  done
+fi
 
 branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null) || exit 0
 

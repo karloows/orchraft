@@ -180,7 +180,7 @@ blocked, per `context/policies/writing-guidelines.md`'s MCP-first rule.
 
 ## Handoff
 
-- Follow the Handoff Contract in `context/personality.md` (target repo copy when present, else `${CLAUDE_PLUGIN_ROOT}/context/personality.md`).
+- Follow the Handoff Contract in `context/personality.md` (target repo copy when present, else `${CLAUDE_PLUGIN_ROOT}/context/personality.md`; if the target copy lacks that section, use the bundled contract).
 - Report the issue number/URL and what changed (created, which fields were
   updated, or that a comment was posted).
 - If a likely duplicate was found, report it even when the user chose to

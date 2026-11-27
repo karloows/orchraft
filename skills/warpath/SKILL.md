@@ -64,6 +64,6 @@ each handoff so a resumed run cannot mistake a stale roast for a clean one.
 
 ## Handoff
 
-- Follow the Handoff Contract in `context/personality.md` (target repo copy when present, else `${CLAUDE_PLUGIN_ROOT}/context/personality.md`).
+- Follow the Handoff Contract in `context/personality.md` (target repo copy when present, else `${CLAUDE_PLUGIN_ROOT}/context/personality.md`; if the target copy lacks that section, use the bundled contract).
 - State the current cycle, every cycle's finding count, and PR head.
 - When clean, hand off to `Haulmaster` / `land` instead of invoking it.

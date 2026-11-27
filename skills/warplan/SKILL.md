@@ -157,7 +157,7 @@ Keep it scoped to what was asked — not a tour of the whole codebase.
 
 ## Handoff
 
-- Follow the Handoff Contract in `context/personality.md` (target repo copy when present, else `${CLAUDE_PLUGIN_ROOT}/context/personality.md`).
+- Follow the Handoff Contract in `context/personality.md` (target repo copy when present, else `${CLAUDE_PLUGIN_ROOT}/context/personality.md`; if the target copy lacks that section, use the bundled contract).
 - Present the plan per [Plan Format](#plan-format).
 - Note which precedent (file, PR, or policy) grounded the approach.
 - If blocked, state the blocker plainly (Handoff Contract).

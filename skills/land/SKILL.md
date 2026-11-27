@@ -37,7 +37,7 @@ Use this skill when the user asks the AI to land work end to end.
 | Inspect branch/PR | `git status --short --branch`; `git rev-parse --abbrev-ref HEAD`; GitHub MCP PR view; fallback `gh pr view --json ...` | Confirm open non-draft PR, head SHA, base, checks, mergeability. |
 | Check checks/permissions | GitHub MCP status/check/mergeability tools; fallback `gh pr checks`, `gh pr view` | Read fresh in current turn. |
 | Stash local changes | `git stash push -u -m "orchraft-land <branch> <timestamp>"` | Record SHA from `git stash list --format='%H %gs'`. |
-| Merge | GitHub MCP merge action if exposed; fallback `gh pr merge --merge|--squash|--rebase --delete-branch=false` only after MCP checked | Resolve method per policy; never bypass disallowed method. |
+| Merge | GitHub MCP merge action if exposed; fallback `gh pr merge --merge` or `--squash` or `--rebase` (choose exactly one) with `--delete-branch=false` only after MCP checked | Resolve method per policy; never bypass disallowed method. Check repo auto-delete setting; if merge may auto-delete head branch, get explicit approval before merging or stop. |
 | Sync base | `git checkout <base>`; `git pull --ff-only` | Skip in linked worktree. |
 | Verify/delete local branch | `git branch -d <topic>` for merge commits; verify merged + `git diff` empty then `git branch -D` for squash/rebase | Never `-D` without verification. |
 | Restore stash | `git stash apply <sha>`; drop matching SHA entry | Never bare `git stash pop`. |
@@ -95,6 +95,9 @@ Use this skill when the user asks the AI to land work end to end.
   work is meant to land, and this pull request says otherwise.
 - Confirm the pull request has no unresolved merge conflicts.
 - Confirm the connected account can merge the pull request.
+- Check the repository's automatic branch-deletion setting before merging. If
+  merging via MCP or `gh` may delete the head branch automatically, get explicit
+  current-turn approval before merging; otherwise stop.
 - Confirm required check status by reading it fresh from the connected tool
   in the current turn; don't assume it from an earlier turn or a prior pass.
 - If tracked, staged, or untracked local changes are present, stash all of
@@ -208,7 +211,7 @@ Use this skill when the user asks the AI to land work end to end.
 
 ## Handoff
 
-- Follow the Handoff Contract in `context/personality.md` (target repo copy when present, else `${CLAUDE_PLUGIN_ROOT}/context/personality.md`).
+- Follow the Handoff Contract in `context/personality.md` (target repo copy when present, else `${CLAUDE_PLUGIN_ROOT}/context/personality.md`; if the target copy lacks that section, use the bundled contract).
 - Report the final branch state.
 - Say which merge method was used and where it came from: the user,
   the config file, the only method the repository allows, or an inference

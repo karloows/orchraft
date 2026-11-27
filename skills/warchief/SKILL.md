@@ -98,7 +98,7 @@ unknown branch, and review before landing.
 ## Handoff
 
 - Unless the user asked for plain output, open with a fresh one-line phrase
-  Follow the Handoff Contract in `context/personality.md` (target repo copy when present, else `${CLAUDE_PLUGIN_ROOT}/context/personality.md`).
+  Follow the Handoff Contract in `context/personality.md` (target repo copy when present, else `${CLAUDE_PLUGIN_ROOT}/context/personality.md`; if the target copy lacks that section, use the bundled contract).
 - Name the selected next role and why.
 - If that role is mutating and neither the current turn nor a verified
   Autonomous Mode entry authorizes it, ask for the exact go-ahead instead of

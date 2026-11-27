@@ -40,7 +40,7 @@ Use this skill when the user asks the AI to ship work.
 | Inspect full diff | `git diff`; `git diff --staged`; `git ls-files --others --exclude-standard` | Read complete intended change set before naming anything. |
 | Resolve base/default branch | config `baseBranch`; else `git symbolic-ref --short refs/remotes/origin/HEAD`; fallback `main`/`master` | Do not assume `main`. |
 | Validate | config `validate` if set; else narrowest relevant project check | Report exact command/result; failure stops. |
-| Branch create/switch | `git checkout -b <type>/<slug>` or keep current topic branch | Verify name against branch policy before creating. |
+| Branch create/switch | `git checkout -b <type>/<slug> <base>` or keep current topic branch | Verify name against branch policy before creating. Use the resolved base as `<base>` when on the base or default branch. |
 | Stage/commit | `git add <intended files>`; `git commit -m "<title>" [-m "<body>"]` | Stage only intended files; let hooks run. |
 | Push | `git push -u origin <branch>` | Current-turn approval required. |
 | PR create/update | GitHub MCP PR tools first; fallback `gh pr view/create/edit` after MCP unavailable/blocked | Re-read full PR body on update. |
@@ -250,7 +250,7 @@ Use this skill when the user asks the AI to ship work.
 
 ## Handoff
 
-- Follow the Handoff Contract in `context/personality.md` (target repo copy when present, else `${CLAUDE_PLUGIN_ROOT}/context/personality.md`).
+- Follow the Handoff Contract in `context/personality.md` (target repo copy when present, else `${CLAUDE_PLUGIN_ROOT}/context/personality.md`; if the target copy lacks that section, use the bundled contract).
 - Report the branch name.
 - Report the commit title.
 - Report the pull request URL or say why PR creation/update was blocked.

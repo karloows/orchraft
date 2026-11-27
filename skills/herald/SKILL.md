@@ -44,11 +44,11 @@ who use the project rather than the people who built it.
 | Identify range | `git tag --sort=-v:refname`; `git log --oneline`; GitHub MCP release/PR reads; fallback `gh release view/list`, `gh pr list` | Determine previous tag/release range. |
 | Collect changes | GitHub MCP merged PR reads; fallback `gh pr list --state merged --search ...` | Include direct commits with no PR. |
 | Draft notes | No command | Follow Notes Format; no voice/marketing. |
-| Publish release notes | `gh release edit/create ...` only after explicit current-turn approval | GitHub MCP cannot write releases; confirm body after write. |
+| Publish release notes | `gh release edit/create ...` only after explicit current-turn approval, or verified Autonomous Mode authorizing that specific release action | GitHub MCP cannot write releases; confirm body after write. |
 
 **Fast Path / Do Not**
 - Do not edit `CHANGELOG.md`.
-- Do not publish/create/edit releases without explicit current-turn approval.
+- Do not publish/create/edit releases without explicit current-turn approval, or verified Autonomous Mode authorizing that specific release action.
 - Do not invent changes not present in PRs/commits.
 
 ## What This Is Not
@@ -191,7 +191,7 @@ who use the project rather than the people who built it.
 
 ## Handoff
 
-- Follow the Handoff Contract in `context/personality.md` (target repo copy when present, else `${CLAUDE_PLUGIN_ROOT}/context/personality.md`). The opening line is the skill's own message, never part of the notes.
+- Follow the Handoff Contract in `context/personality.md` (target repo copy when present, else `${CLAUDE_PLUGIN_ROOT}/context/personality.md`; if the target copy lacks that section, use the bundled contract). The opening line is the skill's own message, never part of the notes.
 - Report the range, and how many pull requests and direct commits it
   covered.
 - Show the drafted notes.

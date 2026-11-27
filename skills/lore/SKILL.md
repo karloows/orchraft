@@ -134,7 +134,7 @@ the one they asked for.
 
 ## Handoff
 
-- Follow the Handoff Contract in `context/personality.md` (target repo copy when present, else `${CLAUDE_PLUGIN_ROOT}/context/personality.md`).
+- Follow the Handoff Contract in `context/personality.md` (target repo copy when present, else `${CLAUDE_PLUGIN_ROOT}/context/personality.md`; if the target copy lacks that section, use the bundled contract).
 - List the files touched and a one-line count of what changed (added/fixed/
   removed).
 - Remind the user that `ship` is the next step if they want these changes

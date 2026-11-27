@@ -41,7 +41,7 @@ history.
 
 | Goal | Preferred tool/command | Notes |
 | --- | --- | --- |
-| Enumerate PRs | GitHub MCP `list_pull_requests state=all`; fallback `gh api --paginate repos/$owner/$repo/pulls?state=all` | Count open/merged/closed-without-merging. |
+| Enumerate PRs | GitHub MCP `list_pull_requests state=all`; fallback `gh api --paginate "repos/$owner/$repo/pulls?state=all"` | Count open/merged/closed-without-merging. |
 | Read reviews/threads | GitHub MCP review/comment reads; fallback `gh api graphql` for attribution/pagination | Parse roast markers/scoreboards; classify thread fate. |
 | Compute metrics | No command | Real counts/time only; median from merged PRs. |
 | Report | No command | No mutation; report incomplete on failed required fetch. |
@@ -203,7 +203,7 @@ and don't round a real count into a marketing-sounding figure.
 
 ## Handoff
 
-- Follow the Handoff Contract in `context/personality.md` (target repo copy when present, else `${CLAUDE_PLUGIN_ROOT}/context/personality.md`).
+- Follow the Handoff Contract in `context/personality.md` (target repo copy when present, else `${CLAUDE_PLUGIN_ROOT}/context/personality.md`; if the target copy lacks that section, use the bundled contract).
   the plain summary instead.
 - Present the summary per [Summary Format](#summary-format).
 - If blocked, state the blocker plainly (Handoff Contract).

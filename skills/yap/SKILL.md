@@ -122,7 +122,7 @@ source(s) were used.
 
 ## Handoff
 
-- Follow the Handoff Contract in `context/personality.md` (target repo copy when present, else `${CLAUDE_PLUGIN_ROOT}/context/personality.md`).
+- Follow the Handoff Contract in `context/personality.md` (target repo copy when present, else `${CLAUDE_PLUGIN_ROOT}/context/personality.md`; if the target copy lacks that section, use the bundled contract).
 - Note which sources backed the explanation (e.g. "based on the PR diff and
   commit history").
 - If blocked, state the blocker plainly (Handoff Contract).

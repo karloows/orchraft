@@ -28,7 +28,7 @@ mirrors — keep them in sync if the surfacing rules change.
 | Goal | Preferred tool/command | Notes |
 | --- | --- | --- |
 | Local state | `git status --short --branch`; `git rev-parse --abbrev-ref HEAD` | Read-only. |
-| PR state | `gh pr view --json number,state,mergeStateStatus,statusCheckRollup,reviewThreads` or equivalent MCP read | Only if GitHub available; silence/unavailable local-only fallback per rules. |
+| PR state | `gh pr view --json number,state,mergeStateStatus,statusCheckRollup` and `gh api graphql` for `reviewThreads`; or equivalent MCP read | Only if GitHub available; silence/unavailable local-only fallback per rules. |
 | Output | One short line or nothing | No mutations, no long summary. |
 
 **Fast Path / Do Not**
@@ -64,7 +64,7 @@ is working as intended.
 
 ## Handoff
 
-- Follow the Handoff Contract in `context/personality.md` (target repo copy when present, else `${CLAUDE_PLUGIN_ROOT}/context/personality.md`). Watchtower stays quiet: one short line or silence.
+- Follow the Handoff Contract in `context/personality.md` (target repo copy when present, else `${CLAUDE_PLUGIN_ROOT}/context/personality.md`; if the target copy lacks that section, use the bundled contract). Watchtower stays quiet: one short line or silence.
 - Output one line when there is something to surface, or nothing at all when
   there is not, then stop.
 

@@ -39,7 +39,7 @@ the whole repo's.
 
 | Goal | Preferred tool/command | Notes |
 | --- | --- | --- |
-| Enumerate PRs | GitHub MCP `list_pull_requests state=all`; fallback `gh api --paginate repos/$owner/$repo/pulls?state=all` | Cover open, merged, closed-without-merging. |
+| Enumerate PRs | GitHub MCP `list_pull_requests state=all`; fallback `gh api --paginate "repos/$owner/$repo/pulls?state=all"` | Cover open, merged, closed-without-merging. |
 | Read review threads | GitHub MCP `pull_request_read get_review_comments`; fallback `gh api graphql` reviewThreads | Find `<!-- orchraft:declined -->` marker replies. |
 | Classify debt | No command | Standing only if thread unresolved; resolved debt is not reported. |
 | Report | No command | Read-only; incomplete on partial fetch failure. |
@@ -176,7 +176,7 @@ Keep it to what was actually found — don't pad an empty result with filler.
 
 ## Handoff
 
-- Follow the Handoff Contract in `context/personality.md` (target repo copy when present, else `${CLAUDE_PLUGIN_ROOT}/context/personality.md`).
+- Follow the Handoff Contract in `context/personality.md` (target repo copy when present, else `${CLAUDE_PLUGIN_ROOT}/context/personality.md`; if the target copy lacks that section, use the bundled contract).
 - Present the summary per [Summary Format](#summary-format).
 - If blocked, state the blocker plainly (Handoff Contract).
 

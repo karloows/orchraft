@@ -300,7 +300,7 @@ Keep it to what's actionable — a clean repo gets counted, not narrated.
 
 ## Handoff
 
-- Follow the Handoff Contract in `context/personality.md` (target repo copy when present, else `${CLAUDE_PLUGIN_ROOT}/context/personality.md`).
+- Follow the Handoff Contract in `context/personality.md` (target repo copy when present, else `${CLAUDE_PLUGIN_ROOT}/context/personality.md`; if the target copy lacks that section, use the bundled contract).
 - Present the summary per [Summary Format](#summary-format).
 - If blocked, state the blocker plainly (Handoff Contract).
 

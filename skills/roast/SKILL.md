@@ -42,7 +42,7 @@ it.
 | Identity/PR state | GitHub MCP `get_me`, PR view/list, commits/diff; fallback `gh api user`, `gh pr view --json ...` | Confirm open non-draft PR and current head/base. |
 | Read policies | `read` target repo `context/policies/*` (or bundled fallback) | Only review-policy, approval, branch/commit/writing, and relevant local rules. |
 | Review diff | `read`/`grep`/targeted file reads; parallel read-only subagents for large diffs | No edits/mutations. |
-| Post review | GitHub MCP `pull_request_review_write` create/add_comment/submit_pending; fallback `gh api` issue comment only if MCP review path unavailable | Requires current-turn approval; confirm returned review ID/URL. |
+| Post review | GitHub MCP `pull_request_review_write` (create, submit_pending) + `add_comment_to_pending_review`; fallback `gh api` issue comment only if MCP review path unavailable | Requires current-turn approval unless verified `autonomous.warpath` authorizes `review`; confirm returned review ID/URL. |
 
 **Fast Path / Do Not**
 - Do not edit files, commit, push, approve, merge, or request changes unless explicitly asked.
@@ -84,8 +84,8 @@ What the end user needs in place before this skill can work at all:
   asks for a review alongside it (e.g. "ship it and roast it"). A preference
   stated in an earlier turn does not carry forward — posting a PR review is
   gated by `context/policies/approval-policy.md` the same as any other
-  mutation, needing the current-turn go-ahead every time, not a remembered
-  standing instruction.
+  mutation, needing the current-turn go-ahead unless verified
+  `autonomous.warpath` authorizes `review` for that run.
 - Do not run automatically on every `ship` unless the user has said so; `ship`
   and `roast` are separate skills with separate trigger rules.
 
@@ -460,7 +460,7 @@ PR titles or descriptions.
 
 - Only use the success phrasing below once the post is confirmed (a returned
   review ID/URL), not just because the API call didn't error.
-- Follow the Handoff Contract in `context/personality.md` (target repo copy when present, else `${CLAUDE_PLUGIN_ROOT}/context/personality.md`).
+- Follow the Handoff Contract in `context/personality.md` (target repo copy when present, else `${CLAUDE_PLUGIN_ROOT}/context/personality.md`; if the target copy lacks that section, use the bundled contract).
 - Report the PR number and the finding counts by severity.
 - If there were zero findings, say so plainly and skip listing severities.
 - If blocked or posting fails, state the blocker plainly (Handoff Contract) and share findings in chat instead.
