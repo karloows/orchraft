@@ -207,35 +207,27 @@ not assume a named `agents/` component exists outside hosts that document it.
   replace it. External agents run inside Zed (Claude Code, Codex, Gemini
   CLI) use their own instruction files and plugin installs, not Zed's
   loader.
-- opencode: can't install a Claude Code plugin, so
-  `scripts/install-opencode.sh <project>` copies `skills/` to
-  `.agents/skills/` and `context/` to the project root, and converts
-  `agents/*.md` into `.opencode/agents/` subagents (all
-  get `task: deny` except `warpath`; read-only ones also get `edit: deny` and
-  ask-before-shell outside a short git/gh/ls list, a guardrail, not a sandbox; `warpath` needs
-  `experimental.subagent_depth: 2` in the user's opencode config). opencode
-  reads a project's `AGENTS.md` itself (sources: opencode v2.2.5's
-  [`skills.mdx`](https://github.com/anomalyco/opencode/blob/v2.2.5/services/www/src/docs/content/skills.mdx),
-  [`agents.mdx`](https://github.com/anomalyco/opencode/blob/v2.2.5/services/www/src/docs/content/agents.mdx),
-  [`instructions.mdx`](https://github.com/anomalyco/opencode/blob/v2.2.5/services/www/src/docs/content/instructions.mdx);
-  the converter is `scripts/install-opencode.sh`, and README's opencode section
-  lists the permission rules and the one check run). Existing `context/` and agent files in the target are kept. The
-  hooks are ported: `scripts/opencode-plugin/orchraft-hooks.js` shells out to
-  copies of `hooks/*.sh` installed alongside it at `.opencode/hooks/`, via
-  `ctx.session.hook("context", ...)` (gated per-session so it also covers a
-  session resumed with `opencode --continue`, which fires no
-  `session.created`), `ctx.tool.hook("execute.after", ...)` against the
-  built-in `shell` tool (not `bash` — see README's opencode section for the
-  real tool name and result shape), and `ctx.event.subscribe` only for
-  `session.deleted` cleanup. See README's opencode section for
-  what was checked live, including why the main-branch commit nudge fires
-  after the git command runs rather than before like the Claude Code hook
-  it ports. Checked live against opencode 2.2.5 for agent
-  loading (`opencode debug agents --standalone` lists the eight agents with
-  their permissions) and for the plugin hooks (loads with no warning;
-  `ctx.location.directory` and the hook/subscribe calls confirmed via a
-  deliberate throw surfaced in the server log), not skills, `AGENTS.md`
-  loading, or a full model run exercising the hooks end to end.
+- opencode: orchraft is an OpenCode server plugin. `package.json` exports
+  `.` -> `./scripts/opencode-plugin/orchraft-hooks.js`; users can load it via
+  `plugins: ["github:karloows/orchraft"]` or a local path in `opencode.jsonc`.
+  The plugin registers bundled `skills/*/SKILL.md` through
+  `ctx.skill.transform` when available, and ports hooks by shelling out to the
+  same `hooks/*.sh` scripts (resolved from the package `hooks/` dir, or
+  `.opencode/hooks/` in copy-install layout). Hooks use
+  `ctx.session.hook("context", ...)` gated per session (covers
+  `opencode --continue` resumes), `ctx.tool.hook("execute.after", ...)` on the
+  built-in `shell` tool (after-the-fact nudge, not pre-execution), and
+  `ctx.event.subscribe` only for `session.deleted` cleanup.
+  The V2 AgentEditor has no `add`, so agents and `context/` are still file
+  installs: `scripts/install-opencode.sh <project>` copies `skills/` to
+  `.agents/skills/`, copies `context/`, and converts `agents/*.md` into
+  `.opencode/agents/` subagents (all get `task: deny` except `warpath`;
+  read-only ones also get `edit: deny` and ask-before-shell outside a short
+  git/gh/ls list, guardrail not sandbox; `warpath` needs
+  `experimental.subagent_depth: 2` in user config). Existing `context/` and
+  agent files are kept. The installer also installs the hook plugin copy at
+  `.opencode/plugins/orchraft-hooks.js` for the copy-install path. See README's
+  opencode section for behavior details and 2.2.5 verification notes.
 
 ## Hooks
 
@@ -370,7 +362,8 @@ falling back to the copy bundled with the plugin.
 - Keep `CLAUDE.md` as a pointer to this file instead of duplicating these
   instructions.
 - Skills live only in `skills/` — Claude Code, Codex, Grok Build, Devin, and
-  (as a packaged plugin) Cursor all read it directly, so there is no
+  (as a packaged plugin) Cursor read it directly, and OpenCode loads it
+  through the plugin or the `.agents/skills/` install, so there is no
   per-ecosystem symlink layer to keep in sync.
 - Don't edit the plugin manifest's `version` by hand; release-please bumps it
   alongside `package.json`.

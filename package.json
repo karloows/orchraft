@@ -3,6 +3,23 @@
   "version": "1.3.0",
   "description": "A clan of orcs hauling a solo dev's mundane chores, so the code wins the glory.",
   "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./scripts/opencode-plugin/orchraft-hooks.js",
+    "./server": "./scripts/opencode-plugin/orchraft-hooks.js"
+  },
+  "files": [
+    "scripts/opencode-plugin",
+    "hooks",
+    "skills",
+    "context",
+    "agents",
+    ".opencode",
+    ".claude-plugin",
+    ".codex-plugin",
+    ".cursor-plugin",
+    ".grok-plugin"
+  ],
   "keywords": [
     "claude-code",
     "cursor",
