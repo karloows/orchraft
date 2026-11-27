@@ -113,14 +113,15 @@ mutation needs the user's current-turn go-ahead.
 ```jsonc
 "autonomous": {
   "ship": ["branch", "commit", "push", "pr"],
-  "warpath": ["branch", "commit", "push", "pr", "review"]
+  "warpath": ["branch", "commit", "push", "pr", "review", "resolve"]
 }
 ```
 
 `ship` authorizes standalone shipping. `warpath` authorizes the repeated
 fix → ship → roast workflow; its actions must be named explicitly, including
-`review` for posting each PR review. A Warpath run still requires the user to
-start the workflow, but does not ask again for the listed actions during its
+`review` for posting each PR review and `resolve` for resolving review threads
+whose findings the diff actually fixes. A Warpath run still requires the user
+to start the workflow, but does not ask again for the listed actions during its
 cycles.
 
 This key carries the whole of `approval-policy.md`'s Autonomous Mode rules,

@@ -12,7 +12,9 @@ findings instead of stopping after one ship or roast pass.
 
 1. Read the live branch and pull-request state with `runes`.
 2. If findings exist, hand them to `Forgehand` for fixes.
-3. When fixes are ready, hand off to `Raid Captain` / `ship`.
+3. When fixes are ready, hand off to `Raid Captain` / `ship` to commit, push,
+   update the PR, and resolve review threads whose findings the diff actually
+   fixes, per `ship` and `context/policies/approval-policy.md`.
 4. Run `roast` against the current pull-request head, including the initial
    head when no prior roast exists.
 5. If findings remain, repeat from step 2; otherwise the latest roast is clean.
@@ -23,6 +25,11 @@ findings instead of stopping after one ship or roast pass.
 The loop is complete only when the latest roast pass ran against the current
 PR head and reported zero findings. A successful ship, passing checks, or zero
 unresolved threads from an older head is not completion.
+
+Addressed review threads should be resolved during `ship`, not left open after
+the fix lands. If a thread cannot be resolved because the tool/path is
+unavailable or approval was not given, report it plainly; do not claim the
+review cleanup is complete.
 
 If a finding is declined, keep it visible and stop for the user's decision;
 declining is not zero findings. If checks fail, the PR disappears, or the

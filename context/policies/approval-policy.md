@@ -104,10 +104,13 @@ writes down, not something a skill infers or a single chat reply grants.
   "`ship` may branch, commit, push, and open/update a PR without asking each
   time"). A blanket "approve everything" entry is not valid — list the
   actions, not a catch-all.
-- A `warpath` entry may name `branch`, `commit`, `push`, `pr`, and `review` to
-  let a user-started Warpath run repeat its fix → ship → roast cycles without
-  asking between cycles. It does not authorize merging, force-pushing,
-  deleting, or closing/reopening issues.
+- A `warpath` entry may name `branch`, `commit`, `push`, `pr`, `review`, and
+  `resolve` to let a user-started Warpath run repeat its fix → ship → roast
+  cycles without asking between cycles. `resolve` covers resolving a review
+  thread whose finding the diff actually fixes; it does not cover declining a
+  finding or resolving an unfixed thread. A `ship` entry may also name
+  `resolve` for the same scoped thread-resolution step. Neither authorizes
+  merging, force-pushing, deleting, or closing/reopening issues.
 - Regardless of Autonomous Mode, always get the current-turn go-ahead for:
   merging a pull request, force-pushing, deleting a branch or repository, and
   closing or reopening an issue. These stay gated because a wrong call is
