@@ -118,10 +118,16 @@ Use this skill when the user asks the AI to ship work.
    files, and the commit each validation claim ran against all go stale when
    a push only appends a line. Correct or re-run anything that no longer
    holds.
-11. If the PR has open review threads from a prior `roast` pass and this
-    diff fixes the finding one flags, resolve that specific thread via
-    `pull_request_review_write` (method `resolve_thread`) once the user gives
-    the current-turn go-ahead per `context/policies/approval-policy.md`.
+11. If the PR has open review threads — from `roast`, CodeRabbit, a human
+    reviewer, or another tool — and this diff fixes the finding one flags,
+    resolve that specific thread when verified Autonomous Mode for `ship` or
+    `warpath` explicitly includes `resolve`, or when the user gives
+    current-turn go-ahead per `context/policies/approval-policy.md`. Use
+    `pull_request_review_write` (method `resolve_thread`) when the GitHub MCP
+    path is available. If that MCP path is unavailable, fall back to
+    `gh api graphql -f query='mutation($id:ID!){resolveReviewThread(input:{threadId:$id}){thread{id isResolved}}}' -f id="$thread_id"`
+    using the review thread's GraphQL node ID; confirm the response reports
+    `isResolved: true` before treating it as resolved.
     Match each resolution to the finding it actually fixes; do not resolve
     threads wholesale or resolve one whose finding this diff doesn't address.
     A finding that a statement is wrong is fixed only when every copy of it
@@ -198,7 +204,9 @@ Use this skill when the user asks the AI to ship work.
   command with escalation, never substitute the GitHub API for the local
   commit, and stop if escalation is declined.
 - Never resolve a review thread whose finding this diff doesn't actually fix,
-  and never resolve one without the user's current-turn go-ahead.
+  and never resolve one without the user's current-turn go-ahead unless
+  verified Autonomous Mode for `ship` or `warpath` explicitly includes
+  `resolve`.
 - Never post a decline reply to a review thread without the user's
   current-turn go-ahead, and never resolve a thread just because a decline
   reply was posted to it — a reply and a resolution are separate actions,

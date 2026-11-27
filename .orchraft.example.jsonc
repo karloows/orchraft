@@ -53,7 +53,7 @@
   // To let Warpath repeat fix → ship → roast without asking between cycles:
   //   "autonomous": {
   //     "ship": ["branch", "commit", "push", "pr"],
-  //     "warpath": ["branch", "commit", "push", "pr", "review"]
+  //     "warpath": ["branch", "commit", "push", "pr", "review", "resolve"]
   //   }
   "autonomous": {}
 }
