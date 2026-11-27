@@ -1,6 +1,6 @@
 {
   "name": "orchraft",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "A clan of orcs hauling a solo dev's mundane chores, so the code wins the glory.",
   "private": true,
   "type": "module",
