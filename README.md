@@ -374,13 +374,13 @@ cd orchraft
 scripts/install-opencode.sh /path/to/your/project
 ```
 
-It installs everything under `.opencode/`: `skills/` to `.opencode/skills/`,
+It installs OpenCode-native files under `.opencode/`: `skills/` to `.opencode/skills/`,
 `context/` to `.opencode/context/`, converted `agents/*.md` to
 `.opencode/agents/`, hook scripts to `.opencode/hooks/`, and the hook plugin
 copy to `.opencode/plugins/orchraft-hooks.js`. For cross-agent compatibility,
-it also copies skills to `.agents/skills/`. Orchraft-shipped skill files are
-overwritten on every run (stale ones from older revisions are left); existing
-`.opencode/context/` and `.opencode/agents/` files are kept.
+it also copies skills to `.agents/skills/` and context to `context/`.
+Orchraft-shipped skill files are overwritten on every run (stale ones from
+older revisions are left); existing context and agent files are kept.
 
 If you load orchraft through `plugins` config, the `.opencode/plugins/orchraft-hooks.js`
 copy is redundant and can duplicate nudges, so prefer one path.

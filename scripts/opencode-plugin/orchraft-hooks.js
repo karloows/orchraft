@@ -9,7 +9,8 @@
 // - Copy-install layout: .opencode/plugins/orchraft-hooks.js with hook scripts
 //   at .opencode/hooks/ (../hooks). scripts/install-opencode.sh also installs
 //   skills to .opencode/skills/ (and .agents/skills/ for compatibility),
-//   context to .opencode/context/, and agents to .opencode/agents/.
+//   context to .opencode/context/ (and context/ for compatibility), and
+//   agents to .opencode/agents/.
 //
 // Verified live against opencode 2.2.5: a default export of {id, setup} is
 // accepted (the object-returning "export const Foo = async (...) => ({hooks})"

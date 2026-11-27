@@ -236,14 +236,15 @@ not assume a named `agents/` component exists outside hosts that document it.
   built-in `shell` tool (after-the-fact nudge, not pre-execution), and
   `ctx.event.subscribe` only for `session.deleted` cleanup.
   The V2 AgentEditor has no `add`, so agents and `context/` are still file
-  installs: `scripts/install-opencode.sh <project>` installs everything under
-  `.opencode/` (`skills/`, `context/`, `agents/`, `hooks/`, `plugins/`) and
-  also copies skills to `.agents/skills/` for cross-agent compatibility.
-  Agents are converted to `.opencode/agents/` subagents (all get `task: deny`
-  except `warpath`; read-only ones also get `edit: deny` and ask-before-shell
-  outside a short git/gh/ls list, guardrail not sandbox; `warpath` needs
-  `experimental.subagent_depth: 2` in user config). Existing `.opencode/context/` and
-  `.opencode/agents/` files are kept. The hook plugin copy lives at
+  installs: `scripts/install-opencode.sh <project>` installs OpenCode-native
+  files under `.opencode/` (`skills/`, `context/`, `agents/`, `hooks/`,
+  `plugins/`) and also copies skills to `.agents/skills/` and context to
+  `context/` for cross-agent compatibility. Agents are converted to
+  `.opencode/agents/` subagents (all get `task: deny` except `warpath`;
+  read-only ones also get `edit: deny` and ask-before-shell outside a short
+  git/gh/ls list, guardrail not sandbox; `warpath` needs
+  `experimental.subagent_depth: 2` in user config). Existing context and agent
+  files are kept. The hook plugin copy lives at
   `.opencode/plugins/orchraft-hooks.js` for the copy-install path. See README's
   opencode section for behavior details and 2.2.5 verification notes.
 

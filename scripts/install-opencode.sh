@@ -41,17 +41,17 @@ copy_new() {
 # The skills directories and their parents must be real directories too, or
 # writes would copy through a link into wherever it points. The same goes for
 # every other directory this script writes into: .opencode/agents, the
-# .opencode/context tree, and the .agents/skills compatibility copy.
+# .opencode/context tree, root context compat copy, and .agents/skills compat.
 check_dirs() {
   while IFS= read -r d; do
     if [ -L "$d" ]; then echo "refusing to install through symlink $d" >&2; exit 1; fi
   done
 }
 {
-  printf '%s\n' "$dst/.agents" "$dst/.agents/skills" "$dst/.opencode" "$dst/.opencode/skills" "$dst/.opencode/agents" "$dst/.opencode/plugins" "$dst/.opencode/hooks" "$dst/.opencode/context"
-  (cd "$src/context" && find . -mindepth 1 -type d) | while IFS= read -r d; do printf '%s\n' "$dst/.opencode/context/${d#./}"; done
+  printf '%s\n' "$dst/.agents" "$dst/.agents/skills" "$dst/.opencode" "$dst/.opencode/skills" "$dst/.opencode/agents" "$dst/.opencode/plugins" "$dst/.opencode/hooks" "$dst/.opencode/context" "$dst/context"
+  (cd "$src/context" && find . -mindepth 1 -type d) | while IFS= read -r d; do printf '%s\n' "$dst/.opencode/context/${d#./}" "$dst/context/${d#./}"; done
 } | check_dirs
-mkdir -p "$dst/.agents/skills" "$dst/.opencode/skills" "$dst/.opencode/agents" "$dst/.opencode/plugins" "$dst/.opencode/hooks" "$dst/.opencode/context"
+mkdir -p "$dst/.agents/skills" "$dst/.opencode/skills" "$dst/.opencode/agents" "$dst/.opencode/plugins" "$dst/.opencode/hooks" "$dst/.opencode/context" "$dst/context"
 # Refuse to write through a symlink where an orchraft skill file or directory
 # belongs: the writes below would follow it into the user's own files.
 (cd "$src/skills" && find . -mindepth 1 -print) | while read -r f; do
@@ -69,7 +69,8 @@ done
 # not written through.
 # Install into .opencode/skills (OpenCode-native) and .agents/skills (cross-agent
 # compatibility). Both get the same content with path refs rewritten for their
-# location; context refs point at .opencode/context in both.
+# location. Keep repository-root context/ as the primary lookup target and
+# rewrite the bundled plugin fallback to .opencode/context/.
 install_skill_file() {
   local srcfile=$1 rel=$2 root=$3 label=$4
   local t="$root/$rel"
@@ -81,7 +82,7 @@ install_skill_file() {
       -e "s# and the orchraft plugin root##g" \
       -e "s#the loaded orchraft package contains \`skills/\` and#\`${label}\` contains#g" \
       -e "s#inspect the package for the other#inspect \`${label}\` for the other#g" \
-      -e 's#(^|[^A-Za-z0-9_$/{])context/(policies|formats|personality\.md)#\1.opencode/context/\2#g' \
+      -e 's#\$\{CLAUDE_PLUGIN_ROOT\}/context/#.opencode/context/#g' \
       "$srcfile" > "$part"
   else
     cat "$srcfile" > "$part"
@@ -101,9 +102,10 @@ done
   part=$(mktemp) || exit 1
   sed -E \
     -e 's#skills/([a-z-]+)/SKILL\.md#.opencode/skills/\1/SKILL.md#g' \
-    -e 's#(^|[^A-Za-z0-9_$/{])context/(policies|formats|personality\.md)#\1.opencode/context/\2#g' \
+    -e 's#\$\{CLAUDE_PLUGIN_ROOT\}/context/#.opencode/context/#g' \
     "$src/context/${f#./}" > "$part" || { rm -f "$part"; exit 1; }
   copy_new "$part" "$dst/.opencode/context/${f#./}" || { rm -f "$part"; exit 1; }
+  copy_new "$part" "$dst/context/${f#./}" || { rm -f "$part"; exit 1; }
   rm -f "$part"
 done
 
@@ -159,13 +161,10 @@ for f in "$src"/agents/*.md; do
     { print }
   ' "$f" | sed -E \
     -e 's#skills/#.opencode/skills/#g' \
-    -e 's#(^|[^A-Za-z0-9_$/{])context/(policies|formats|personality\.md)#\1.opencode/context/\2#g' \
+    -e 's#\$\{CLAUDE_PLUGIN_ROOT\}/context/#.opencode/context/#g' \
     -e 's#orchraft:([a-z-]+)#\1#g' > "$tmp"
   copy_new "$tmp" "$dst/.opencode/agents/$(basename "$f")" || exit 1
 done
-if [ -d "$dst/context/policies" ] && [ -f "$dst/context/policies/approval-policy.md" ]; then
-  echo "note: found project-root context/ (old OpenCode copy-install layout). This install uses .opencode/context/; review and remove the old context/ copy if it is only an orchraft install artifact."
-fi
 echo "note: read-only agents' shell rules come after your project rules in opencode, so they override a project shell deny; re-add hard denies in .opencode/agents/*.md."
 echo "note: warpath delegates to forgehand and trialmaster, so set experimental.subagent_depth to 2 in your opencode config (default 1)."
 echo "note: .opencode/plugins/orchraft-hooks.js ports the watchtower and main-branch-commit nudges; both need jq on PATH, same as the Claude Code hooks."
