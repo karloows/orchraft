@@ -34,9 +34,8 @@ import { fileURLToPath } from "node:url"
 
 const here = dirname(fileURLToPath(import.meta.url))
 const packageRoot = resolve(here, "../..")
-const hooksDir = existsSync(join(packageRoot, "hooks/watchtower-nudge.sh"))
-  ? join(packageRoot, "hooks")
-  : resolve(here, "../hooks")
+const inCopyInstallLayout = basename(here) === "plugins" && basename(dirname(here)) === ".opencode"
+const hooksDir = inCopyInstallLayout ? resolve(here, "../hooks") : join(packageRoot, "hooks")
 const skillsDir = join(packageRoot, "skills")
 
 // Mirrors FileAccess.resolvePath's tilde handling (packages/core/src/
