@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
-# Install orchraft into a project for opencode: skills, policies, and the agents converted to opencode's format.
-# Skill files orchraft ships are overwritten on every run; stale ones from older revisions are left. Policies and agents may
+# Install orchraft into a project for OpenCode: skills, context, and the agents
+# converted to OpenCode's format. Everything lands under .opencode/ so the
+# project keeps a single OpenCode-owned directory.
+# Skill files orchraft ships are overwritten on every run; stale ones from older revisions are left. Context and agents may
 # be customised or hand-written in the target, so an existing file is kept.
 # Usage: scripts/install-opencode.sh <target-project-dir>
 set -euo pipefail
@@ -36,27 +38,28 @@ copy_new() {
   rm -f "$part"
 }
 
-# The skills directory and its parent must be real directories too, or cp -R
-# would copy through the link into wherever it points.
-# The same goes for every other directory it writes into: .opencode/agents and
-# the context tree (each directory orchraft's context/ has, since copy_new
-# would otherwise write through a linked context/policies).
+# The skills directories and their parents must be real directories too, or
+# writes would copy through a link into wherever it points. The same goes for
+# every other directory this script writes into: .opencode/agents, the
+# .opencode/context tree, root context compat copy, and .agents/skills compat.
 check_dirs() {
   while IFS= read -r d; do
     if [ -L "$d" ]; then echo "refusing to install through symlink $d" >&2; exit 1; fi
   done
 }
 {
-  printf '%s\n' "$dst/.agents" "$dst/.agents/skills" "$dst/.opencode" "$dst/.opencode/agents" "$dst/.opencode/plugins" "$dst/.opencode/hooks" "$dst/context"
-  (cd "$src/context" && find . -mindepth 1 -type d) | while IFS= read -r d; do printf '%s\n' "$dst/context/${d#./}"; done
+  printf '%s\n' "$dst/.agents" "$dst/.agents/skills" "$dst/.opencode" "$dst/.opencode/skills" "$dst/.opencode/agents" "$dst/.opencode/plugins" "$dst/.opencode/hooks" "$dst/.opencode/context" "$dst/context"
+  (cd "$src/context" && find . -mindepth 1 -type d) | while IFS= read -r d; do printf '%s\n' "$dst/.opencode/context/${d#./}" "$dst/context/${d#./}"; done
 } | check_dirs
-mkdir -p "$dst/.agents/skills" "$dst/.opencode/agents" "$dst/.opencode/plugins" "$dst/.opencode/hooks"
+mkdir -p "$dst/.agents/skills" "$dst/.opencode/skills" "$dst/.opencode/agents" "$dst/.opencode/plugins" "$dst/.opencode/hooks" "$dst/.opencode/context" "$dst/context"
 # Refuse to write through a symlink where an orchraft skill file or directory
 # belongs: the writes below would follow it into the user's own files.
 (cd "$src/skills" && find . -mindepth 1 -print) | while read -r f; do
-  if [ -L "$dst/.agents/skills/${f#./}" ]; then
-    echo "refusing to overwrite symlink $dst/.agents/skills/${f#./}" >&2; exit 1
-  fi
+  for root in "$dst/.opencode/skills" "$dst/.agents/skills"; do
+    if [ -L "$root/${f#./}" ]; then
+      echo "refusing to overwrite symlink $root/${f#./}" >&2; exit 1
+    fi
+  done
 done
 # Skills cite each other as skills/<name>/SKILL.md; point those at the installed
 # path, and shaman's plugin-package wording at the installed skills directory.
@@ -64,23 +67,44 @@ done
 # is staged in a sibling file and renamed into place, so a failed copy leaves the
 # previous install intact and a hard link to another project's file is replaced,
 # not written through.
+# Install into .opencode/skills (OpenCode-native) and .agents/skills (cross-agent
+# compatibility). Both get the same content with path refs rewritten for their
+# location. Keep repository-root context/ as the primary lookup target and
+# rewrite the bundled plugin fallback to .opencode/context/.
+install_skill_file() {
+  local srcfile=$1 rel=$2 root=$3 label=$4
+  local t="$root/$rel"
+  local part
+  part=$(mktemp "$t.part.XXXXXX") || return 1
+  if [ "${rel##*/}" = SKILL.md ]; then
+    sed -E \
+      -e "s#skills/([a-z-]+)/SKILL\\.md#${label}/\\1/SKILL.md#g" \
+      -e "s# and the orchraft plugin root##g" \
+      -e "s#the loaded orchraft package contains \`skills/\` and#\`${label}\` contains#g" \
+      -e "s#inspect the package for the other#inspect \`${label}\` for the other#g" \
+      -e 's#\$\{CLAUDE_PLUGIN_ROOT\}/context/#.opencode/context/#g' \
+      "$srcfile" > "$part"
+  else
+    cat "$srcfile" > "$part"
+  fi || { rm -f "$part"; return 1; }
+  # mktemp files are 0600: give the file the mode a plain write would get, capped at 0644.
+  chmod "$(printf '%o' $((0644 & ~$(umask))))" "$part" && mv -f "$part" "$t" || { rm -f "$part"; return 1; }
+}
 (cd "$src/skills" && find . -mindepth 1 -type d) | while read -r d; do
-  mkdir -p "$dst/.agents/skills/${d#./}" || exit 1
+  mkdir -p "$dst/.opencode/skills/${d#./}" "$dst/.agents/skills/${d#./}" || exit 1
 done
 (cd "$src/skills" && find . -type f) | while read -r f; do
-  t="$dst/.agents/skills/${f#./}"
-  part=$(mktemp "$t.part.XXXXXX") || exit 1
-  if [ "${f##*/}" = SKILL.md ]; then
-    sed -E 's#skills/([a-z-]+)/SKILL\.md#.agents/skills/\1/SKILL.md#g; s# and the orchraft plugin root##g; s#the loaded orchraft package contains `skills/` and#`.agents/skills/` contains#g; s#inspect the package for the other#inspect `.agents/skills/` for the other#g' "$src/skills/${f#./}" > "$part"
-  else
-    cat "$src/skills/${f#./}" > "$part"
-  fi || { rm -f "$part"; exit 1; }
-  # mktemp files are 0600: give the file the mode a plain write would get, capped at 0644.
-  chmod "$(printf '%o' $((0644 & ~$(umask))))" "$part" && mv -f "$part" "$t" || { rm -f "$part"; exit 1; }
+  rel=${f#./}
+  install_skill_file "$src/skills/$rel" "$rel" "$dst/.opencode/skills" ".opencode/skills" || exit 1
+  install_skill_file "$src/skills/$rel" "$rel" "$dst/.agents/skills" ".agents/skills" || exit 1
 done
 (cd "$src/context" && find . -type f ! -name .DS_Store) | while read -r f; do
   part=$(mktemp) || exit 1
-  sed -E 's#skills/([a-z-]+)/SKILL\.md#.agents/skills/\1/SKILL.md#g' "$src/context/${f#./}" > "$part" || { rm -f "$part"; exit 1; }
+  sed -E \
+    -e 's#skills/([a-z-]+)/SKILL\.md#.opencode/skills/\1/SKILL.md#g' \
+    -e 's#\$\{CLAUDE_PLUGIN_ROOT\}/context/#.opencode/context/#g' \
+    "$src/context/${f#./}" > "$part" || { rm -f "$part"; exit 1; }
+  copy_new "$part" "$dst/.opencode/context/${f#./}" || { rm -f "$part"; exit 1; }
   copy_new "$part" "$dst/context/${f#./}" || { rm -f "$part"; exit 1; }
   rm -f "$part"
 done
@@ -135,7 +159,10 @@ for f in "$src"/agents/*.md; do
       print; next }
     n == 1 && !/^description:/ { next }
     { print }
-  ' "$f" | sed -E 's#skills/#.agents/skills/#g; s#orchraft:([a-z-]+)#\1#g' > "$tmp"
+  ' "$f" | sed -E \
+    -e 's#skills/#.opencode/skills/#g' \
+    -e 's#\$\{CLAUDE_PLUGIN_ROOT\}/context/#.opencode/context/#g' \
+    -e 's#orchraft:([a-z-]+)#\1#g' > "$tmp"
   copy_new "$tmp" "$dst/.opencode/agents/$(basename "$f")" || exit 1
 done
 echo "note: read-only agents' shell rules come after your project rules in opencode, so they override a project shell deny; re-add hard denies in .opencode/agents/*.md."
