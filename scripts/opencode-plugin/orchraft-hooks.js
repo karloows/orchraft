@@ -7,8 +7,9 @@
 // - Package/plugin layout: scripts/opencode-plugin/orchraft-hooks.js with
 //   hooks/ and skills/ at the repo/package root (../../hooks, ../../skills).
 // - Copy-install layout: .opencode/plugins/orchraft-hooks.js with hook scripts
-//   at .opencode/hooks/ (../hooks) and skills already installed in
-//   .agents/skills/ by scripts/install-opencode.sh.
+//   at .opencode/hooks/ (../hooks). scripts/install-opencode.sh also installs
+//   skills to .opencode/skills/ (and .agents/skills/ for compatibility),
+//   context to .opencode/context/, and agents to .opencode/agents/.
 //
 // Verified live against opencode 2.2.5: a default export of {id, setup} is
 // accepted (the object-returning "export const Foo = async (...) => ({hooks})"
