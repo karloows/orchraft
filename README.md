@@ -12,7 +12,7 @@
 <p align="center">
   <a href="https://github.com/karloows/orchraft/actions/workflows/validate-plugin.yaml"><img alt="Plugin validation" src="https://img.shields.io/github/actions/workflow/status/karloows/orchraft/validate-plugin.yaml?style=flat-square&label=checks&color=6B7A4B"></a>
   <img alt="18 skills" src="https://img.shields.io/badge/skills-18-6B7A4B?style=flat-square">
-  <img alt="Runs on Claude Code, Codex, Grok Build, Cursor and Devin" src="https://img.shields.io/badge/runs%20on-Claude%20Code%20%C2%B7%20Codex%20%C2%B7%20Grok%20%C2%B7%20Cursor%20%C2%B7%20Devin-1B1712?style=flat-square">
+  <img alt="Runs on Claude Code, Codex, Grok Build, Cursor, Devin and OpenCode" src="https://img.shields.io/badge/runs%20on-Claude%20Code%20%C2%B7%20Codex%20%C2%B7%20Grok%20%C2%B7%20Cursor%20%C2%B7%20Devin%20%C2%B7%20OpenCode-1B1712?style=flat-square">
   <a href="LICENSE"><img alt="License Apache 2.0" src="https://img.shields.io/badge/license-Apache--2.0-1B1712?style=flat-square"></a>
 </p>
 
@@ -172,7 +172,8 @@ moves the ground under an installed copy.
 
 - `skills/`: canonical agent skills, read directly by Claude Code, Codex,
   Grok Build, Devin, and (as a packaged plugin) Cursor once orchraft is
-  installed — no per-ecosystem symlink layer.
+  installed, and registered by the OpenCode plugin or `.agents/skills/`
+  install — no per-ecosystem symlink layer.
 - `agents/`: optional host adapters for safe local implementation, planning,
   review, explanation, documentation, and status work. Portable behavior stays
   in `skills/`.
@@ -205,6 +206,11 @@ moves the ground under an installed copy.
   refusing to commit without a request) rather than file syntax.
 - `scripts/check-rosters.sh`: a CI check that fails when a doc's skill list
   or skill count drifts from `skills/`.
+- `scripts/opencode-plugin/orchraft-hooks.js`: OpenCode server plugin
+  entrypoint (exported as package `.`) that registers bundled skills and
+  ports the watchtower/main-branch nudges.
+- `scripts/install-opencode.sh`: file-copy installer for OpenCode agents,
+  context, and copy-install hook layout.
 - `assets/`: art used by this README. `orc.png` is the mascot in the header,
   `orc-intro.svg` is the animated banner, and `orc-armor.png` is the original
   illustration that banner embeds — kept as the source of the artwork, not
@@ -330,11 +336,37 @@ using its install section above.
 under [Requirements](#requirements) to open pull requests, post reviews,
 merge, and manage issues.
 
-## opencode
+## Install As An OpenCode Plugin
 
-opencode can't install a Claude Code plugin, so a script installs the
-pieces in opencode's own layout. Clone orchraft, then run the script from
-inside that checkout with your project's path:
+orchraft ships as an OpenCode server plugin. Add it to `opencode.jsonc` in
+the project or globally:
+
+```jsonc
+{
+  "plugins": ["github:karloows/orchraft"]
+}
+```
+
+For a local checkout, point at the directory instead:
+
+```jsonc
+{
+  "plugins": ["/path/to/orchraft"]
+}
+```
+
+The plugin entrypoint is `scripts/opencode-plugin/orchraft-hooks.js`
+(exported as package `.`). On setup it registers the bundled `skills/*/SKILL.md`
+files through `ctx.skill.transform` when that API is available, and installs
+the `watchtower` and main-branch commit/push nudges by shelling out to the
+same `hooks/*.sh` scripts the Claude Code hooks use.
+
+### Agents and context
+
+OpenCode server plugins can register skills and hooks, but the current V2
+AgentEditor has no `add` operation, so orchraft agents and `context/`
+policies are still installed as files. Run the installer from an orchraft
+checkout:
 
 ```sh
 git clone https://github.com/karloows/orchraft
@@ -342,86 +374,61 @@ cd orchraft
 scripts/install-opencode.sh /path/to/your/project
 ```
 
-It copies `skills/` to `.agents/skills/` (the files orchraft ships are overwritten on every run; files from older revisions are not removed) and
-`context/` to the project root, and converts `agents/*.md` into
-`.opencode/agents/` subagents. Every agent without the `Agent` tool in its
-Claude definition gets `task: deny`; the read-only ones also get `edit: deny`
-and ask before any shell command outside a short list of
-`git`/`gh`/`ls` commands. That is
-a guardrail, not a sandbox: an allowed command can still redirect output or write through an option such as `git log --output=`, so
-the agent's own instructions remain the rule. opencode appends agent rules
-after your project's, so these shell rules win over a project `shell` deny for
-the same command (a denied `ls *` becomes allowed, other denies become
-`ask`); if you rely on hard denies, add them to the generated agent files
-too.
+It copies `skills/` to `.agents/skills/` (overwriting orchraft-shipped skill
+files; not removing stale ones from older revisions), copies `context/` to
+the project root, and converts `agents/*.md` into `.opencode/agents/`
+subagents. Existing `context/` and agent files are kept. The installer also
+installs the hook plugin copy at `.opencode/plugins/orchraft-hooks.js`; if
+you load orchraft through `plugins` config, that copy is redundant and can
+duplicate nudges, so prefer one path.
 
-`warpath` is the one agent that delegates: to `forgehand`, and to
-`trialmaster` for read-only analysis before `roast`. opencode's default
-`experimental.subagent_depth` of 1 stops a subagent from starting another, so
-set it to `2` in your own opencode config; the installer never edits that
-file.
+Every agent without the `Agent` tool in its Claude definition gets
+`task: deny`; read-only agents also get `edit: deny` and ask before shell
+commands outside a short `git`/`gh`/`ls` allowlist. That is a guardrail, not
+a sandbox: allowed commands can still redirect output or write through
+options such as `git log --output=`, so agent instructions remain the rule.
+OpenCode appends agent rules after project rules, so these shell rules win
+over a project `shell` deny for the same command; re-add hard denies in the
+generated agent files if you rely on them.
 
-A `context/` or agent file that already exists in the project is kept, not
-overwritten, so your edited policies survive a re-run.
+`warpath` delegates to `forgehand`, and to `trialmaster` for read-only
+analysis before `roast`. OpenCode's default `experimental.subagent_depth` of
+1 blocks subagents from starting subagents, so set it to `2` in your own
+OpenCode config; the installer never edits that file.
 
-What opencode 2.2.5 does with these files, from its own docs at the
-[v2.2.5 tag](https://github.com/anomalyco/opencode/tree/v2.2.5/services/www/src/docs/content):
-[`skills.mdx`](https://github.com/anomalyco/opencode/blob/v2.2.5/services/www/src/docs/content/skills.mdx)
-lists `.agents/skills` as a project skills location,
-[`agents.mdx`](https://github.com/anomalyco/opencode/blob/v2.2.5/services/www/src/docs/content/agents.mdx)
-loads Markdown agents from `.opencode/agents/<name>.md`, and
-[`instructions.mdx`](https://github.com/anomalyco/opencode/blob/v2.2.5/services/www/src/docs/content/instructions.mdx)
-loads a project `AGENTS.md`. The one check, on opencode 2.2.5: after running
-the installer on a scratch project, `opencode debug agents --standalone` run in
-that project listed the eight converted agents (`chronicler`, `forgehand`, `loremaster`,
-`rune-reader`, `scout`, `tactician`, `trialmaster`, `warpath`) with the
-`edit`, `shell`, and `subagent` permission rules written as above. Skill and
-`AGENTS.md` loading, and any model run, were not checked here.
+### Hook behavior
 
-The `watchtower` and main-branch commit nudges are ported:
-`scripts/opencode-plugin/orchraft-hooks.js` is installed alongside copies of
-`hooks/*.sh` at `.opencode/hooks/`, and shells out to those same scripts
-(`Bun.$`, available globally since the plugin runs under Bun) instead of
-reimplementing their bash/git/gh checks in JS. `ctx.session.hook("context",
-...)` runs the watchtower check once per session (gated on that hook, not a
-`session.created` subscription, so it still runs for a session resumed with
-`opencode --continue` after a server restart, which never fires
-`session.created`) and injects it into that model request's system prompt.
-`ctx.tool.hook("execute.after", ...)` appends the main-branch commit nudge to
-the built-in `shell` tool's result.
+`ctx.session.hook("context", ...)` runs the watchtower check once per session
+(gated per session, not on `session.created`, so it also covers sessions
+resumed with `opencode --continue`). `ctx.tool.hook("execute.after", ...)`
+appends the main-branch commit nudge to built-in `shell` tool results.
 
-Unlike the Claude Code `PreToolUse` hook this ports, which warns before the
-`git commit`/`push` runs, the opencode nudge fires after it: `execute.before`
-has no result yet for the main-branch nudge to append text to, and the model
-only ever sees a tool's result, not a pre-execution hook's return value. So on
-opencode this is an after-the-fact note that a commit or push to the base
-branch already happened, not a chance to reconsider first.
+Unlike the Claude Code `PreToolUse` hook this ports, the OpenCode nudge fires
+after the `git commit`/`push` runs: `execute.before` has no result to append
+to, and the model only sees tool results. It is an after-the-fact note, not a
+pre-execution block.
 
-Checked live against the installed opencode 2.2.5 binary: the object-return
-style documented at [opencode.ai/docs/plugins](https://opencode.ai/docs/plugins)
-(`export const Foo = async ({directory, ...}) => ({hooks})`) is rejected by
-that build with `Plugin must export a default definition with an id and an
-effect or setup function`; a default export of `{id, setup}` loads with no
-such warning, and a deliberate throw from inside `setup` after calling
-`ctx.tool.hook`, `ctx.session.hook`, and checking `ctx.event.subscribe`
-surfaced verbatim in the server log, confirming all three exist and accept
-the hook/subscribe calls without error. `ctx.location.directory` was checked
-the same way. `ctx.event.subscribe` is kept only for `session.deleted`, to
-stop its per-session dedupe `Set` from growing for the life of a long-running
-server.
+The hooks need `bash`, `git`, and `jq`; `gh` is optional and degrades
+watchtower to local-only/silence. The plugin resolves hook scripts from the
+package `hooks/` directory when loaded as a package, or `.opencode/hooks/`
+when installed by the copy installer.
 
-opencode 2.2.5's built-in shell tool is registered as `"shell"`, not
-`"bash"` (confirmed against `packages/core/src/tool/plugin/shell.ts` at the
-v2.2.5 tag). Its successful result is `{output, content, metadata}`, where
-`output` is a structured object (`exit`/`signal`/`truncated`/...) and
-`content` is an array of `{type, text}` parts, except for a backgrounded
-command, whose result is a plain `{output: <string>, shellID, ...}` with no
-`content` at all. The nudge is appended as a new `content` part when
-`content` is that array, as a plain string concatenation onto `content` or
-`output` otherwise, and the command's own call-level `workdir` (when the
-model set one) is resolved and used as the nudge's working directory instead
-of the plugin's fixed project directory, since a command can run in a
-different worktree than the one the plugin started in.
+### Verification notes (opencode 2.2.5)
+
+Checked live against opencode 2.2.5: the default export `{id, setup}` shape
+loads (the object-return `async (...) => ({hooks})` style documented at
+opencode.ai/docs/plugins was rejected there with "Plugin must export a
+default definition with an id and an effect or setup function");
+`ctx.location.directory`, `ctx.session.hook`, `ctx.tool.hook`, and
+`ctx.event.subscribe` all accepted calls without error. The built-in shell
+tool is registered as `"shell"`, not `"bash"` (confirmed against
+`packages/core/src/tool/plugin/shell.ts` at the v2.2.5 tag). Its successful
+result is `{output, content, metadata}` where `output` is a structured object
+and `content` is an array of `{type, text}` parts, except a backgrounded
+command whose result is `{output: <string>, shellID, ...}` with no `content`.
+The nudge is appended as a `content` part when possible, otherwise
+concatenated onto `content` or `output`. The command's call-level `workdir`,
+when set, is resolved and used as the nudge's working directory.
 
 ## First 60 Seconds
 

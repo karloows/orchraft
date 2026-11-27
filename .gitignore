@@ -6,6 +6,9 @@ node_modules/
 .envrc
 # local MCP server config; may contain secrets or tokens
 .mcp.json
+# local OpenCode config; may contain secrets or tokens
+opencode.json
+opencode.jsonc
 # per-machine Claude Code permission overrides
 .claude/**
 # maintainer-only roadmap
