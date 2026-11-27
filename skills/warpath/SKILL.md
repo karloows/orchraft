@@ -20,6 +20,21 @@ findings instead of stopping after one ship or roast pass.
 5. If findings remain, repeat from step 2; otherwise the latest roast is clean.
 6. Recommend `Haulmaster` / `land`; do not merge as part of this loop.
 
+## Command Card
+
+| Goal | Preferred tool/command | Notes |
+| --- | --- | --- |
+| Read live state | `runes` workflow/skill | Re-read after every handoff; no stored loop state. |
+| Fix findings | `forgehand`/implementation workflow | Edits/tests only; no mutation. |
+| Ship fixes | `ship` workflow | Only with current-turn approval or verified `autonomous.warpath`. |
+| Review | `roast` workflow | Against current PR head; zero findings on latest head = complete. |
+| Land handoff | Name `land` | Never merge in warpath. |
+
+**Fast Path / Do Not**
+- Do not merge, force-push, delete, or close/reopen issues.
+- Do not treat stale/older-head clean state as completion.
+- Do not keep looping on declined findings; stop for user decision.
+
 ## Completion
 
 The loop is complete only when the latest roast pass ran against the current
@@ -49,9 +64,6 @@ each handoff so a resumed run cannot mistake a stale roast for a clean one.
 
 ## Handoff
 
-Unless the user asked for plain output, open with a short orc-voice line,
-speaking as the Warpath from `context/personality.md` (the target repo's
-copy when it exists, otherwise `${CLAUDE_PLUGIN_ROOT}/context/personality.md`),
-and state the current cycle.
-Report every cycle's finding count and PR head. When clean, hand off to
-`Haulmaster` / `land` instead of invoking it.
+- Follow the Handoff Contract in `context/personality.md` (target repo copy when present, else `${CLAUDE_PLUGIN_ROOT}/context/personality.md`; if the target copy lacks that section, use the bundled contract).
+- State the current cycle, every cycle's finding count, and PR head.
+- When clean, hand off to `Haulmaster` / `land` instead of invoking it.

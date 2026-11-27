@@ -12,6 +12,7 @@ the lifecycle stage before writing code and, eventually, `ship`.
 ## Contents
 
 - [At A Glance](#at-a-glance)
+- [Command Card](#command-card)
 - [What This Is Not](#what-this-is-not)
 - [Trigger Rules](#trigger-rules)
 - [Prerequisites](#prerequisites)
@@ -33,6 +34,19 @@ the lifecycle stage before writing code and, eventually, `ship`.
 4. Stop. Never write code, commit, push, or touch a PR/issue as part of this
    skill — that's implementation and `ship`'s job, after the chief signs off
    on the plan.
+
+## Command Card
+
+| Goal | Preferred tool/command | Notes |
+| --- | --- | --- |
+| Ground in repo | `read`, `glob`, `grep`, `git log --oneline`, `git blame` (targeted) | Read only files/policies/precedent relevant to the goal. |
+| Check related PRs/issues | GitHub MCP search/read tools; fallback `gh search prs` / `gh search issues`, or `gh pr list` / `gh issue list` | Read-only; do not mutate. |
+| Draft plan | No command | Output plan format; stop before implementation. |
+
+**Fast Path / Do Not**
+- Do not implement, commit, push, or mutate GitHub.
+- Do not scan the whole repo; follow relevant precedent and policies only.
+- Ask one clarification if goal/scope is too vague to ground.
 
 ## What This Is Not
 
@@ -143,18 +157,14 @@ Keep it scoped to what was asked — not a tour of the whole codebase.
 
 ## Handoff
 
-- Unless the user asked for plain output, open with a fresh one-line phrase
-  in the orc voice, speaking as the Tactician from `context/personality.md`
-  (the target repo's copy when it exists, otherwise
-  `${CLAUDE_PLUGIN_ROOT}/context/personality.md`). If they did, open with
-  the plain plan instead.
+- Follow the Handoff Contract in `context/personality.md` (target repo copy when present, else `${CLAUDE_PLUGIN_ROOT}/context/personality.md`; if the target copy lacks that section, use the bundled contract).
 - Present the plan per [Plan Format](#plan-format).
 - Note which precedent (file, PR, or policy) grounded the approach.
-- If blocked, drop the orc voice and state the blocker plainly.
+- If blocked, state the blocker plainly (Handoff Contract).
 
 ## Response Examples
 
-Opening lines are samples of the orc voice; write a fresh one each time.
+Opening lines are samples; follow the Handoff Contract for voice selection.
 
 Plan drafted:
 

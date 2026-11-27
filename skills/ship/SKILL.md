@@ -10,6 +10,7 @@ Use this skill when the user asks the AI to ship work.
 ## Contents
 
 - [At A Glance](#at-a-glance)
+- [Command Card](#command-card)
 - [Trigger Rules](#trigger-rules)
 - [What This Is Not](#what-this-is-not)
 - [Prerequisites](#prerequisites)
@@ -30,6 +31,24 @@ Use this skill when the user asks the AI to ship work.
    push.
 5. Create or update the pull request and report the branch, commit, PR, and
    validation result.
+
+## Command Card
+
+| Goal | Preferred tool/command | Notes |
+| --- | --- | --- |
+| Inspect state | `git status --short --branch` | First step; never guess. |
+| Inspect full diff | `git diff`; `git diff --staged`; `git ls-files --others --exclude-standard` | Read complete intended change set before naming anything. |
+| Resolve base/default branch | config `baseBranch`; else `git symbolic-ref --short refs/remotes/origin/HEAD`; fallback `main`/`master` | Do not assume `main`. |
+| Validate | config `validate` if set; else narrowest relevant project check | Report exact command/result; failure stops. |
+| Branch create/switch | `git checkout -b <type>/<slug> <base>` or keep current topic branch | Verify name against branch policy before creating. Use the resolved base as `<base>` when on the base or default branch. |
+| Stage/commit | `git add <intended files>`; `git commit -m "<title>" [-m "<body>"]` | Stage only intended files; let hooks run. |
+| Push | `git push -u origin <branch>` | Current-turn approval required. |
+| PR create/update | GitHub MCP PR tools first; fallback `gh pr view/create/edit` after MCP unavailable/blocked | Re-read full PR body on update. |
+
+**Fast Path / Do Not**
+- Do not explore unrelated files or rerun unchanged validation.
+- Do not commit/push/PR without explicit current-turn ship approval (or verified Autonomous Mode).
+- Do not create a second topic branch unless explicitly asked.
 
 ## Trigger Rules
 
@@ -231,11 +250,7 @@ Use this skill when the user asks the AI to ship work.
 
 ## Handoff
 
-- Unless the user asked for plain output, open with a fresh one-line success
-  phrase in the orc voice, speaking as the Raid Captain from
-  `context/personality.md` (the target repo's copy when it exists, otherwise
-  `${CLAUDE_PLUGIN_ROOT}/context/personality.md`). If they did, open with the
-  plain result instead.
+- Follow the Handoff Contract in `context/personality.md` (target repo copy when present, else `${CLAUDE_PLUGIN_ROOT}/context/personality.md`; if the target copy lacks that section, use the bundled contract).
 - Report the branch name.
 - Report the commit title.
 - Report the pull request URL or say why PR creation/update was blocked.
@@ -247,7 +262,7 @@ Use this skill when the user asks the AI to ship work.
 
 ## Response Examples
 
-Opening lines are samples of the orc voice; write a fresh one each time.
+Opening lines are samples; follow the Handoff Contract for voice selection.
 
 Successful ship:
 

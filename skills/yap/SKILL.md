@@ -12,6 +12,7 @@ generic description.
 ## Contents
 
 - [At A Glance](#at-a-glance)
+- [Command Card](#command-card)
 - [What This Is Not](#what-this-is-not)
 - [Trigger Rules](#trigger-rules)
 - [Targets](#targets)
@@ -31,6 +32,20 @@ generic description.
    references instead of asserting from general knowledge alone.
 4. Stop. This skill never edits files, comments on anything, or opens/changes
    a PR.
+
+## Command Card
+
+| Goal | Preferred tool/command | Notes |
+| --- | --- | --- |
+| Identify target | `read`, `glob`, `grep`, `git log`, `git blame` as needed | Use the smallest relevant source set. |
+| PR/diff target | GitHub MCP PR/diff/commits; fallback `gh pr view/diff` | Read-only. |
+| Error/log target | `read` referenced files/lines; trace actual code path | Do not explain generically without checking code. |
+| Dependency target | `read` local changelog/docs; web fetch/search only if needed | Cite real changelog/release notes. |
+
+**Fast Path / Do Not**
+- Do not edit files, commit, push, or mutate PRs/issues.
+- Do not guess when sources are missing; state what is unverifiable.
+- Do not scope-creep into unrelated codebase tour.
 
 ## What This Is Not
 
@@ -107,18 +122,14 @@ source(s) were used.
 
 ## Handoff
 
-- Unless the user asked for plain output, open with a fresh one-line phrase in
-  the orc voice, speaking as the Scout from `context/personality.md` (the
-  target repo's copy when it exists, otherwise
-  `${CLAUDE_PLUGIN_ROOT}/context/personality.md`), when the explanation is
-  delivered. If they did, open with the plain explanation instead.
+- Follow the Handoff Contract in `context/personality.md` (target repo copy when present, else `${CLAUDE_PLUGIN_ROOT}/context/personality.md`; if the target copy lacks that section, use the bundled contract).
 - Note which sources backed the explanation (e.g. "based on the PR diff and
   commit history").
-- If blocked, drop the orc voice and state the blocker plainly.
+- If blocked, state the blocker plainly (Handoff Contract).
 
 ## Response Examples
 
-Opening lines are samples of the orc voice; write a fresh one each time.
+Opening lines are samples; follow the Handoff Contract for voice selection.
 
 Explained a PR:
 

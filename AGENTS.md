@@ -25,9 +25,12 @@ user's explicit go-ahead in the current turn, and approval never carries
 forward, unless a repo owner has written a scoped `Autonomous Mode` opt-in
 into their own `approval-policy.md` naming that exact action — and even then,
 merging, force-pushing, deleting, and issue close/reopen stay gated
-regardless. The full rule lives in `context/policies/approval-policy.md` so it
-ships with the plugin; read it before any of those actions. It overrides any
-skill step that could be read as running to completion unattended.
+regardless. When approval is needed, ask one short specific question naming the
+exact action; a clear affirmative reply in the same turn ("yes", "ok", "go
+ahead", "ship it") counts for that named action. The full rule lives in
+`context/policies/approval-policy.md` so it ships with the plugin; read it
+before any of those actions. It overrides any skill step that could be read as
+running to completion unattended.
 
 ## How To Use This Repo
 
@@ -38,15 +41,29 @@ skill step that could be read as running to completion unattended.
   approval gates.
 - Use the policies in `context/policies/` for reusable naming and writing
   standards.
-- Use `context/personality.md` for the orc voice on user-facing surfaces
-  (README intro, plugin descriptions, skill handoff lines). Everything that
-  file excludes, including policies, commits, PR text, and release notes,
-  stays plain.
+- Use `context/personality.md` for the orc voice on orchraft-owned,
+  user-facing handoff surfaces when `voice` is not `plain` and no
+  higher-priority style instruction is active. Workflow rules, approval gates,
+  verification, and factual reporting always apply. Policies, commits, PR text,
+  review findings, release notes, skill instructions, and errors/blockers stay
+  plain.
 - Prefer project-local rules, templates, hooks, and CI checks over these
   defaults when this workflow pack is installed into another repository.
 - Keep guidance generic unless a file is intentionally project-specific.
 - Do not duplicate policy details here; update the source policy or skill
   instead.
+
+## Skill Execution Discipline
+
+- When a skill includes a `Command Card` or `Fast Path`, follow it before
+  improvising discovery. Use the named tools/commands first; only fall back
+  when blocked.
+- Do not rescan the repo, reread unchanged policy files, or rerun validation
+  already reported in the same turn unless something changed.
+- Prefer dedicated tools (`read`, `glob`, `grep`, `edit`, `write`) over shell
+  equivalents. Use GitHub MCP tools before `gh` when a skill says MCP-first.
+- Report exact commands run and their outcome. If a command was not run, say
+  so plainly.
 
 ## Design Intent
 

@@ -12,6 +12,7 @@ it.
 ## Contents
 
 - [At A Glance](#at-a-glance)
+- [Command Card](#command-card)
 - [Requirements](#requirements)
 - [What This Is Not](#what-this-is-not)
 - [Trigger Rules](#trigger-rules)
@@ -33,6 +34,20 @@ it.
 4. Report findings by severity, then post them as a single PR review: one
    comment anchored to each finding's diff line, plus one summary.
 5. Stop. Do not push fixes unless the user explicitly asks.
+
+## Command Card
+
+| Goal | Preferred tool/command | Notes |
+| --- | --- | --- |
+| Identity/PR state | GitHub MCP `get_me`, PR view/list, commits/diff; fallback `gh api user`, `gh pr view --json ...` | Confirm open non-draft PR and current head/base. |
+| Read policies | `read` target repo `context/policies/*` (or bundled fallback) | Only review-policy, approval, branch/commit/writing, and relevant local rules. |
+| Review diff | `read`/`grep`/targeted file reads; parallel read-only subagents for large diffs | No edits/mutations. |
+| Post review | GitHub MCP `pull_request_review_write` (create, submit_pending) + `add_comment_to_pending_review`; fallback `gh api` issue comment only if MCP review path unavailable | Requires current-turn approval unless verified `autonomous.warpath` authorizes `review`; confirm returned review ID/URL. |
+
+**Fast Path / Do Not**
+- Do not edit files, commit, push, approve, merge, or request changes unless explicitly asked.
+- Do not post without current-turn approval unless verified `autonomous.warpath` authorizes `review`.
+- Do not invent policies; tag judgment calls per review-policy.
 
 ## Requirements
 
@@ -69,8 +84,8 @@ What the end user needs in place before this skill can work at all:
   asks for a review alongside it (e.g. "ship it and roast it"). A preference
   stated in an earlier turn does not carry forward — posting a PR review is
   gated by `context/policies/approval-policy.md` the same as any other
-  mutation, needing the current-turn go-ahead every time, not a remembered
-  standing instruction.
+  mutation, needing the current-turn go-ahead unless verified
+  `autonomous.warpath` authorizes `review` for that run.
 - Do not run automatically on every `ship` unless the user has said so; `ship`
   and `roast` are separate skills with separate trigger rules.
 
@@ -445,19 +460,14 @@ PR titles or descriptions.
 
 - Only use the success phrasing below once the post is confirmed (a returned
   review ID/URL), not just because the API call didn't error.
-- Unless the user asked for plain output, open with a fresh one-line success
-  phrase in the orc voice, speaking as the Trialmaster from
-  `context/personality.md` (the target repo's copy when it exists, otherwise
-  `${CLAUDE_PLUGIN_ROOT}/context/personality.md`). If they did, open with the
-  plain result instead.
+- Follow the Handoff Contract in `context/personality.md` (target repo copy when present, else `${CLAUDE_PLUGIN_ROOT}/context/personality.md`; if the target copy lacks that section, use the bundled contract).
 - Report the PR number and the finding counts by severity.
 - If there were zero findings, say so plainly and skip listing severities.
-- If posting stops or fails, drop the orc voice and state the blocker
-  plainly, then share the findings in chat instead.
+- If blocked or posting fails, state the blocker plainly (Handoff Contract) and share findings in chat instead.
 
 ## Response Examples
 
-Opening lines are samples of the orc voice; write a fresh one each time.
+Opening lines are samples; follow the Handoff Contract for voice selection.
 
 Clean review, no findings:
 

@@ -39,6 +39,12 @@ If one of these actions is coming up and the current turn didn't clearly ask
 for it, stop and ask instead of inferring permission from context, urgency,
 prior turns, or "this is obviously what they want."
 
+Ask one short, specific confirmation question that names the exact action. A
+clear affirmative reply to that question in the same turn — such as "yes",
+"ok", "go ahead", "ship it", or "land it" — counts as explicit go-ahead for
+that named action. Do not require a long scripted phrase when the action is
+already unambiguous.
+
 A request to fix, address, or resolve something — findings from a review,
 a bug, feedback in a comment — is approval to make the edit, not to commit,
 push, or update a pull request with it. Treat phrases like "resolve the

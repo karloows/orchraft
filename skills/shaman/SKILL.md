@@ -15,6 +15,20 @@ reads the signs of the current repository; it never repairs anything.
 3. Report each check as `PASS`, `WARN`, or `FAIL`, then give the smallest next
    action and an explicit `READY` or `NOT READY` result.
 
+## Command Card
+
+| Goal | Preferred tool/command | Notes |
+| --- | --- | --- |
+| Repo identity | `git rev-parse --show-toplevel`; `git rev-parse --abbrev-ref HEAD` | Read-only. |
+| Skill/policy/hook files | `read`, `glob`, `ls`/`find` equivalent via tools; `jq . hooks/hooks.json` | Verify presence/parse; do not edit. |
+| GitHub auth | `gh auth status`; check origin URL | No token output. |
+| Config parse | `read` `.orchraft.jsonc`/`.orchraft.json`; quote-aware comment strip before parse | Warn on malformed; never rewrite. |
+
+**Fast Path / Do Not**
+- Do not change files, git state, GitHub, Trello, hooks, or config.
+- Do not print secrets/tokens.
+- Do not claim PASS from memory; report only checks performed now.
+
 ## Checks
 
 ### Repository and skill loading

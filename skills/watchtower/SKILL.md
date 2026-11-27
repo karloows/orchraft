@@ -23,6 +23,18 @@ mirrors — keep them in sync if the surfacing rules change.
 3. Stop. Never commit, push, merge, comment, resolve threads, or update
    issues.
 
+## Command Card
+
+| Goal | Preferred tool/command | Notes |
+| --- | --- | --- |
+| Local state | `git status --short --branch`; `git rev-parse --abbrev-ref HEAD` | Read-only. |
+| PR state | `gh pr view --json number,state,mergeStateStatus,statusCheckRollup` and `gh api graphql` for `reviewThreads`; or equivalent MCP read | Only if GitHub available; silence/unavailable local-only fallback per rules. |
+| Output | One short line or nothing | No mutations, no long summary. |
+
+**Fast Path / Do Not**
+- Do not mutate git/GitHub.
+- Do not report "GitHub unavailable" when there is nothing actionable.
+
 ## What To Surface
 
 Surface only actionable live facts:
@@ -52,8 +64,7 @@ is working as intended.
 
 ## Handoff
 
-- Use the Watchtower voice from `context/personality.md` (the target repo's
-  copy when it exists, otherwise `${CLAUDE_PLUGIN_ROOT}/context/personality.md`).
+- Follow the Handoff Contract in `context/personality.md` (target repo copy when present, else `${CLAUDE_PLUGIN_ROOT}/context/personality.md`; if the target copy lacks that section, use the bundled contract). Watchtower stays quiet: one short line or silence.
 - Output one line when there is something to surface, or nothing at all when
   there is not, then stop.
 

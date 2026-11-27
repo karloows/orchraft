@@ -7,17 +7,15 @@ description: Have the AI implement a requested code change and run focused valid
 
 Use this skill for implementation work that should stay in the working tree.
 
-## Rules
+## Command Card
 
-- Read the repository's instructions, relevant policies, and existing code
-  before editing.
-- Trace the real flow and reuse existing helpers and patterns.
-- Make the smallest correct change and preserve unrelated work.
-- Run the narrowest useful validation after editing.
-- Stop before committing, pushing, creating or updating branches, opening or
-  updating pull requests, posting reviews, changing issues, publishing
-  releases, or merging.
-- Report the files changed and validation results honestly.
+| Goal | Preferred tool/command | Notes |
+| --- | --- | --- |
+| Understand scope | `read`, `glob`, `grep`, `git status --short` | Read only files relevant to the request. |
+| Implement | `edit`/`write` | Smallest correct change; preserve unrelated work. |
+| Validate | Narrowest relevant test/lint/build command | Report exact command and result. |
 
-If the work needs a plan first, stop and direct the user to `warplan`. If the
-user wants the completed work shipped, stop and direct them to `ship`.
+**Fast Path / Do Not**
+- Do not commit, push, branch, open/update PRs, post reviews, change issues, release, or merge.
+- Do not scan the whole repo when targeted reads answer the question.
+- If planning is needed, direct to `warplan`; if shipping is requested, direct to `ship`.

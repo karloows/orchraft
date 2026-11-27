@@ -13,6 +13,7 @@ history.
 ## Contents
 
 - [At A Glance](#at-a-glance)
+- [Command Card](#command-card)
 - [What This Is Not](#what-this-is-not)
 - [Trigger Rules](#trigger-rules)
 - [Requirements](#requirements)
@@ -35,6 +36,20 @@ history.
    report the real median across them.
 4. Report the totals. Never invent a number nothing in the data supports.
 5. Stop. Never touch a PR/issue — this skill only reads.
+
+## Command Card
+
+| Goal | Preferred tool/command | Notes |
+| --- | --- | --- |
+| Enumerate PRs | GitHub MCP `list_pull_requests state=all`; fallback `gh api --paginate "repos/$owner/$repo/pulls?state=all"` | Count open/merged/closed-without-merging. |
+| Read reviews/threads | GitHub MCP review/comment reads; fallback `gh api graphql` for attribution/pagination | Parse roast markers/scoreboards; classify thread fate. |
+| Compute metrics | No command | Real counts/time only; median from merged PRs. |
+| Report | No command | No mutation; report incomplete on failed required fetch. |
+
+**Fast Path / Do Not**
+- Do not mutate PRs/issues.
+- Do not invent benchmark/synthetic numbers.
+- Do not attribute threads to roast without verification.
 
 ## What This Is Not
 
@@ -188,17 +203,14 @@ and don't round a real count into a marketing-sounding figure.
 
 ## Handoff
 
-- Unless the user asked for plain output, open with a fresh one-line phrase
-  in the orc voice, speaking as the Quartermaster from
-  `context/personality.md` (the target repo's copy when it exists, otherwise
-  `${CLAUDE_PLUGIN_ROOT}/context/personality.md`). If they did, open with
+- Follow the Handoff Contract in `context/personality.md` (target repo copy when present, else `${CLAUDE_PLUGIN_ROOT}/context/personality.md`; if the target copy lacks that section, use the bundled contract).
   the plain summary instead.
 - Present the summary per [Summary Format](#summary-format).
-- If blocked, drop the orc voice and state the blocker plainly.
+- If blocked, state the blocker plainly (Handoff Contract).
 
 ## Response Examples
 
-Opening lines are samples of the orc voice; write a fresh one each time.
+Opening lines are samples; follow the Handoff Contract for voice selection.
 
 Real history to report (illustrative — actual output names real numbers):
 

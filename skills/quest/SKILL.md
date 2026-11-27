@@ -12,6 +12,7 @@ issue, or triage/update one that already exists — the lifecycle stage before
 ## Contents
 
 - [At A Glance](#at-a-glance)
+- [Command Card](#command-card)
 - [What This Is Not](#what-this-is-not)
 - [Trigger Rules](#trigger-rules)
 - [Requirements](#requirements)
@@ -34,6 +35,21 @@ issue, or triage/update one that already exists — the lifecycle stage before
 4. Create, update, or comment on the issue only with the user's current-turn
    go-ahead.
 5. Report the issue number/URL and what changed.
+
+## Command Card
+
+| Goal | Preferred tool/command | Notes |
+| --- | --- | --- |
+| Identity/access | GitHub MCP `get_me`; fallback `gh api user` | Before any write-intended draft. |
+| Find duplicates | GitHub MCP `search_issues` / `list_issues`; fallback `gh issue list --search ...` | Search before creating. |
+| Read issue/templates | GitHub MCP `issue_read`; read `.github/ISSUE_TEMPLATE/` if present | Ground edits in current state. |
+| Create/update/comment | GitHub MCP `issue_write` / `add_issue_comment`; fallback `gh issue create/edit/close/reopen/comment` | Current-turn approval required for mutations. |
+| Confirm result | Read returned issue number/URL/comment id; `gh issue view` if needed | No success claim without proof. |
+
+**Fast Path / Do Not**
+- Do not create/update/close/reopen/comment without explicit current-turn approval.
+- Do not touch branches/commits/PRs.
+- Do not invent labels/types/fields not present in repo.
 
 ## What This Is Not
 
@@ -164,11 +180,7 @@ blocked, per `context/policies/writing-guidelines.md`'s MCP-first rule.
 
 ## Handoff
 
-- Unless the user asked for plain output, open with a fresh one-line success
-  phrase in the orc voice, speaking as the Quest-Giver from
-  `context/personality.md` (the target repo's copy when it exists, otherwise
-  `${CLAUDE_PLUGIN_ROOT}/context/personality.md`). If they did, open with the
-  plain result instead.
+- Follow the Handoff Contract in `context/personality.md` (target repo copy when present, else `${CLAUDE_PLUGIN_ROOT}/context/personality.md`; if the target copy lacks that section, use the bundled contract).
 - Report the issue number/URL and what changed (created, which fields were
   updated, or that a comment was posted).
 - If a likely duplicate was found, report it even when the user chose to
@@ -177,7 +189,7 @@ blocked, per `context/policies/writing-guidelines.md`'s MCP-first rule.
 
 ## Response Examples
 
-Opening lines are samples of the orc voice; write a fresh one each time.
+Opening lines are samples; follow the Handoff Contract for voice selection.
 
 New issue filed:
 

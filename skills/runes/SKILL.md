@@ -13,6 +13,7 @@ conversation.
 ## Contents
 
 - [At A Glance](#at-a-glance)
+- [Command Card](#command-card)
 - [What This Is Not](#what-this-is-not)
 - [Trigger Rules](#trigger-rules)
 - [Prerequisites](#prerequisites)
@@ -33,6 +34,20 @@ conversation.
 3. Summarize where it actually stands and name the next logical step,
    without taking it.
 4. Stop. Never commit, push, or touch a PR/issue as part of this skill.
+
+## Command Card
+
+| Goal | Preferred tool/command | Notes |
+| --- | --- | --- |
+| Local state | `git status --short --branch`; `git rev-parse --abbrev-ref HEAD` | Read-only; only report checked-out worktree changes for checked-out target. |
+| PR discovery | GitHub MCP PR lookup by branch; fallback `gh pr view --json ...` or `gh pr list --head ...` | Classify none/draft/open/closed/merged explicitly. |
+| Checks/reviews | GitHub MCP PR status/reviews/comments; fallback `gh pr checks`, `gh api` | Find latest roast marker in reviews or issue comments. |
+| Next step | No command | Name it; do not execute ship/roast/land. |
+
+**Fast Path / Do Not**
+- Do not mutate git/GitHub.
+- Do not guess PR/check/review state when unavailable; report unverifiable.
+- Do not present stale roast findings as current after head moved.
 
 ## What This Is Not
 
@@ -146,17 +161,13 @@ Keep it to what's actually known — don't pad a thin status with filler.
 
 ## Handoff
 
-- Unless the user asked for plain output, open with a fresh one-line phrase
-  in the orc voice, speaking as the Rune-Reader from
-  `context/personality.md` (the target repo's copy when it exists, otherwise
-  `${CLAUDE_PLUGIN_ROOT}/context/personality.md`). If they did, open with
-  the plain summary instead.
+- Follow the Handoff Contract in `context/personality.md` (target repo copy when present, else `${CLAUDE_PLUGIN_ROOT}/context/personality.md`; if the target copy lacks that section, use the bundled contract).
 - Present the summary per [Summary Format](#summary-format).
-- If blocked, drop the orc voice and state the blocker plainly.
+- If blocked, state the blocker plainly (Handoff Contract).
 
 ## Response Examples
 
-Opening lines are samples of the orc voice; write a fresh one each time.
+Opening lines are samples; follow the Handoff Contract for voice selection.
 
 PR with open findings:
 

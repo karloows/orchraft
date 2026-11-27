@@ -10,8 +10,10 @@ Some settings are enums or toggles: which merge method to use, whether to
 delete a local branch. A model should not weigh those each time, and a shell
 hook cannot read prose at all. Those belong in a file a script can parse.
 Everything requiring judgment — what counts as validation, how severe a
-review finding is, the voice — stays in the prose policies and is not
-duplicated here.
+review finding is, the personality content — stays in the prose policies and is
+not duplicated here. A response-voice mode is a small enum and lives here so
+other plugins or plain-output preferences can coexist without fighting the
+workflow rules.
 
 ## The File
 
@@ -160,6 +162,23 @@ repository that needs mutations actually prevented should use its agent
 platform's own permission rules or a blocking pre-tool hook, and treat this
 key as the convenience layer it is.
 
+### `voice`
+
+Controls orchraft's user-facing handoff voice. One of:
+
+- `"orc"` (default) — use the orc personality on surfaces allowed by
+  `context/personality.md`.
+- `"plain"` — use plain, factual handoffs. No persona, no "Chief", no clan
+  role flourish. Workflow semantics, approval gates, and factual report
+  fields are unchanged.
+
+This setting is for coexistence with other style/persona plugins or user
+preference. If the user explicitly asks for plain output, or another
+higher-priority active instruction controls response style, follow that
+instruction even when this is `"orc"`. Orchraft never applies voice to
+commits, PR titles/bodies, review findings, release notes, policy files,
+skill instructions, or errors/blockers.
+
 ### `merge.method`
 
 Which merge method `land` uses. One of:
@@ -209,10 +228,18 @@ than overriding it when this setting names a different one.
 ### `hooks.watchtower.enabled`
 
 Whether the session-start nudge runs. `true` by default. Set it to `false`
-to silence the ambient nudge without uninstalling anything. This is the one
-setting read by a shell script rather than by a skill, which is why the
-format tolerates comments being stripped rather than assuming a reader that
+to silence the ambient nudge without uninstalling anything. This setting is
+read by a shell script rather than by a skill, which is why the format
+tolerates comments being stripped rather than assuming a reader that
 understands them.
+
+### `hooks.mainCommitNudge.enabled`
+
+Whether the PreToolUse nudge fires when a `git commit` or `git push` targets
+the repository's default branch directly. `true` by default. Set it to
+`false` to silence that ambient nudge. Like `hooks.watchtower.enabled`, it is
+read by a shell script and falls back to the default on a missing file,
+missing key, wrong type, or unparseable config.
 
 ### `merge.deleteLocalBranch`
 

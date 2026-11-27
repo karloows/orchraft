@@ -11,6 +11,7 @@ comments and docstrings — the clan calls this "lore."
 ## Contents
 
 - [At A Glance](#at-a-glance)
+- [Command Card](#command-card)
 - [What This Is Not](#what-this-is-not)
 - [Trigger Rules](#trigger-rules)
 - [Requirements](#requirements)
@@ -33,6 +34,20 @@ comments and docstrings — the clan calls this "lore."
 4. Leave already-compliant lore untouched.
 5. Report what changed, file:line. Never commit, push, or open/update a PR —
    that's `ship`'s job.
+
+## Command Card
+
+| Goal | Preferred tool/command | Notes |
+| --- | --- | --- |
+| Inspect scope | `git status --short`; `git diff`; `git diff --staged` | Default target is current diff; include untracked files from status. |
+| Read policy/examples | `read` `context/policies/lore-policy.md`; `grep`/`read` nearby doc-comment examples | Match existing language convention. |
+| Edit lore | `edit` | Comments/docstrings only; never change behavior. |
+| PR target | GitHub MCP PR diff/read; fallback `gh pr diff/view` | Read-only; ask before switching targets if unavailable. |
+
+**Fast Path / Do Not**
+- Do not commit, push, stage, or mutate PRs/issues.
+- Do not add comments the policy says to skip.
+- Do not invent behavior not grounded in code.
 
 ## What This Is Not
 
@@ -119,20 +134,16 @@ the one they asked for.
 
 ## Handoff
 
-- Unless the user asked for plain output, open with a fresh one-line phrase
-  in the orc voice, speaking as the Loremaster from
-  `context/personality.md` (the target repo's copy when it exists, otherwise
-  `${CLAUDE_PLUGIN_ROOT}/context/personality.md`). If they did, open with the
-  plain result instead.
+- Follow the Handoff Contract in `context/personality.md` (target repo copy when present, else `${CLAUDE_PLUGIN_ROOT}/context/personality.md`; if the target copy lacks that section, use the bundled contract).
 - List the files touched and a one-line count of what changed (added/fixed/
   removed).
 - Remind the user that `ship` is the next step if they want these changes
   committed.
-- If blocked, drop the orc voice and state the blocker plainly.
+- If blocked, state the blocker plainly (Handoff Contract).
 
 ## Response Examples
 
-Opening lines are samples of the orc voice; write a fresh one each time.
+Opening lines are samples; follow the Handoff Contract for voice selection.
 
 Lore added to a diff:
 

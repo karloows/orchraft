@@ -12,6 +12,7 @@ account, not just the current repo — every other status skill here
 ## Contents
 
 - [At A Glance](#at-a-glance)
+- [Command Card](#command-card)
 - [What This Is Not](#what-this-is-not)
 - [Trigger Rules](#trigger-rules)
 - [Requirements](#requirements)
@@ -35,6 +36,20 @@ account, not just the current repo — every other status skill here
    to say" instinct `watchtower` uses — not a wall of "repo X: all clear"
    lines.
 4. Stop. Never touch a PR/issue — this skill only reads.
+
+## Command Card
+
+| Goal | Preferred tool/command | Notes |
+| --- | --- | --- |
+| Identity | `gh api user --jq .login`; GitHub MCP `get_me` if available | Compare identities before enumerating. |
+| Enumerate repos | `gh api --paginate --method GET user/repos -f affiliation=owner ...` | Read-only; owned, non-fork, non-archived only. |
+| List open PRs/checks | GitHub MCP PR list/status/review tools; fallback `gh api`/`gh pr view` | Paginate; classify failing/pending/conflict/unresolved/draft/unverified. |
+| Report | No command | Actionable and unverified only; no mutations. |
+
+**Fast Path / Do Not**
+- Do not mutate PRs/issues or walk closed/merged history.
+- Do not report partial/failed checks as clean.
+- Do not expand to org repos not personally owned.
 
 ## What This Is Not
 
@@ -285,17 +300,13 @@ Keep it to what's actionable — a clean repo gets counted, not narrated.
 
 ## Handoff
 
-- Unless the user asked for plain output, open with a fresh one-line phrase
-  in the orc voice, speaking as the Warden from `context/personality.md`
-  (the target repo's copy when it exists, otherwise
-  `${CLAUDE_PLUGIN_ROOT}/context/personality.md`). If they did, open with
-  the plain summary instead.
+- Follow the Handoff Contract in `context/personality.md` (target repo copy when present, else `${CLAUDE_PLUGIN_ROOT}/context/personality.md`; if the target copy lacks that section, use the bundled contract).
 - Present the summary per [Summary Format](#summary-format).
-- If blocked, drop the orc voice and state the blocker plainly.
+- If blocked, state the blocker plainly (Handoff Contract).
 
 ## Response Examples
 
-Opening lines are samples of the orc voice; write a fresh one each time.
+Opening lines are samples; follow the Handoff Contract for voice selection.
 
 Actionable state found (illustrative — actual output names real repos/PRs):
 

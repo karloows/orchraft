@@ -12,6 +12,7 @@ the whole repo's.
 ## Contents
 
 - [At A Glance](#at-a-glance)
+- [Command Card](#command-card)
 - [What This Is Not](#what-this-is-not)
 - [Trigger Rules](#trigger-rules)
 - [Requirements](#requirements)
@@ -33,6 +34,20 @@ the whole repo's.
    merged/closed.
 3. Stop. Never touch a PR/issue, and never resolve or reply to anything —
    this skill only reads.
+
+## Command Card
+
+| Goal | Preferred tool/command | Notes |
+| --- | --- | --- |
+| Enumerate PRs | GitHub MCP `list_pull_requests state=all`; fallback `gh api --paginate "repos/$owner/$repo/pulls?state=all"` | Cover open, merged, closed-without-merging. |
+| Read review threads | GitHub MCP `pull_request_read get_review_comments`; fallback `gh api graphql` reviewThreads | Find `<!-- orchraft:declined -->` marker replies. |
+| Classify debt | No command | Standing only if thread unresolved; resolved debt is not reported. |
+| Report | No command | Read-only; incomplete on partial fetch failure. |
+
+**Fast Path / Do Not**
+- Do not mutate PRs/issues, resolve threads, or post replies.
+- Do not treat unmarked replies as declined.
+- Do not present partial results as complete.
 
 ## What This Is Not
 
@@ -161,17 +176,13 @@ Keep it to what was actually found — don't pad an empty result with filler.
 
 ## Handoff
 
-- Unless the user asked for plain output, open with a fresh one-line phrase
-  in the orc voice, speaking as the Reckoner from `context/personality.md`
-  (the target repo's copy when it exists, otherwise
-  `${CLAUDE_PLUGIN_ROOT}/context/personality.md`). If they did, open with
-  the plain summary instead.
+- Follow the Handoff Contract in `context/personality.md` (target repo copy when present, else `${CLAUDE_PLUGIN_ROOT}/context/personality.md`; if the target copy lacks that section, use the bundled contract).
 - Present the summary per [Summary Format](#summary-format).
-- If blocked, drop the orc voice and state the blocker plainly.
+- If blocked, state the blocker plainly (Handoff Contract).
 
 ## Response Examples
 
-Opening lines are samples of the orc voice; write a fresh one each time.
+Opening lines are samples; follow the Handoff Contract for voice selection.
 
 Standing debt found (illustrative — actual output names real PRs/files):
 
