@@ -380,7 +380,7 @@ It installs everything under `.opencode/`: `skills/` to `.opencode/skills/`,
 copy to `.opencode/plugins/orchraft-hooks.js`. For cross-agent compatibility,
 it also copies skills to `.agents/skills/`. Orchraft-shipped skill files are
 overwritten on every run (stale ones from older revisions are left); existing
-`context/` and agent files are kept.
+`.opencode/context/` and `.opencode/agents/` files are kept.
 
 If you load orchraft through `plugins` config, the `.opencode/plugins/orchraft-hooks.js`
 copy is redundant and can duplicate nudges, so prefer one path.

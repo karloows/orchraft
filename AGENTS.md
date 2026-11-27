@@ -242,8 +242,8 @@ not assume a named `agents/` component exists outside hosts that document it.
   Agents are converted to `.opencode/agents/` subagents (all get `task: deny`
   except `warpath`; read-only ones also get `edit: deny` and ask-before-shell
   outside a short git/gh/ls list, guardrail not sandbox; `warpath` needs
-  `experimental.subagent_depth: 2` in user config). Existing `context/` and
-  agent files are kept. The hook plugin copy lives at
+  `experimental.subagent_depth: 2` in user config). Existing `.opencode/context/` and
+  `.opencode/agents/` files are kept. The hook plugin copy lives at
   `.opencode/plugins/orchraft-hooks.js` for the copy-install path. See README's
   opencode section for behavior details and 2.2.5 verification notes.
 
