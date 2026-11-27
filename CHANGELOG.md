@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.4.0](https://github.com/karloows/orchraft/compare/v1.3.0...v1.4.0) (2026-11-27)
+
+
+### Features
+
+* improve plugin compatibility and skill command cards ([#95](https://github.com/karloows/orchraft/issues/95)) ([15bb287](https://github.com/karloows/orchraft/commit/15bb287c58233dcd16659e76e4ce3f86faabe9c2))
+* package orchraft as an OpenCode plugin ([#92](https://github.com/karloows/orchraft/issues/92)) ([efe9e8d](https://github.com/karloows/orchraft/commit/efe9e8d61934eec6379dd03661c28d4d0f0938e4))
+
+
+### Bug Fixes
+
+* resolve addressed review threads during warpath ([#94](https://github.com/karloows/orchraft/issues/94)) ([b674e42](https://github.com/karloows/orchraft/commit/b674e42c1e175e3cc5f17d06cc2995e969d98233))
+
 ## [1.3.0](https://github.com/karloows/orchraft/compare/v1.2.1...v1.3.0) (2026-11-04)
 
 
