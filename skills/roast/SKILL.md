@@ -46,7 +46,7 @@ it.
 
 **Fast Path / Do Not**
 - Do not edit files, commit, push, approve, merge, or request changes unless explicitly asked.
-- Do not post without current-turn approval.
+- Do not post without current-turn approval unless verified `autonomous.warpath` authorizes `review`.
 - Do not invent policies; tag judgment calls per review-policy.
 
 ## Requirements

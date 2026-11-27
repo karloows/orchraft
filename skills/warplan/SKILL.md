@@ -40,7 +40,7 @@ the lifecycle stage before writing code and, eventually, `ship`.
 | Goal | Preferred tool/command | Notes |
 | --- | --- | --- |
 | Ground in repo | `read`, `glob`, `grep`, `git log --oneline`, `git blame` (targeted) | Read only files/policies/precedent relevant to the goal. |
-| Check related PRs/issues | GitHub MCP search/read tools; fallback `gh pr list/search`, `gh issue list/search` | Read-only; do not mutate. |
+| Check related PRs/issues | GitHub MCP search/read tools; fallback `gh search prs` / `gh search issues`, or `gh pr list` / `gh issue list` | Read-only; do not mutate. |
 | Draft plan | No command | Output plan format; stop before implementation. |
 
 **Fast Path / Do Not**
