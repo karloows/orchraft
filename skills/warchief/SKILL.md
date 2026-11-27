@@ -24,6 +24,19 @@ next across the software lifecycle, instead of naming a specific skill.
    the default branch. A failed or mismatched verification is not
    authorization.
 
+## Command Card
+
+| Goal | Preferred tool/command | Notes |
+| --- | --- | --- |
+| Inspect local state | `git status --short --branch` | Read-only. |
+| Inspect live PR/issue state | `runes` or GitHub MCP/`gh` read calls only when needed | Do not mutate. |
+| Route to role | Invoke the matching skill/agent | Pick earliest lifecycle step that removes uncertainty. |
+| Mutating next step | Stop and ask for exact current-turn approval unless verified Autonomous Mode covers that exact action | Never chain mutating approvals. |
+
+**Fast Path / Do Not**
+- Do not commit/push/PR/review/merge/issue/release mutate as warchief.
+- Do not create stored state files.
+
 ## Routing
 
 - Treat user-facing role names as portable workflow roles. Run the matching
@@ -85,9 +98,7 @@ unknown branch, and review before landing.
 ## Handoff
 
 - Unless the user asked for plain output, open with a fresh one-line phrase
-  in the orc voice, speaking as the Warchief from `context/personality.md`
-  (the target repo's copy when it exists, otherwise
-  `${CLAUDE_PLUGIN_ROOT}/context/personality.md`).
+  Follow the Handoff Contract in `context/personality.md` (target repo copy when present, else `${CLAUDE_PLUGIN_ROOT}/context/personality.md`).
 - Name the selected next role and why.
 - If that role is mutating and neither the current turn nor a verified
   Autonomous Mode entry authorizes it, ask for the exact go-ahead instead of

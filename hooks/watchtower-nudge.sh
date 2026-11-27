@@ -67,12 +67,12 @@ dirty=""
 [ -n "$status_output" ] && dirty=1
 
 if [[ "$branch" =~ ^(main|master)$ ]]; then
-  [ -n "$dirty" ] && emit "Chief, \`$branch\` has uncommitted changes."
+  [ -n "$dirty" ] && emit "[orchraft] \`$branch\` has uncommitted changes."
   exit 0
 fi
 
 command -v gh >/dev/null 2>&1 || {
-  [ -n "$dirty" ] && emit "Chief, \`$branch\` has local changes (gh not installed)."
+  [ -n "$dirty" ] && emit "[orchraft] \`$branch\` has local changes (gh not installed)."
   exit 0
 }
 
@@ -88,15 +88,15 @@ rm -f "$pr_stderr" 2>/dev/null
 
 if [ $pr_rc -ne 0 ]; then
   if printf '%s' "$pr_err" | grep -qi 'no pull requests found'; then
-    [ -n "$dirty" ] && emit "Chief, \`$branch\` has local changes and no open PR yet."
+    [ -n "$dirty" ] && emit "[orchraft] \`$branch\` has local changes and no open PR yet."
   else
-    [ -n "$dirty" ] && emit "Chief, \`$branch\` has local changes (GitHub status unavailable)."
+    [ -n "$dirty" ] && emit "[orchraft] \`$branch\` has local changes (GitHub status unavailable)."
   fi
   exit 0
 fi
 
 if [ "$(printf '%s' "$pr_json" | jq -r '.state // empty')" != "OPEN" ]; then
-  [ -n "$dirty" ] && emit "Chief, \`$branch\` has local changes and no open PR yet."
+  [ -n "$dirty" ] && emit "[orchraft] \`$branch\` has local changes and no open PR yet."
   exit 0
 fi
 
@@ -104,17 +104,17 @@ number=$(printf '%s' "$pr_json" | jq -r '.number')
 states=$(printf '%s' "$pr_json" | jq -r '[.statusCheckRollup[]? | (.conclusion // .status // .state // "")] | join(",")')
 
 if printf '%s' "$states" | grep -qiE 'failure|error|cancelled|timed_out'; then
-  emit "Chief, PR #$number has a failing check."
+  emit "[orchraft] PR #$number has a failing check."
   exit 0
 fi
 if printf '%s' "$states" | grep -qiE 'pending|in_progress|queued'; then
-  emit "Chief, PR #$number checks are still running."
+  emit "[orchraft] PR #$number checks are still running."
   exit 0
 fi
 
 mergeable=$(printf '%s' "$pr_json" | jq -r '.mergeStateStatus // empty')
 if [ "$mergeable" = "DIRTY" ]; then
-  emit "Chief, PR #$number has merge conflicts."
+  emit "[orchraft] PR #$number has merge conflicts."
   exit 0
 fi
 
@@ -192,7 +192,7 @@ if [ $? -eq 0 ] && [ -n "$owner_repo" ]; then
 fi
 
 if [ -n "$threads_checked" ] && [ "$unresolved" -gt 0 ]; then
-  emit "Chief, PR #$number still carries $unresolved open crack(s) from the last roast."
+  emit "[orchraft] PR #$number still carries $unresolved open crack(s) from the last roast."
   exit 0
 fi
 
@@ -200,7 +200,7 @@ fi
 # succeeded -- a failed query defaulting to "assume clean" would be a false
 # all-clear, worse than saying nothing.
 if [ -n "$threads_checked" ] && [ "$mergeable" = "CLEAN" ]; then
-  emit "Chief, PR #$number is green and clean; \`land\` is the next call."
+  emit "[orchraft] PR #$number is green and clean; \`land\` is the next call."
   exit 0
 fi
 

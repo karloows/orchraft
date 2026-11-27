@@ -12,6 +12,7 @@ who use the project rather than the people who built it.
 ## Contents
 
 - [At A Glance](#at-a-glance)
+- [Command Card](#command-card)
 - [What This Is Not](#what-this-is-not)
 - [Trigger Rules](#trigger-rules)
 - [Requirements](#requirements)
@@ -35,6 +36,20 @@ who use the project rather than the people who built it.
 4. Show the draft in chat. Stop there unless the user asks to publish it.
 5. Once the approval policy is satisfied, write the notes into the GitHub
    release for that tag.
+
+## Command Card
+
+| Goal | Preferred tool/command | Notes |
+| --- | --- | --- |
+| Identify range | `git tag --sort=-v:refname`; `git log --oneline`; GitHub MCP release/PR reads; fallback `gh release view/list`, `gh pr list` | Determine previous tag/release range. |
+| Collect changes | GitHub MCP merged PR reads; fallback `gh pr list --state merged --search ...` | Include direct commits with no PR. |
+| Draft notes | No command | Follow Notes Format; no voice/marketing. |
+| Publish release notes | `gh release edit/create ...` only after explicit current-turn approval | GitHub MCP cannot write releases; confirm body after write. |
+
+**Fast Path / Do Not**
+- Do not edit `CHANGELOG.md`.
+- Do not publish/create/edit releases without explicit current-turn approval.
+- Do not invent changes not present in PRs/commits.
 
 ## What This Is Not
 
@@ -176,23 +191,18 @@ who use the project rather than the people who built it.
 
 ## Handoff
 
-- Unless the user asked for plain output, open with a fresh one-line phrase
-  in the orc voice, speaking as the Herald from `context/personality.md`
-  (the target repo's copy when it exists, otherwise
-  `${CLAUDE_PLUGIN_ROOT}/context/personality.md`). If they did, open with
-  the plain result instead. The line is the skill's own message, never part
-  of the notes.
+- Follow the Handoff Contract in `context/personality.md` (target repo copy when present, else `${CLAUDE_PLUGIN_ROOT}/context/personality.md`). The opening line is the skill's own message, never part of the notes.
 - Report the range, and how many pull requests and direct commits it
   covered.
 - Show the drafted notes.
 - After publishing, report the release URL and which write happened: the
   notes added above the existing body, the block from an earlier run
   updated, the whole body replaced, or a draft release created.
-- If blocked, drop the orc voice and state the blocker plainly.
+- If blocked, state the blocker plainly (Handoff Contract).
 
 ## Response Examples
 
-Opening lines are samples of the orc voice; write a fresh one each time.
+Opening lines are samples; follow the Handoff Contract for voice selection.
 
 Notes drafted:
 

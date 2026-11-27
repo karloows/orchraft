@@ -14,6 +14,11 @@
   // Unset means the repository's own default branch.
   // "baseBranch": "main",
 
+  // Response voice for orchraft handoffs. Does not change workflow gates.
+  //   "orc"   — default orc persona on allowed surfaces
+  //   "plain" — factual handoffs, no persona; better for style-plugin coexistence
+  "voice": "orc",
+
   "merge": {
     // Which merge method `land` uses.
     //   "repo"   — resolve it from the repository (default)
@@ -33,6 +38,11 @@
     "watchtower": {
       // The session-start nudge about open PR work.
       // Set false to silence it without uninstalling anything.
+      "enabled": true
+    },
+    "mainCommitNudge": {
+      // The PreToolUse nudge when a git commit/push targets the default
+      // branch directly. Set false to silence it without uninstalling it.
       "enabled": true
     }
   },

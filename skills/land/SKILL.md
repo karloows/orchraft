@@ -10,6 +10,7 @@ Use this skill when the user asks the AI to land work end to end.
 ## Contents
 
 - [At A Glance](#at-a-glance)
+- [Command Card](#command-card)
 - [What This Is Not](#what-this-is-not)
 - [Trigger Rules](#trigger-rules)
 - [Preconditions](#preconditions)
@@ -28,6 +29,23 @@ Use this skill when the user asks the AI to land work end to end.
    workflow. In a linked worktree, skip the sync and the deletion but still
    restore the stash.
 5. Report the result with the actual merge method and branch state.
+
+## Command Card
+
+| Goal | Preferred tool/command | Notes |
+| --- | --- | --- |
+| Inspect branch/PR | `git status --short --branch`; `git rev-parse --abbrev-ref HEAD`; GitHub MCP PR view; fallback `gh pr view --json ...` | Confirm open non-draft PR, head SHA, base, checks, mergeability. |
+| Check checks/permissions | GitHub MCP status/check/mergeability tools; fallback `gh pr checks`, `gh pr view` | Read fresh in current turn. |
+| Stash local changes | `git stash push -u -m "orchraft-land <branch> <timestamp>"` | Record SHA from `git stash list --format='%H %gs'`. |
+| Merge | GitHub MCP merge action if exposed; fallback `gh pr merge --merge|--squash|--rebase --delete-branch=false` only after MCP checked | Resolve method per policy; never bypass disallowed method. |
+| Sync base | `git checkout <base>`; `git pull --ff-only` | Skip in linked worktree. |
+| Verify/delete local branch | `git branch -d <topic>` for merge commits; verify merged + `git diff` empty then `git branch -D` for squash/rebase | Never `-D` without verification. |
+| Restore stash | `git stash apply <sha>`; drop matching SHA entry | Never bare `git stash pop`. |
+
+**Fast Path / Do Not**
+- Do not merge without explicit current-turn land approval.
+- Do not delete branches or force land past failed/pending checks without explicit allowed override.
+- Do not switch/delete in linked worktrees; report cleanup command instead.
 
 ## What This Is Not
 
@@ -190,11 +208,7 @@ Use this skill when the user asks the AI to land work end to end.
 
 ## Handoff
 
-- Unless the user asked for plain output, open with a fresh one-line success
-  phrase in the orc voice, speaking as the Haulmaster from
-  `context/personality.md` (the target repo's copy when it exists, otherwise
-  `${CLAUDE_PLUGIN_ROOT}/context/personality.md`). If they did, open with the
-  plain result instead.
+- Follow the Handoff Contract in `context/personality.md` (target repo copy when present, else `${CLAUDE_PLUGIN_ROOT}/context/personality.md`).
 - Report the final branch state.
 - Say which merge method was used and where it came from: the user,
   the config file, the only method the repository allows, or an inference
@@ -208,7 +222,7 @@ Use this skill when the user asks the AI to land work end to end.
 
 ## Response Examples
 
-Opening lines are samples of the orc voice; write a fresh one each time.
+Opening lines are samples; follow the Handoff Contract for voice selection.
 
 Successful landing:
 

@@ -49,6 +49,36 @@ fi
 # wrongly treat it as a work tree and fall through to command matching.
 [ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" = true ] || exit 0
 
+# Opt out via the repo's own config (context/policies/config-policy.md).
+# Same comment-stripping shape as watchtower-nudge.sh: the format allows //
+# comments, jq does not, and a blind strip would also truncate // in URLs.
+strip_jsonc() {
+  awk '{
+    out = ""; inq = 0; i = 1; n = length($0)
+    while (i <= n) {
+      c = substr($0, i, 1)
+      if (inq) {
+        if (c == "\\") { out = out substr($0, i, 2); i += 2; continue }
+        if (c == "\"") { inq = 0 }
+        out = out c; i++
+      } else {
+        if (c == "\"") { inq = 1; out = out c; i++; continue }
+        if (c == "/" && substr($0, i + 1, 1) == "/") { break }
+        out = out c; i++
+      }
+    }
+    print out
+  }' "$1" 2>/dev/null
+}
+
+for cfg in .orchraft.jsonc .orchraft.json; do
+  [ -f "$cfg" ] || continue
+  disabled=$(strip_jsonc "$cfg" \
+    | jq -r '(.hooks.mainCommitNudge.enabled == false) | tostring' 2>/dev/null)
+  [ "$disabled" = "true" ] && exit 0
+  break
+done
+
 command_str=$(printf '%s' "$input" | jq -r '.tool_input.command // empty')
 [ -n "$command_str" ] || exit 0
 
@@ -115,7 +145,7 @@ default_branch="${default_branch#origin/}"
 
 if { [ -n "$default_branch" ] && [ "$branch" = "$default_branch" ]; } ||
    { [ -z "$default_branch" ] && [[ "$branch" =~ ^(main|master)$ ]]; }; then
-  emit "Chief, that git command targets \`$branch\` directly -- \`ship\` is the usual path for a branch/commit/PR. Proceeding only if you meant this."
+  emit "[orchraft] That git command targets \`$branch\` directly -- \`ship\` is the usual path for a branch/commit/PR. Proceeding only if you meant this."
 fi
 
 exit 0

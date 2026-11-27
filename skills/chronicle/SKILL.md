@@ -11,6 +11,7 @@ Markdown document — anything that isn't an in-code comment or docstring.
 ## Contents
 
 - [At A Glance](#at-a-glance)
+- [Command Card](#command-card)
 - [What This Is Not](#what-this-is-not)
 - [Trigger Rules](#trigger-rules)
 - [Requirements](#requirements)
@@ -33,6 +34,20 @@ Markdown document — anything that isn't an in-code comment or docstring.
 4. Draft or update the doc content directly in the file.
 5. Report what changed, file and section. Never commit, push, or open/update
    a PR — that's `ship`'s job.
+
+## Command Card
+
+| Goal | Preferred tool/command | Notes |
+| --- | --- | --- |
+| Inspect scope | `git status --short`; `git diff`; `git diff --staged`; `read` target doc | Ground in real sources before drafting. |
+| Read policy/tone | `read` `context/policies/docs-policy.md`; read comparable docs in repo | Match existing structure/tone. |
+| Draft/update doc | `edit`/`write` | Markdown docs only; no in-code comments/docstrings. |
+| PR/issue target | GitHub MCP PR/issue read; fallback `gh pr view/diff`, `gh issue view` | Read-only; ask before switching targets if unavailable. |
+
+**Fast Path / Do Not**
+- Do not commit, push, stage, or mutate PRs/issues.
+- Do not invent rationale/history not supported by sources.
+- Do not pad with generic filler.
 
 ## What This Is Not
 
@@ -133,20 +148,15 @@ Markdown document — anything that isn't an in-code comment or docstring.
 
 ## Handoff
 
-- Unless the user asked for plain output, open with a fresh one-line phrase
-  in the orc voice, speaking as the Chronicler from `context/personality.md`
-  (the target repo's copy when it exists, otherwise
-  `${CLAUDE_PLUGIN_ROOT}/context/personality.md`). If they did, open with
-  the plain result instead. This orc-voice line is the skill's own success
-  message, not part of the drafted document's content.
+- Follow the Handoff Contract in `context/personality.md` (target repo copy when present, else `${CLAUDE_PLUGIN_ROOT}/context/personality.md`). The opening line is the skill's own message, not part of the drafted document.
 - List the files/sections touched and a one-line summary of what changed.
 - Remind the user that `ship` is the next step if they want these changes
   committed.
-- If blocked, drop the orc voice and state the blocker plainly.
+- If blocked, state the blocker plainly (Handoff Contract).
 
 ## Response Examples
 
-Opening lines are samples of the orc voice; write a fresh one each time.
+Opening lines are samples; follow the Handoff Contract for voice selection.
 
 Doc drafted:
 
