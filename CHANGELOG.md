@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0](https://github.com/karloows/orchraft/compare/v1.4.0...v1.5.0) (2026-11-27)
+
+
+### Features
+
+* consolidate OpenCode copy-install layout under .opencode ([#96](https://github.com/karloows/orchraft/issues/96)) ([7103467](https://github.com/karloows/orchraft/commit/7103467d6a136d5a763464af5a721340b8d842bf))
+
 ## [1.4.0](https://github.com/karloows/orchraft/compare/v1.3.0...v1.4.0) (2026-11-27)
 
 
